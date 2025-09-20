@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Damián Alejandro Linares - Portfolio Digital</title>
+    <title>Damian Alejandro Linares - Portfolio Digital</title>
     <style>
         * {
             margin: 0;
@@ -268,7 +268,7 @@
     <div class="desktop">
         <div class="window">
             <div class="title-bar">
-                <span>Portfolio Digital - Damián Alejandro Linares</span>
+                <span>Portfolio Digital - Damian Alejandro Linares</span>
                 <div class="window-controls">
                     <div class="control-btn">_</div>
                     <div class="control-btn">[_]</div>
@@ -286,9 +286,9 @@
             <div class="content">
                 <div class="logo-container">
                     <div class="logo">
-                        <img src="https://i.ibb.co/mCdtvXVR/RONINGANGSTUDIO-BY-DAMIAN-LINARES.png  " alt="RONINGANGSTUDIO-BY-DAMIAN-LINARES" border="0">
+                        <img src="https://i.ibb.co/mCdtvXVR/RONINGANGSTUDIO-BY-DAMIAN-LINARES.png" alt="RONINGANGSTUDIO-BY-DAMIAN-LINARES" border="0">
                     </div>
-                    <div class="artist-info">DAMIÁN ALEJANDRO LINARES</div>
+                    <div class="artist-info">DAMIAN ALEJANDRO LINARES</div>
                     <div class="studio-info">RONIN GANG STUDIO</div>
                 </div>
                 
@@ -368,11 +368,14 @@
             
             modalTitle.textContent = `${number} - ${fullTitle}`;
             
-            // CORRECCIÓN: Mapear nombres de carpetas reales
-            const folderPath = number === '01' ? '01-meditacion-debugging' :
-                              number === '02' ? '02-espejo-sombra' :
-                              number === '03' ? '03-naturaleza-del-yo' :
-                              'unknown';
+            // Mapeo de carpetas reales
+            const folderMap = {
+                '01': '01-meditacion-debugging',
+                '02': '02-espejo-sombra',
+                '03': '03-naturaleza-del-yo'
+            };
+
+            const folderPath = folderMap[number] || 'unknown';
 
             workFrame.src = `./${folderPath}/index.html`;
             
