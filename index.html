@@ -20,26 +20,25 @@
 
         .desktop {
             min-height: 100vh;
-            background: #000; /* Negro profundo */
+            background: #000; /* Fondo negro base */
             position: relative;
             background-image: 
-                url('https://i.imgur.com/6YtJpLX.png'), /* Textura de circuito PCB (azul-verde) */
-                url('https://i.imgur.com/7QvZc6F.png'), /* Patrón de ondas digitales (suave) */
-                url('https://i.imgur.com/kKzVbHg.png'); /* Ruido digital sutil (grano) */
-            background-size: cover, cover, cover;
-            background-position: center, center, center;
-            background-repeat: no-repeat, repeat, repeat;
-            opacity: 0.9; /* Sutil transparencia para no saturar */
+                url('https://i.ibb.co/PZTVfGvV/roningangstudio-a-ninja-person-looking-up-with-3d-pixels-over-d84ba365-bf5d-4333-ac25-0362629be6bf.png'), /* Tu imagen principal */
+                url('https://i.imgur.com/kKzVbHg.png'); /* Ruido digital sutil */
+            background-size: cover, repeat;
+            background-position: center, center;
+            background-repeat: no-repeat, repeat;
+            opacity: 0.95; /* Sutil transparencia para no saturar */
         }
 
-        /* Añade animación suave para efecto hipnótico */
-        @keyframes wavePulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 0.9; }
+        /* Efecto de pulso suave para hacerlo más hipnótico */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
         }
 
         .desktop {
-            animation: wavePulse 8s infinite ease-in-out;
+            animation: pulse 6s infinite ease-in-out;
         }
 
         .window {
@@ -291,7 +290,7 @@
             <div class="content">
                 <div class="logo-container">
                     <div class="logo">
-                        <img src="https://i.ibb.co/mCdtvXVR/RONINGANGSTUDIO-BY-DAMIAN-LINARES.png  " alt="RONINGANGSTUDIO-BY-DAMIAN-LINARES" border="0">
+                        <img src="https://i.ibb.co/mCdtvXVR/RONINGANGSTUDIO-BY-DAMIAN-LINARES.png" alt="RONINGANGSTUDIO-BY-DAMIAN-LINARES" border="0">
                     </div>
                     <div class="artist-info">DAMIAN ALEJANDRO LINARES</div>
                     <div class="studio-info">RONIN GANG STUDIO</div>
@@ -318,7 +317,7 @@
                         <span class="work-number">05</span>
                         <span>Identidad en Flujo [COMING SOON]</span>
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -367,48 +366,4 @@
             const workDescTitle = document.getElementById('workDescTitle');
             const workDescription = document.getElementById('workDescription');
             
-            // Reconstruir el título completo para mostrar, buscando en el DOM
-            const fullTitleSpan = document.querySelector(`.work-item[onclick*="openWork('${number}', '${folderName}'"] span:last-child`);
-            const fullTitle = fullTitleSpan ? fullTitleSpan.textContent : 'Título Desconocido'; // Fallback
-            
-            modalTitle.textContent = `${number} - ${fullTitle}`;
-            workFrame.src = `./${number}_${folderName}/index.html`; // Ruta correcta
-            workDescTitle.textContent = fullTitle;
-            workDescription.textContent = description;
-
-            modal.style.display = 'block';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('workModal');
-            const workFrame = document.getElementById('workFrame');
-            modal.style.display = 'none';
-            workFrame.src = 'about:blank'; // Detiene la ejecución del sketch y limpia el iframe
-        }
-
-        function closeWindow() {
-            if (confirm('¿Estás seguro de que quieres cerrar el portfolio?')) {
-                // Esto no cerrará la pestaña en la mayoría de los navegadores modernos por seguridad,
-                // pero lo dejamos como simulación de la funcionalidad.
-                const win = document.querySelector('.window');
-                win.style.display = 'none'; // Simula cerrar la ventana
-            }
-        }
-
-        updateTime();
-        setInterval(updateTime, 1000);
-
-        document.getElementById('workModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
-    </script>
-</body>
-</html>
+            // Reconstruir el título completo para mostrar, buscando en el
