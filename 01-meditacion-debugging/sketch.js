@@ -1,4 +1,4 @@
-"// --- OBRA 01: MEDITACIÓN COMO DEBUGGING MENTAL ---
+// --- OBRA 01: MEDITACIÓN COMO DEBUGGING MENTAL ---
 // Estilo Visionario inspirado en Alex Grey.
 
 let chakras = [];
@@ -144,4 +144,5 @@ function windowResized() {
   for (let i = 0; i < 7; i++) {
     chakras[i].y = (height * 0.85) - (i * height * 0.1);
   }
-}"
+}
+
