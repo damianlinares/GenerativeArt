@@ -5,22 +5,632 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SILENCIA EL RUIDO. ENCUENTRA TU CENTRO. - Damian Alejandro Linares</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-    <!-- resto del código del template -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2a 50%, #0a0a0a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 2s ease-out;
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            text-align: center;
+            line-height: 1.6;
+            letter-spacing: 3px;
+            animation: pulse 2s infinite;
+            text-shadow: 0 0 20px rgba(180, 120, 255, 0.6);
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .info-panel {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            width: 350px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(180, 120, 255, 0.4);
+            border-radius: 12px;
+            padding: 25px;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.6;
+            z-index: 100;
+            transform: translateX(110%);
+            transition: transform 0.8s ease-out;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .info-panel.visible {
+            transform: translateX(0);
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            color: #b478ff;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(180, 120, 255, 0.5);
+        }
+
+        .info-description {
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .info-controls {
+            background: rgba(180, 120, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(180, 120, 255, 0.3);
+        }
+
+        .info-controls h4 {
+            color: #b478ff;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-controls p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            z-index: 100;
+            max-width: 280px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .controls h4 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .controls p {
+            margin: 5px 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .info-panel {
+                position: fixed;
+                top: auto;
+                bottom: 100px;
+                right: 20px;
+                left: 20px;
+                width: auto;
+                max-width: none;
+                transform: translateY(110%);
+            }
+
+            .info-panel.visible {
+                transform: translateY(0);
+            }
+
+            .controls {
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+
+            .loading-text {
+                font-size: clamp(1.2rem, 8vw, 2.5rem);
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-text">
             SILENCIA EL RUIDO.<br>
-            <!-- resto igual -->
+            ENCUENTRA TU CENTRO.
         </div>
     </div>
     
     <div class="info-panel" id="infoPanel">
         <div class="info-title">ENCUENTRA TU CENTRO.</div>
-        <!-- resto con la descripción específica -->
+        <div class="info-description">
+            Una exploración digital de la meditación como proceso de debugging mental. 
+            Observa cómo los pensamientos caóticos se transforman en claridad a través 
+            del proceso meditativo, representado como la depuración de código mental.
+        </div>
+        <div class="info-description">
+            Los chakras se activan progresivamente mientras los pensamientos parásitos 
+            son procesados y eliminados del sistema mental, creando un estado de 
+            silencio interior y conexión energética.
+        </div>
+        <div class="info-controls">
+            <h4>CONTROLES INTERACTIVOS:</h4>
+            <p>• <strong>Click:</strong> Reiniciar proceso de meditación</p>
+            <p>• <strong>Espacio:</strong> Acelerar claridad mental</p>
+            <p>• <strong>I:</strong> Mostrar/ocultar información</p>
+            <p>• <strong>Esc:</strong> Modo pantalla completa</p>
+        </div>
+        <div style="text-align: center; margin-top: 15px; color: rgba(255,255,255,0.6); font-size: 11px;">
+            © 2024 Damian Alejandro Linares
+        </div>
     </div>
-    
-    <!-- resto del HTML igual al template -->
-    <script src="sketch.js"></script>
+
+    <div class="controls">
+        <h4>SISTEMA DE DEBUGGING MENTAL</h4>
+        <p><strong>Estado:</strong> <span id="systemStatus">Iniciando...</span></p>
+        <p><strong>Claridad:</strong> <span id="clarityLevel">0%</span></p>
+        <p><strong>Pensamientos:</strong> <span id="thoughtCount">--</span></p>
+        <p><strong>Chakras activos:</strong> <span id="activeChakras">0/7</span></p>
+    </div>
+
+    <script>
+        // Variables globales para el sistema
+        let chakras = [];
+        let pensamientos = [];
+        let particulas = [];
+        let tiempo = 0;
+        let claridad = 0;
+        let canvas;
+        let loadingComplete = false;
+
+        // Configuración inicial
+        function setup() {
+            canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent(document.body);
+            colorMode(HSB, 360, 100, 100, 100);
+            
+            inicializarSistema();
+            setTimeout(ocultarPantallaCarga, 3000);
+        }
+
+        function inicializarSistema() {
+            // Inicializar chakras con colores tradicionales
+            let coloresChakra = [0, 30, 60, 120, 210, 240, 275];
+            chakras = [];
+            for (let i = 0; i < 7; i++) {
+                chakras.push({
+                    y: (height * 0.85) - (i * height * 0.1),
+                    color: coloresChakra[i],
+                    tam: 20,
+                    id: i,
+                    energia: 0,
+                    activo: false
+                });
+            }
+
+            // Inicializar pensamientos caóticos
+            pensamientos = [];
+            for (let i = 0; i < 120; i++) {
+                pensamientos.push({
+                    x: width / 2 + random(-250, 250),
+                    y: height * 0.2 + random(-200, 200),
+                    vx: random(-2, 2),
+                    vy: random(-2, 2),
+                    tam: random(3, 12),
+                    ruidoOffset: random(1000),
+                    alpha: random(60, 100),
+                    tipo: Math.floor(random(4)),
+                    vida: 1.0,
+                    procesado: false
+                });
+            }
+
+            // Inicializar partículas de energía
+            particulas = [];
+            for(let i = 0; i < 80; i++) {
+                particulas.push({
+                    x: random(width),
+                    y: random(height),
+                    vx: random(-1, 1),
+                    vy: random(-1, 1),
+                    tam: random(1, 4),
+                    alpha: random(20, 80),
+                    hue: random(180, 280)
+                });
+            }
+        }
+
+        function draw() {
+            if (!loadingComplete) return;
+
+            // Fondo dinámico
+            let bgHue = lerp(240, 280, claridad);
+            let bgSat = lerp(50, 25, claridad);
+            let bgBright = lerp(2, 6, claridad);
+            background(bgHue, bgSat, bgBright);
+            
+            tiempo += 0.01;
+            
+            // Proceso de claridad mental
+            if (pensamientos.length > 0) {
+                claridad = min(1.0, claridad + 0.0008);
+            }
+
+            // Sistema de renderizado
+            dibujarParticulas();
+            dibujarAura();
+            dibujarFiguraCentral();
+            actualizarPensamientos();
+            dibujarGeometriaSagrada();
+            dibujarInterfazPrincipal();
+            actualizarEstadisticas();
+        }
+
+        function dibujarParticulas() {
+            for(let p of particulas) {
+                p.x += p.vx * lerp(1.2, 0.3, claridad);
+                p.y += p.vy * lerp(1.2, 0.3, claridad);
+                
+                // Wrap screen
+                if(p.x < 0) p.x = width;
+                if(p.x > width) p.x = 0;
+                if(p.y < 0) p.y = height;
+                if(p.y > height) p.y = 0;
+                
+                noStroke();
+                fill(p.hue, 40, 90, p.alpha * claridad);
+                ellipse(p.x, p.y, p.tam);
+            }
+        }
+
+        function dibujarAura() {
+            let auraTam = lerp(width * 0.25, width * 0.55, claridad);
+            
+            for(let i = 5; i >= 0; i--) {
+                let factor = 1 + (i * 0.12);
+                let alpha = lerp(5, 18, claridad) / (i + 1);
+                let respiracion = sin(tiempo * 2.5) * 0.08 + 1;
+                
+                noFill();
+                stroke(lerp(0, 200, claridad), lerp(90, 30, claridad), 100, alpha);
+                strokeWeight(lerp(4, 0.5, i/5));
+                ellipse(width/2, height/2, auraTam * factor * respiracion);
+            }
+        }
+
+        function dibujarFiguraCentral() {
+            // Columna energética central
+            strokeWeight(lerp(1, 8, claridad));
+            stroke(0, 0, 100, lerp(25, 85, claridad));
+            line(width / 2, height * 0.9, width / 2, height * 0.12);
+
+            let chakrasActivos = 0;
+            
+            for (let i = 0; i < chakras.length; i++) {
+                let c = chakras[i];
+                c.energia = constrain(claridad * 8 - i, 0, 1);
+                c.activo = c.energia > 0.3;
+                
+                if(c.activo) chakrasActivos++;
+                
+                let pulso = sin(tiempo * 5 - i * 0.7) * lerp(12, 3, c.energia);
+                let tamActual = c.tam + pulso;
+                let brillo = lerp(40, 100, c.energia);
+                let saturacion = lerp(50, 100, c.energia);
+                
+                // Aura chakra
+                for(let j = 4; j >= 0; j--) {
+                    noStroke();
+                    let alphaAura = lerp(3, 35, c.energia) / (j + 1);
+                    fill(c.color, saturacion * 0.6, brillo, alphaAura);
+                    ellipse(width / 2, c.y, tamActual * (2.5 + j * 0.6));
+                }
+                
+                // Núcleo chakra
+                fill(c.color, saturacion, brillo, lerp(40, 100, c.energia));
+                ellipse(width / 2, c.y, tamActual);
+                
+                // Símbolo chakra
+                if(c.energia > 0.4) {
+                    fill(0, 0, 100, 95);
+                    textAlign(CENTER, CENTER);
+                    textSize(12);
+                    text(String.fromCharCode(9674 + i), width / 2, c.y);
+                }
+            }
+        }
+
+        function actualizarPensamientos() {
+            let cabezaY = height * 0.18;
+            let radio = width * 0.12;
+
+            for (let i = pensamientos.length - 1; i >= 0; i--) {
+                let p = pensamientos[i];
+                
+                // Movimiento caótico que decrece
+                let fuerzaRuido = lerp(2.0, 0.02, claridad);
+                p.vx += map(noise(p.ruidoOffset + tiempo), 0, 1, -0.3, 0.3) * fuerzaRuido;
+                p.vy += map(noise(p.ruidoOffset + 150 + tiempo), 0, 1, -0.3, 0.3) * fuerzaRuido;
+
+                // Atracción hacia el centro
+                let dx = width/2 - p.x;
+                let dy = cabezaY - p.y;
+                let distancia = sqrt(dx*dx + dy*dy);
+                
+                let fuerzaAtraccion = lerp(0.003, 0.025, claridad);
+                if(distancia > 0) {
+                    p.vx += dx * fuerzaAtraccion / distancia;
+                    p.vy += dy * fuerzaAtraccion / distancia;
+                }
+                
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+                
+                // Procesamiento de pensamientos
+                if(distancia < radio) {
+                    p.vida -= 0.025 * claridad;
+                    p.alpha = p.vida * 80;
+                    p.procesado = true;
+                }
+                
+                // Eliminar pensamientos procesados
+                if(p.vida <= 0 || (distancia < 12 && claridad > 0.5)) {
+                    pensamientos.splice(i, 1);
+                    continue;
+                }
+                
+                // Renderizado de pensamientos
+                push();
+                translate(p.x, p.y);
+                rotate(p.ruidoOffset + tiempo * (3 - claridad * 2));
+                
+                let colorPensamiento = (p.tipo * 80 + tiempo * 50) % 360;
+                strokeWeight(1.2);
+                stroke(colorPensamiento, 80, 85, p.alpha);
+                fill(colorPensamiento, 60, 95, p.alpha * 0.4);
+                
+                // Formas según tipo de pensamiento
+                switch(p.tipo) {
+                    case 0:
+                        rect(-p.tam/2, -p.tam/2, p.tam, p.tam);
+                        break;
+                    case 1:
+                        ellipse(0, 0, p.tam);
+                        break;
+                    case 2:
+                        triangle(-p.tam/2, p.tam/2, p.tam/2, p.tam/2, 0, -p.tam/2);
+                        break;
+                    case 3:
+                        beginShape();
+                        for(let a = 0; a < TWO_PI; a += PI/4) {
+                            let r = p.tam/2 * (1 + sin(a * 2 + tiempo * 3) * 0.4);
+                            vertex(cos(a) * r, sin(a) * r);
+                        }
+                        endShape(CLOSE);
+                        break;
+                }
+                pop();
+            }
+        }
+
+        function dibujarGeometriaSagrada() {
+            if(claridad > 0.2) {
+                push();
+                translate(width/2, height/2);
+                
+                let alphaMandala = (claridad - 0.2) * 30;
+                stroke(lerp(200, 260, claridad), 35, 95, alphaMandala);
+                strokeWeight(0.8);
+                noFill();
+                
+                // Geometría sagrada
+                let numCirculos = 8;
+                let radioBase = 100;
+                
+                for(let i = 0; i < numCirculos; i++) {
+                    let angulo = map(i, 0, numCirculos, 0, TWO_PI);
+                    let x = cos(angulo) * radioBase;
+                    let y = sin(angulo) * radioBase;
+                    ellipse(x, y, radioBase * 0.8);
+                }
+                
+                ellipse(0, 0, radioBase * 0.8);
+                
+                // Rayos energéticos
+                for(let i = 0; i < 16; i++) {
+                    let angulo = map(i, 0, 16, 0, TWO_PI);
+                    let variacion = sin(tiempo * 2 + i) * 30;
+                    let x1 = cos(angulo) * (60 + variacion);
+                    let y1 = sin(angulo) * (60 + variacion);
+                    let x2 = cos(angulo) * (180 + variacion);
+                    let y2 = sin(angulo) * (180 + variacion);
+                    line(x1, y1, x2, y2);
+                }
+                
+                pop();
+            }
+        }
+
+        function dibujarInterfazPrincipal() {
+            let porcentaje = Math.round(claridad * 100);
+            let estadoTexto = getEstadoTexto(claridad);
+            
+            // Fondo interfaz
+            fill(0, 0, 0, 75);
+            rectMode(CENTER);
+            noStroke();
+            rect(width / 2, height - 90, min(900, width - 60), 140, 12);
+
+            // Título principal con efecto glow
+            drawTextWithGlow("MEDITACIÓN COMO DEBUGGING MENTAL", width / 2, height - 125, 28, color(200, 70, 100));
+            drawTextWithGlow("ESTADO: " + estadoTexto, width / 2, height - 95, 18, color(140, 60, 95));
+            drawTextWithGlow("CLARIDAD MENTAL: " + porcentaje + "%", width / 2, height - 72, 16, color(80, 55, 100));
+            drawTextWithGlow("PENSAMIENTOS RESTANTES: " + pensamientos.length, width / 2, height - 52, 16, color(80, 55, 100));
+            
+            // Barra de progreso mejorada
+            dibujarBarraProgreso();
+        }
+
+        function getEstadoTexto(claridad) {
+            if(claridad < 0.1) return "INICIANDO DEBUGGING MENTAL...";
+            if(claridad < 0.25) return "ANALIZANDO PATRONES MENTALES...";
+            if(claridad < 0.5) return "PROCESANDO CÓDIGO MALICIOSO...";
+            if(claridad < 0.75) return "LIBERANDO MEMORIA MENTAL...";
+            if(claridad < 0.95) return "OPTIMIZANDO SISTEMA...";
+            return "SILENCIO INTERIOR ALCANZADO";
+        }
+
+        function dibujarBarraProgreso() {
+            let barWidth = min(450, width - 120);
+            let barHeight = 15;
+            
+            // Fondo barra
+            fill(0, 0, 15, 90);
+            rect(width/2, height - 25, barWidth, barHeight, 8);
+            
+            // Progreso con gradiente
+            for(let i = 0; i < claridad * barWidth; i++) {
+                let progress = i / barWidth;
+                let hue = lerp(0, 140, progress);
+                fill(hue, 85, 95, 95);
+                rect(width/2 - barWidth/2 + i + 0.5, height - 25, 1, barHeight - 3);
+            }
+            
+            // Borde
+            noFill();
+            stroke(0, 0, 100, 70);
+            strokeWeight(1);
+            rect(width/2, height - 25, barWidth, barHeight, 8);
+        }
+
+        function drawTextWithGlow(txt, x, y, size, col) {
+            textAlign(CENTER, CENTER);
+            textSize(size);
+            
+            // Efecto glow
+            fill(red(col), green(col), blue(col), 25);
+            for(let i = 0; i < 4; i++) {
+                text(txt, x + i, y);
+                text(txt, x - i, y);
+                text(txt, x, y + i);
+                text(txt, x, y - i);
+            }
+            
+            fill(col);
+            text(txt, x, y);
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('systemStatus').textContent = getEstadoTexto(claridad);
+            document.getElementById('clarityLevel').textContent = Math.round(claridad * 100) + '%';
+            document.getElementById('thoughtCount').textContent = pensamientos.length;
+            
+            let chakrasActivos = chakras.filter(c => c.activo).length;
+            document.getElementById('activeChakras').textContent = chakrasActivos + '/7';
+        }
+
+        function ocultarPantallaCarga() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const infoPanel = document.getElementById('infoPanel');
+            
+            loadingScreen.classList.add('fade-out');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                infoPanel.classList.add('visible');
+                loadingComplete = true;
+            }, 2000);
+        }
+
+        // Eventos de interacción
+        function mousePressed() {
+            claridad = 0;
+            inicializarSistema();
+        }
+
+        function keyPressed() {
+            if(key === ' ') {
+                claridad = min(1.0, claridad + 0.15);
+            } else if(key.toLowerCase() === 'i') {
+                const infoPanel = document.getElementById('infoPanel');
+                infoPanel.classList.toggle('visible');
+            } else if(keyCode === ESCAPE) {
+                let fs = fullscreen();
+                fullscreen(!fs);
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            
+            // Reposicionar elementos
+            for (let i = 0; i < chakras.length; i++) {
+                chakras[i].y = (height * 0.85) - (i * height * 0.1);
+            }
+            
+            // Recentrar pensamientos
+            for(let p of pensamientos) {
+                if(p.x < 0 || p.x > width) p.x = width/2 + random(-150, 150);
+                if(p.y < 0 || p.y > height) p.y = height * 0.2 + random(-150, 150);
+            }
+        }
+    </script>
 </body>
 </html>
