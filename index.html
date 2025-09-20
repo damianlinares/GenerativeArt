@@ -20,16 +20,15 @@
 
         .desktop {
             min-height: 100vh;
-            background: #000; /* Negro profundo */
+            background: #000;
             position: relative;
             background-image: url('https://i.ibb.co/wrsD63xF/roningangstudio-a-ninja-person-looking-up-with-3d-pixels-over-29ff83b6-1b00-48ce-828a-63b10f49e88b.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.95; /* Sutil transparencia para no saturar */
+            opacity: 0.95;
         }
 
-        /* Efecto de pulso suave para hacerlo más hipnótico */
         @keyframes pulse {
             0%, 100% { opacity: 0.9; }
             50% { opacity: 1; }
@@ -127,12 +126,11 @@
             position: relative;
         }
         
-        /* Estilo para que tu imagen se ajuste al círculo */
         .logo img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Asegura que la imagen cubra el círculo */
-            border-radius: 50%; /* Mantiene la forma circular */
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .artist-info {
@@ -202,14 +200,14 @@
 
         .modal-content {
             padding: 10px;
-            height: calc(100% - 22px); /* Ajustado para la barra de título */
-            overflow: hidden; /* Evitar scroll doble */
+            height: calc(100% - 22px);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
         .work-frame {
-            flex-grow: 1; /* El iframe ocupa el espacio disponible */
+            flex-grow: 1;
             border: 2px inset #c0c0c0;
             background: white;
         }
@@ -220,7 +218,7 @@
             background: white;
             border: 2px inset #c0c0c0;
             font-size: 11px;
-            flex-shrink: 0; /* Evita que la descripción se encoja */
+            flex-shrink: 0;
         }
 
         .taskbar {
@@ -288,7 +286,7 @@
             <div class="content">
                 <div class="logo-container">
                     <div class="logo">
-                        <img src="https://i.ibb.co/mCdtvXVR/RONINGANGSTUDIO-BY-DAMIAN-LINARES.png" alt="RONINGANGSTUDIO-BY-DAMIAN-LINARES" border="0">
+                        <img src="https://i.ibb.co/mCdtvXVR/RONINGANGSTUDIO-BY-DAMIAN-LINARES.png  " alt="RONINGANGSTUDIO-BY-DAMIAN-LINARES" border="0">
                     </div>
                     <div class="artist-info">DAMIAN ALEJANDRO LINARES</div>
                     <div class="studio-info">RONIN GANG STUDIO</div>
@@ -315,7 +313,7 @@
                         <span class="work-number">05</span>
                         <span>Identidad en Flujo [COMING SOON]</span>
                     </div>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -364,12 +362,11 @@
             const workDescTitle = document.getElementById('workDescTitle');
             const workDescription = document.getElementById('workDescription');
             
-            // Reconstruir el título completo para mostrar, buscando en el DOM
             const fullTitleSpan = document.querySelector(`.work-item[onclick*="openWork('${number}', '${folderName}'"] span:last-child`);
-            const fullTitle = fullTitleSpan ? fullTitleSpan.textContent : 'Título Desconocido'; // Fallback
+            const fullTitle = fullTitleSpan ? fullTitleSpan.textContent : 'Título Desconocido';
             
             modalTitle.textContent = `${number} - ${fullTitle}`;
-            workFrame.src = `./${number}_${folderName}/index.html`; // Ruta correcta
+            workFrame.src = `./${number}_${folderName}/index.html`;
             workDescTitle.textContent = fullTitle;
             workDescription.textContent = description;
 
@@ -380,13 +377,13 @@
             const modal = document.getElementById('workModal');
             const workFrame = document.getElementById('workFrame');
             modal.style.display = 'none';
-            workFrame.src = 'about:blank'; // Detiene la ejecución del sketch y limpia el iframe
+            workFrame.src = 'about:blank';
         }
 
         function closeWindow() {
             if (confirm('¿Estás seguro de que quieres cerrar el portfolio?')) {
                 const win = document.querySelector('.window');
-                win.style.display = 'none'; // Simula cerrar la ventana
+                win.style.display = 'none';
             }
         }
 
