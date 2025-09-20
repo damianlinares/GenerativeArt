@@ -165,6 +165,16 @@
             color: white;
         }
 
+        .work-item.coming-soon {
+            cursor: not-allowed;
+            color: #808080;
+        }
+
+        .work-item.coming-soon:hover {
+            background: white;
+            color: #808080;
+        }
+
         .work-item:last-child {
             border-bottom: none;
         }
@@ -262,6 +272,14 @@
         .work-item {
             animation: pixelFade 0.3s ease-out;
         }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -293,23 +311,23 @@
                 </div>
                 
                 <div class="works-list">
-                    <div class="work-item" onclick="openWork('01', 'Meditacion_Debugging', 'Una exploracion digital de la meditacion como proceso de debugging mental.')">
+                    <div class="work-item" onclick="openWork('01-meditacion-debugging', 'Meditación como Debugging Mental', 'Una exploración digital de la meditación como proceso de debugging mental.')">
                         <span class="work-number">01</span>
                         <span>Meditación como Debugging Mental</span>
                     </div>
-                    <div class="work-item" onclick="openWork('02', 'Espejo_Sombra', 'Reflexiones sobre los aspectos ocultos del yo en el mundo digital.')">
+                    <div class="work-item" onclick="openWork('02-espejo-sombra', 'El Espejo de Sombra Interactivo', 'Reflexiones sobre los aspectos ocultos del yo en el mundo digital.')">
                         <span class="work-number">02</span>
                         <span>El Espejo de Sombra Interactivo</span>
                     </div>
-                    <div class="work-item" onclick="openWork('03', 'Naturaleza_del_Yo', 'Una investigacion visual sobre la identidad en la era digital.')">
+                    <div class="work-item" onclick="openWork('03-naturaleza-del-yo', 'La Naturaleza del Yo', 'Una investigación visual sobre la identidad en la era digital.')">
                         <span class="work-number">03</span>
-                        <span>La Naturaleza del \'Yo\'</span>
+                        <span>La Naturaleza del "Yo"</span>
                     </div>
-                    <div class="work-item">
+                    <div class="work-item coming-soon">
                         <span class="work-number">04</span>
                         <span>Arquetipos Digitales [COMING SOON]</span>
                     </div>
-                    <div class="work-item">
+                    <div class="work-item coming-soon">
                         <span class="work-number">05</span>
                         <span>Identidad en Flujo [COMING SOON]</span>
                     </div>
@@ -323,14 +341,15 @@
             <div class="title-bar">
                 <span id="modalTitle">Obra Digital</span>
                 <div class="window-controls">
-                    <div class="control-btn">_</div>
-                    <div class="control-btn">[_]</div>
+                    <div class="control-btn" onclick="minimizeModal()">_</div>
+                    <div class="control-btn" onclick="toggleMaximize()">[_]</div>
                     <div class="control-btn" onclick="closeModal()">X</div>
                 </div>
             </div>
             <div class="modal-content">
-                <div class="work-frame">
-                    <iframe id="workFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+                <div class="work-frame" id="workFrameContainer">
+                    <div class="loading" id="loadingIndicator">Cargando obra...</div>
+                    <iframe id="workFrame" style="width: 100%; height: 100%; border: none; display: none;"></iframe>
                 </div>
                 <div class="work-description">
                     <h3 id="workDescTitle"></h3>
@@ -346,6 +365,9 @@
     </div>
 
     <script>
+        let isModalMaximized = false;
+        let originalModalStyle = {};
+        
         function updateTime() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('es-ES', {
@@ -355,34 +377,33 @@
             document.getElementById('currentTime').textContent = timeString;
         }
 
-        function openWork(number, folderName, description) {
+        function openWork(folderName, title, description) {
             const modal = document.getElementById('workModal');
             const modalTitle = document.getElementById('modalTitle');
             const workFrame = document.getElementById('workFrame');
             const workDescTitle = document.getElementById('workDescTitle');
             const workDescription = document.getElementById('workDescription');
+            const loadingIndicator = document.getElementById('loadingIndicator');
             
-            // Reconstruir el título completo para mostrar, buscando en el DOM
-            const fullTitleSpan = document.querySelector(`.work-item[onclick*="openWork('${number}', '${folderName}'"] span:last-child`);
-            const fullTitle = fullTitleSpan ? fullTitleSpan.textContent : 'Título Desconocido'; // Fallback
+            modalTitle.textContent = title;
             
-            modalTitle.textContent = `${number} - ${fullTitle}`;
+            // Mostrar indicador de carga
+            loadingIndicator.style.display = 'flex';
+            workFrame.style.display = 'none';
             
-            // Mapeo de carpetas reales
-            const folderMap = {
-                '01': '01-meditacion-debugging',
-                '02': '02-espejo-sombra',
-                '03': '03-naturaleza-del-yo'
-            };
-
-            const folderPath = folderMap[number] || 'unknown';
-
-            workFrame.src = `./${folderPath}/index.html`;
+            // Configurar el iframe
+            workFrame.src = `${folderName}/index.html`;
             
-            workDescTitle.textContent = fullTitle;
+            workDescTitle.textContent = title;
             workDescription.textContent = description;
 
             modal.style.display = 'block';
+            
+            // Cuando el iframe carga, ocultar el indicador de carga
+            workFrame.onload = function() {
+                loadingIndicator.style.display = 'none';
+                workFrame.style.display = 'block';
+            };
         }
 
         function closeModal() {
@@ -390,6 +411,47 @@
             const workFrame = document.getElementById('workFrame');
             modal.style.display = 'none';
             workFrame.src = 'about:blank';
+            
+            // Restaurar tamaño original si estaba maximizado
+            if (isModalMaximized) {
+                toggleMaximize();
+            }
+        }
+
+        function minimizeModal() {
+            const modal = document.getElementById('workModal');
+            modal.style.display = 'none';
+        }
+
+        function toggleMaximize() {
+            const modalWindow = document.querySelector('.modal-window');
+            
+            if (!isModalMaximized) {
+                // Guardar estilo original
+                originalModalStyle = {
+                    width: modalWindow.style.width,
+                    height: modalWindow.style.height,
+                    top: modalWindow.style.top,
+                    left: modalWindow.style.left,
+                    transform: modalWindow.style.transform
+                };
+                
+                // Maximizar
+                modalWindow.style.width = '95%';
+                modalWindow.style.height = '95%';
+                modalWindow.style.top = '50%';
+                modalWindow.style.left = '50%';
+                modalWindow.style.transform = 'translate(-50%, -50%)';
+                isModalMaximized = true;
+            } else {
+                // Restaurar tamaño original
+                modalWindow.style.width = originalModalStyle.width || '80%';
+                modalWindow.style.height = originalModalStyle.height || '80%';
+                modalWindow.style.top = originalModalStyle.top || '50%';
+                modalWindow.style.left = originalModalStyle.left || '50%';
+                modalWindow.style.transform = originalModalStyle.transform || 'translate(-50%, -50%)';
+                isModalMaximized = false;
+            }
         }
 
         function closeWindow() {
@@ -412,6 +474,14 @@
             if (e.key === 'Escape') {
                 closeModal();
             }
+        });
+
+        // Prevenir clics en obras "coming soon"
+        document.querySelectorAll('.work-item.coming-soon').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Esta obra estará disponible próximamente');
+            });
         });
     </script>
 </body>
