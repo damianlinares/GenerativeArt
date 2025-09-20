@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Damian Alejandro Linares - Portfolio Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: monospace;
+            background: #c0c0c0;
+            color: #000;
+            overflow-x: hidden;
+        }
+
+        .desktop {
+            min-height: 100vh;
+            background: #008080;
+            position: relative;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,0,0.1) 35px, rgba(255,255,0,0.1) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0,0,0,0.05) 35px, rgba(0,0,0,0.05) 70px);
+        }
+
+        .window {
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            position: absolute;
+            min-width: 400px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+        }
+
+        .title-bar {
+            background: linear-gradient(to right, #000080, #000040);
+            color: white;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .control-btn {
+            width: 16px;
+            height: 14px;
+            background: #c0c0c0;
+            border: 1px outset #c0c0c0;
+            font-size: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .control-btn:active {
+            border: 1px inset #c0c0c0;
+        }
+
+        .menu-bar {
+            background: #c0c0c0;
+            border-bottom: 1px solid #808080;
+            padding: 2px;
+        }
+
+        .menu-item {
+            display: inline-block;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .menu-item:hover {
+            background: #316ac5;
+            color: white;
+        }
+
+        .content {
+            padding: 10px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #000;
+            border: 2px inset #c0c0c0;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: #000;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .skull {
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .teeth {
+            position: absolute;
+            bottom: 10px;
+            width: 40px;
+            height: 8px;
+            background: #ffff00;
+            border-radius: 2px;
+        }
+
+        .artist-info {
+            color: #ffff00;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .studio-info {
+            color: white;
+            font-size: 10px;
+        }
+
+        .works-list {
+            background: white;
+            border: 2px inset #c0c0c0;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .work-item {
+            padding: 2px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .work-item:hover {
+            background: #316ac5;
+            color: white;
+        }
+
+        .work-item:last-child {
+            border-bottom: none;
+        }
+
+        .work-number {
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 30px;
+        }
+
+        .work-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        .modal-window {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 800px;
+            height: 80%;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+        }
+
+        .modal-content {
+            padding: 10px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+
+        .work-frame {
+            width: 100%;
+            height: 400px;
+            border: 2px inset #c0c0c0;
+            background: white;
+        }
+
+        .work-description {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border: 2px inset #c0c0c0;
+            font-size: 11px;
+        }
+
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: #c0c0c0;
+            border-top: 1px solid #808080;
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+        }
+
+        .start-button {
+            background: #c0c0c0;
+            border: 1px outset #c0c0c0;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .start-button:active {
+            border: 1px inset #c0c0c0;
+        }
+
+        .time {
+            margin-left: auto;
+            font-size: 11px;
+            padding: 4px 8px;
+            border: 1px inset #c0c0c0;
+        }
+
+        @keyframes pixelFade {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .work-item {
+            animation: pixelFade 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <div class="window">
+            <div class="title-bar">
+                <span>Portfolio Digital - Damian Alejandro Linares</span>
+                <div class="window-controls">
+                    <div class="control-btn">_</div>
+                    <div class="control-btn">[_]</div>
+                    <div class="control-btn" onclick="closeWindow()">X</div>
+                </div>
+            </div>
+            
+            <div class="menu-bar">
+                <span class="menu-item">File</span>
+                <span class="menu-item">Edit</span>
+                <span class="menu-item">View</span>
+                <span class="menu-item">Help</span>
+            </div>
+            
+            <div class="content">
+                <div class="logo-container">
+                    <div class="logo">
+                        <div class="skull">[SKULL]</div>
+                        <div class="teeth"></div>
+                    </div>
+                    <div class="artist-info">DAMIAN ALEJANDRO LINARES</div>
+                    <div class="studio-info">RONIN GANG STUDIO</div>
+                </div>
+                
+                <div class="works-list">
+                    <div class="work-item" onclick="openWork('01', 'meditacion-debugging', 'Una exploracion digital de la meditacion como proceso de debugging mental.')">
+                        <span class="work-number">01</span>
+                        <span>meditacion-debugging</span>
+                    </div>
+                    <div class="work-item" onclick="openWork('02', 'espejo-sombra', 'Reflexiones sobre los aspectos ocultos del yo en el mundo digital.')">
+                        <span class="work-number">02</span>
+                        <span>espejo-sombra</span>
+                    </div>
+                    <div class="work-item" onclick="openWork('03', 'naturaleza-del-yo', 'Una investigacion visual sobre la identidad en la era digital.')">
+                        <span class="work-number">03</span>
+                        <span>naturaleza-del-yo</span>
+                    </div>
+                    <div class="work-item">
+                        <span class="work-number">04</span>
+                        <span>arquetipos-digitales [COMING SOON]</span>
+                    </div>
+                    <div class="work-item">
+                        <span class="work-number">05</span>
+                        <span>identidad-en-flujo [COMING SOON]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="work-modal" id="workModal">
+        <div class="modal-window">
+            <div class="title-bar">
+                <span id="modalTitle">Obra Digital</span>
+                <div class="window-controls">
+                    <div class="control-btn">_</div>
+                    <div class="control-btn">[_]</div>
+                    <div class="control-btn" onclick="closeModal()">X</div>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="work-frame">
+                    <iframe id="workFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+                <div class="work-description">
+                    <h3 id="workDescTitle"></h3>
+                    <p id="workDescription"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="taskbar">
+        <button class="start-button">Start</button>
+        <div class="time" id="currentTime"></div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        function openWork(number, title, description) {
+            const modal = document.getElementById('workModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const workFrame = document.getElementById('workFrame');
+            const workDescTitle = document.getElementById('workDescTitle');
+            const workDescription = document.getElementById('workDescription');
+
+            modalTitle.textContent = number + ' - ' + title;
+            workFrame.src = './' + number + '-' + title + '/index.html';
+            workDescTitle.textContent = number + ' - ' + title;
+            workDescription.textContent = description;
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('workModal');
+            const workFrame = document.getElementById('workFrame');
+            modal.style.display = 'none';
+            workFrame.src = '';
+        }
+
+        function closeWindow() {
+            if (confirm('Estas seguro de que quieres cerrar el portfolio?')) {
+                window.close();
+            }
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        document.getElementById('workModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
