@@ -283,15 +283,15 @@
                 </div>
                 
                 <div class="works-list">
-                    <div class="work-item" onclick="openWork('01', 'meditacion-debugging', 'Una exploracion digital de la meditacion como proceso de debugging mental.')">
+                    <div class="work-item" onclick="openWork('01', 'Meditacion_Debugging', 'Una exploracion digital de la meditacion como proceso de debugging mental.')">
                         <span class="work-number">01</span>
                         <span>Meditación como Debugging Mental</span>
                     </div>
-                    <div class="work-item" onclick="openWork('02', 'espejo-sombra', 'Reflexiones sobre los aspectos ocultos del yo en el mundo digital.')">
+                    <div class="work-item" onclick="openWork('02', 'Espejo_Sombra', 'Reflexiones sobre los aspectos ocultos del yo en el mundo digital.')">
                         <span class="work-number">02</span>
                         <span>El Espejo de Sombra Interactivo</span>
                     </div>
-                    <div class="work-item" onclick="openWork('03', 'naturaleza-del-yo', 'Una investigacion visual sobre la identidad en la era digital.')">
+                    <div class="work-item" onclick="openWork('03', 'Naturaleza_del_Yo', 'Una investigacion visual sobre la identidad en la era digital.')">
                         <span class="work-number">03</span>
                         <span>La Naturaleza del \'Yo\'</span>
                     </div>
@@ -352,11 +352,12 @@
             const workDescTitle = document.getElementById('workDescTitle');
             const workDescription = document.getElementById('workDescription');
             
-            // Reconstruir el título completo para mostrar
-            const fullTitle = document.querySelector(`.work-item[onclick*="'${folderName}'"] span:last-child`).textContent;
-
+            // Reconstruir el título completo para mostrar, buscando en el DOM
+            const fullTitleSpan = document.querySelector(`.work-item[onclick*="openWork('${number}', '${folderName}'"] span:last-child`);
+            const fullTitle = fullTitleSpan ? fullTitleSpan.textContent : 'Título Desconocido'; // Fallback
+            
             modalTitle.textContent = `${number} - ${fullTitle}`;
-            workFrame.src = `./${number}_${folderName}/index.html`; // Ajusta la ruta a tu estructura
+            workFrame.src = `./${number}_${folderName}/index.html`; // Ruta correcta
             workDescTitle.textContent = fullTitle;
             workDescription.textContent = description;
 
@@ -367,7 +368,7 @@
             const modal = document.getElementById('workModal');
             const workFrame = document.getElementById('workFrame');
             modal.style.display = 'none';
-            workFrame.src = 'about:blank'; // Detiene la ejecución del sketch
+            workFrame.src = 'about:blank'; // Detiene la ejecución del sketch y limpia el iframe
         }
 
         function closeWindow() {
@@ -375,7 +376,7 @@
                 // Esto no cerrará la pestaña en la mayoría de los navegadores modernos por seguridad,
                 // pero lo dejamos como simulación de la funcionalidad.
                 const win = document.querySelector('.window');
-                win.style.display = 'none';
+                win.style.display = 'none'; // Simula cerrar la ventana
             }
         }
 
