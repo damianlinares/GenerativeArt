@@ -1,233 +1,177 @@
-let fragmentos = [];
-let nucleoYo;
-let ondas = [];
+// --- OBRA 02: EL ESPEJO DE SOMBRA INTERACTIVO ---
+// Estilo Visionario. (VERSIÓN DEPURADA)
+
+let chakras = [];
+let sombra;
 let tiempo = 0;
-let modoFluidez = false;
+let integracion = 0; // 0 = Separación total, 1 = Integración máxima
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  colorMode(HSB, 360, 100, 100, 100);
   
-  // Núcleo central del yo
-  nucleoYo = {
-    x: width/2,
-    y: height/2,
-    radioBase: 40,
-    estabilidad: 1.0,
-    fragmentacion: 0
+  // Definimos los 7 chakras
+  let coloresChakra = [0, 30, 60, 120, 210, 240, 275];
+  for (let i = 0; i < 7; i++) {
+    chakras.push({
+      y: (height * 0.85) - (i * height * 0.1),
+      color: coloresChakra[i],
+      tam: 20
+    });
+  }
+  
+  // Creamos la figura de la Sombra con puntos fluidos
+  sombra = {
+    puntos: [],
+    x: width / 2,
+    y: height / 2,
+    radio: height * 0.4
   };
-  
-  // Fragmentos de identidad
-  for (let i = 0; i < 12; i++) {
-    let angulo = (i / 12) * TWO_PI;
-    fragmentos.push({
-      x: width/2 + cos(angulo) * 100,
-      y: height/2 + sin(angulo) * 100,
-      anguloOriginal: angulo,
-      distanciaBase: 100,
-      tamaño: random(15, 25),
-      tipo: i % 4, // 4 tipos de fragmentos identitarios
-      deriva: random(-0.01, 0.01),
-      fase: random(TWO_PI),
-      conectado: true
+  for (let i = 0; i < 100; i++) {
+    sombra.puntos.push({
+      angulo: map(i, 0, 100, 0, TWO_PI),
+      distancia: random(sombra.radio * 0.8, sombra.radio),
+      ruidoOffset: random(1000)
     });
   }
   
-  // Ondas de transformación
-  for (let i = 0; i < 6; i++) {
-    ondas.push({
-      radio: 0,
-      maxRadio: random(200, 400),
-      velocidad: random(0.5, 1.5),
-      grosor: random(1, 3),
-      opacidad: random(100, 200)
-    });
-  }
+  textAlign(CENTER, CENTER);
+  textFont('serif');
 }
 
 function draw() {
-  background(8, 12, 25);
+  background(240, 50, 4); // Un azul más oscuro, casi negro
   tiempo += 0.01;
   
-  // Evolución temporal de la fluidez
-  if (frameCount % 600 === 0) { // Cada 10 segundos
-    modoFluidez = !modoFluidez;
-    nucleoYo.estabilidad = modoFluidez ? 0.3 : 1.0;
+  // La integración aumenta cuanto más cerca está el ratón del centro de la sombra
+  let distanciaMouse = dist(mouseX, mouseY, sombra.x, sombra.y);
+  // <<-- ARREGLO AQUÍ -->>
+  let distanciaMaxima = width / 2; // Se cambió ""maxDist"" por ""distanciaMaxima""
+  integracion = map(distanciaMouse, distanciaMaxima, 50, 0, 1, true); // Y se actualizó aquí también
+
+  // 1. DIBUJAR AURA
+  dibujarAura();
+
+  // 2. DIBUJAR SOMBRA
+  dibujarSombra();
+
+  // 3. DIBUJAR FIGURA CENTRAL Y CHAKRAS
+  dibujarFiguraCentral();
+  
+  // 4. DIBUJAR CONEXIÓN (La integración)
+  dibujarConexion();
+
+  // 5. DIBUJAR INTERFAZ
+  mostrarInterfaz();
+}
+
+
+function dibujarAura() {
+  let auraTam = width * 0.4 + integracion * 100;
+  let auraColor = lerpColor(color(255, 10), color(300, 80, 50, 20), integracion);
+  
+  noFill();
+  stroke(auraColor);
+  strokeWeight(2);
+  beginShape();
+  for (let a = 0; a < TWO_PI; a += 0.1) {
+    let r = auraTam + map(noise(cos(a) + tiempo, sin(a) + tiempo), 0, 1, -50, 50);
+    let x = width / 2 + cos(a) * (r * 0.3); // Aura más vertical
+    let y = height / 2 + sin(a) * r;
+    curveVertex(x, y);
   }
-  
-  // Actualizar núcleo del yo
-  nucleoYo.fragmentacion = sin(tiempo * 2) * 0.3 + 0.7;
-  let radioActual = nucleoYo.radioBase * nucleoYo.fragmentacion * nucleoYo.estabilidad;
-  
-  // Ondas expansivas de transformación
-  for (let onda of ondas) {
-    onda.radio += onda.velocidad;
-    if (onda.radio > onda.maxRadio) {
-      onda.radio = 0;
-    }
-    
-    // Dibujar onda
-    stroke(100, 150, 255, onda.opacidad * (1 - onda.radio/onda.maxRadio));
-    strokeWeight(onda.grosor);
-    noFill();
-    ellipse(nucleoYo.x, nucleoYo.y, onda.radio * 2);
-  }
-  
-  // Conexiones entre fragmentos y núcleo
-  stroke(80, 120, 200, 60);
-  strokeWeight(1);
-  for (let fragmento of fragmentos) {
-    if (fragmento.conectado || !modoFluidez) {
-      let alpha = modoFluidez ? 30 : 80;
-      stroke(80, 120, 200, alpha);
-      line(nucleoYo.x, nucleoYo.y, fragmento.x, fragmento.y);
-    }
-  }
-  
-  // Actualizar y dibujar fragmentos de identidad
-  for (let i = 0; i < fragmentos.length; i++) {
-    let fragmento = fragmentos[i];
-    
-    // Movimiento orbital con deriva
-    fragmento.anguloOriginal += 0.005 + fragmento.deriva;
-    fragmento.fase += 0.02;
-    
-    // Distancia fluctuante del núcleo
-    let fluctuacion = sin(fragmento.fase) * 30;
-    let distancia = fragmento.distanciaBase + fluctuacion;
-    
-    if (modoFluidez) {
-      // En modo fluidez, fragmentos se dispersan
-      distancia *= 1.5 + sin(tiempo + i) * 0.5;
-      fragmento.conectado = random() > 0.3;
-    } else {
-      fragmento.conectado = true;
-    }
-    
-    fragmento.x = nucleoYo.x + cos(fragmento.anguloOriginal) * distancia;
-    fragmento.y = nucleoYo.y + sin(fragmento.anguloOriginal) * distancia;
-    
-    // Dibujar fragmento según tipo
-    let intensidad = modoFluidez ? 150 : 200;
-    
-    switch(fragmento.tipo) {
-      case 0: // Memoria (círculos concéntricos)
-        fill(255, 150, 100, intensidad);
-        noStroke();
-        ellipse(fragmento.x, fragmento.y, fragmento.tamaño);
-        fill(255, 200, 150, intensidad * 0.6);
-        ellipse(fragmento.x, fragmento.y, fragmento.tamaño * 0.6);
-        break;
-        
-      case 1: // Personalidad (formas angulares)
-        fill(150, 255, 150, intensidad);
-        noStroke();
-        rectMode(CENTER);
-        push();
-        translate(fragmento.x, fragmento.y);
-        rotate(fragmento.fase);
-        rect(0, 0, fragmento.tamaño, fragmento.tamaño);
-        pop();
-        break;
-        
-      case 2: // Emociones (formas fluidas)
-        fill(255, 150, 255, intensidad);
-        noStroke();
-        beginShape();
-        for (let a = 0; a < TWO_PI; a += PI/6) {
-          let r = fragmento.tamaño * 0.5 + sin(a * 3 + fragmento.fase) * 5;
-          let x = fragmento.x + cos(a) * r;
-          let y = fragmento.y + sin(a) * r;
-          vertex(x, y);
-        }
-        endShape(CLOSE);
-        break;
-        
-      default: // Creencias (estrellas)
-        fill(150, 200, 255, intensidad);
-        noStroke();
-        push();
-        translate(fragmento.x, fragmento.y);
-        rotate(fragmento.fase * 0.5);
-        for (let j = 0; j < 6; j++) {
-          let ang = j * PI/3;
-          let x1 = cos(ang) * fragmento.tamaño * 0.3;
-          let y1 = sin(ang) * fragmento.tamaño * 0.3;
-          let x2 = cos(ang) * fragmento.tamaño * 0.6;
-          let y2 = sin(ang) * fragmento.tamaño * 0.6;
-          strokeWeight(3);
-          stroke(150, 200, 255, intensidad);
-          line(x1, y1, x2, y2);
-        }
-        pop();
-    }
-  }
-  
-  // Dibujar núcleo central del yo
+  endShape(CLOSE);
+}
+
+function dibujarSombra() {
   push();
-  translate(nucleoYo.x, nucleoYo.y);
-  
-  // Aura exterior
-  fill(255, 255, 100, 40);
+  translate(sombra.x, sombra.y);
   noStroke();
-  ellipse(0, 0, radioActual * 4);
   
-  // Anillos internos
-  for (let r = 3; r > 0; r--) {
-    let alpha = 100 + r * 30;
-    fill(255, 255, 150, alpha);
-    ellipse(0, 0, radioActual * r * 0.8);
+  // El cuerpo oscuro y fluido de la sombra
+  fill(240, 30, 2, 80); // Negro casi transparente
+  beginShape();
+  for (let p of sombra.puntos) {
+    let ruido = noise(p.ruidoOffset + tiempo * 0.5);
+    let d = p.distancia + map(ruido, 0, 1, -40, 40);
+    let x = cos(p.angulo) * d;
+    let y = sin(p.angulo) * d;
+    curveVertex(x, y);
   }
+  endShape(CLOSE);
   
-  // Núcleo brillante
-  fill(255, 255, 200, 200);
-  ellipse(0, 0, radioActual);
-  
-  // Patrones internos según estabilidad
-  if (nucleoYo.estabilidad < 0.7) {
-    stroke(255, 100, 100, 150);
-    strokeWeight(2);
-    noFill();
-    for (let i = 0; i < 8; i++) {
-      let ang = i * PI/4 + tiempo * 2;
-      let r1 = radioActual * 0.3;
-      let r2 = radioActual * 0.7;
-      line(cos(ang) * r1, sin(ang) * r1, cos(ang) * r2, sin(ang) * r2);
+  // Patrones internos que se revelan con la integración
+  if (integracion > 0.1) {
+    for (let p of sombra.puntos) {
+      if (p.angulo % 0.5 < 0.05) { // Algunos puntos brillan
+        let x = cos(p.angulo) * p.distancia;
+        let y = sin(p.angulo) * p.distancia;
+        fill(275, 100, 100, integracion * 80); // Chispas violetas
+        ellipse(x, y, 5, 5);
+      }
     }
   }
-  
   pop();
+}
+
+
+function dibujarFiguraCentral() {
+  let figuraX = width / 2;
   
-  // Partículas de transformación
-  if (modoFluidez) {
-    fill(255, 255, 255, 100);
+  // La columna de luz se intensifica con la integración
+  strokeWeight(3 + integracion * 4);
+  stroke(0, 0, 100, 50 + integracion * 50);
+  line(figuraX, 0, figuraX, height);
+
+  for (let i = 0; i < chakras.length; i++) {
+    let c = chakras[i];
+    let pulso = sin(tiempo * 5 - i) * 5;
+    // Los chakras laten más fuerte durante la integración
+    let tamActual = c.tam + pulso + integracion * 15;
+    
     noStroke();
-    for (let i = 0; i < 20; i++) {
-      let x = width/2 + cos(tiempo * 3 + i * 0.5) * 200;
-      let y = height/2 + sin(tiempo * 2 + i * 0.3) * 150;
-      ellipse(x, y, 3);
+    fill(c.color, 90, 90, 30 + integracion * 50);
+    ellipse(figuraX, c.y, tamActual * 3);
+    fill(c.color, 90, 90, 100);
+    ellipse(figuraX, c.y, tamActual);
+  }
+}
+
+function dibujarConexion() {
+  if (integracion > 0.1) {
+    // Zarcillos de luz que conectan el Yo con la Sombra
+    for (let c of chakras) {
+      let sombraY = random(height * 0.2, height * 0.8);
+      stroke(c.color, 80, 100, integracion * 40);
+      strokeWeight(1.5);
+      line(width / 2, c.y, sombra.x, sombraY);
     }
   }
+}
+
+
+function mostrarInterfaz() {
+  let estadoTexto = integracion < 0.7 ? ""CONFRONTACIÓN"" : ""INTEGRACIÓN"";
   
-  // Interfaz informativa
-  fill(200);
-  textAlign(CENTER);
+  fill(0, 0, 0, 50);
+  rectMode(CENTER);
+  noStroke();
+  rect(width / 2, height - 60, 650, 80, 10);
+
+  fill(0, 0, 100);
+  textSize(24);
+  text(""EL ESPEJO DE SOMBRA INTERACTIVO"", width / 2, height - 80);
+  
   textSize(18);
-  let estado = modoFluidez ? "IDENTIDAD EN FLUJO" : "IDENTIDAD ESTABLE";
-  text(estado, width/2, height - 60);
-  
-  textSize(12);
-  fill(150);
-  text("La naturaleza del yo se transforma constantemente", width/2, height - 30);
-  
-  // Leyenda de fragmentos
-  textAlign(LEFT);
-  textSize(10);
-  fill(255, 150, 100); text("● MEMORIAS", 20, height - 100);
-  fill(150, 255, 150); text("● PERSONALIDAD", 20, height - 80);
-  fill(255, 150, 255); text("● EMOCIONES", 20, height - 60);
-  fill(150, 200, 255); text("● CREENCIAS", 20, height - 40);
+  text(""ESTADO: "" + estadoTexto, width / 2, height - 45);
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+  sombra.x = width/2;
+  sombra.y = height/2;
+  sombra.radio = height * 0.4;
+  for (let i = 0; i < 7; i++) {
+    chakras[i].y = (height * 0.85) - (i * height * 0.1);
+  }
 }
