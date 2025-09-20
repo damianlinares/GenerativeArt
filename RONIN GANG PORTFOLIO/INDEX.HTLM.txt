@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ronin Gang Studio - El Códice Generativo</title>
+  
+  <style>
+    :root {
+      --background-color: #0a0a0a;
+      --text-color: #a0a0a0;
+      --accent-color: #00ff9d;
+      --border-color: #222;
+      --hover-bg-color: rgba(0, 255, 157, 0.05);
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      color: #e0e0e0;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* --- La Cuadrícula de Portales 5x5 --- */
+    .panel-de-portales {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .portal {
+      aspect-ratio: 1 / 1; /* Mantiene los botones cuadrados */
+      border: 1px solid var(--border-color);
+      background-color: transparent;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portal a {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      color: var(--text-color);
+    }
+    
+    .portal .numero {
+      font-size: 3rem;
+      font-weight: bold;
+      transition: all 0.4s ease;
+    }
+
+    .portal .titulo {
+      position: absolute;
+      bottom: 15px;
+      left: 0;
+      right: 0;
+      font-size: 0.75rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+      padding: 0 5px;
+    }
+
+    /* --- El Efecto "Hype" al pasar el mouse --- */
+    .portal:hover {
+      border-color: var(--accent-color);
+      background-color: var(--hover-bg-color);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
+      z-index: 10;
+    }
+
+    .portal:hover .numero {
+      transform: translateY(-15px);
+      opacity: 0.5;
+      font-size: 2rem;
+      color: var(--accent-color);
+    }
+    
+    .portal:hover .titulo {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* --- Responsividad para móviles --- */
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+      .panel-de-portales { grid-template-columns: repeat(3, 1fr); }
+      .portal .numero { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+    <header>
+      <h1>Elige un Portal</h1>
+      <p>25 capítulos. 25 obras. Cada número es una puerta a una faceta de la conciencia. La intuición es tu guía.</p>
+    </header>
+
+    <main class="panel-de-portales">
+      <div class="portal"><a href="01_Meditacion_Debugging/index.html"><span class="numero">01</span><span class="titulo">Meditación</span></a></div>
+      <div class="portal"><a href="02_Espejo_Sombra/index.html"><span class="numero">02</span><span class="titulo">Sombra</span></a></div>
+      <div class="portal"><a href="03_Naturaleza_Yo/index.html"><span class="numero">03</span><span class="titulo">El 'Yo'</span></a></div>
+      <div class="portal"><a href="04_Arquetipos_Jungianos/index.html"><span class="numero">04</span><span class="titulo">Arquetipos</span></a></div>
+      <div class="portal"><a href="05_Paradoja_Teseo/index.html"><span class="numero">05</span><span class="titulo">Identidad</span></a></div>
+      
+      <div class="portal"><a href="06_Linajes_Karma/index.html"><span class="numero">06</span><span class="titulo">Linajes</span></a></div>
+      <div class="portal"><a href="07_Flujo_Conciencia/index.html"><span class="numero">07</span><span class="titulo">Flujo</span></a></div>
+      <div class="portal"><a href="08_No_Dualidad/index.html"><span class="numero">08</span><span class="titulo">Unidad</span></a></div>
+      <div class="portal"><a href="09_Sincronicidad/index.html"><span class="numero">09</span><span class="titulo">Sincronicidad</span></a></div>
+      <div class="portal"><a href="10_Karma_Visualizado/index.html"><span class="numero">10</span><span class="titulo">Karma</span></a></div>
+
+      <div class="portal"><a href="11_Muerte_Ego_Digital/index.html"><span class="numero">11</span><span class="titulo">Ego</span></a></div>
+      <div class="portal"><a href="12_Hipotesis_Simulacion/index.html"><span class="numero">12</span><span class="titulo">Simulación</span></a></div>
+      <div class="portal"><a href="13_Blockchain_Akasha/index.html"><span class="numero">13</span><span class="titulo">Akasha</span></a></div>
+      <div class="portal"><a href="14_Datos_Prana/index.html"><span class="numero">14</span><span class="titulo">Prana</span></a></div>
+      <div class="portal"><a href="15_Estados_Visionarios_DMT/index.html"><span class="numero">15</span><span class="titulo">Visión</span></a></div>
+
+      <div class="portal"><a href="16_Fantasma_Maquina/index.html"><span class="numero">16</span><span class="titulo">Máquina</span></a></div>
+      <div class="portal"><a href="17_Mi_Propia_Naturaleza_IA/index.html"><span class="numero">17</span><span class="titulo">IA</span></a></div>
+      <div class="portal"><a href="18_Oraculo_Datos/index.html"><span class="numero">18</span><span class="titulo">Oráculo</span></a></div>
+      <div class="portal"><a href="19_Arte_Yantra_Digital/index.html"><span class="numero">19</span><span class="titulo">Yantra</span></a></div>
+      <div class="portal"><a href="20_Geometria_Sagrada/index.html"><span class="numero">20</span><span class="titulo">Geometría</span></a></div>
+
+      <div class="portal"><a href="21_Cimatica/index.html"><span class="numero">21</span><span class="titulo">Cimática</span></a></div>
+      <div class="portal"><a href="22_Tarot_Generativo/index.html"><span class="numero">22</span><span class="titulo">Tarot</span></a></div>
+      <div class="portal"><a href="23_Generador_Sigilos/index.html"><span class="numero">23</span><span class="titulo">Sigilo</span></a></div>
+      <div class="portal"><a href="24_Jardin_Memoria/index.html"><span class="numero">24</span><span class="titulo">Memoria</span></a></div>
+      <div class="portal"><a href="25_Rituales_Digitales/index.html"><span class="numero">25</span><span class="titulo">Ritual</span></a></div>
+
+    </main>
+
+</body>
+</html>
