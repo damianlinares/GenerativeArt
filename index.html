@@ -20,14 +20,12 @@
 
         .desktop {
             min-height: 100vh;
-            background: #000; /* Fondo negro base */
+            background: #000; /* Negro profundo */
             position: relative;
-            background-image: 
-                url('https://i.ibb.co/PZTVfGvV/roningangstudio-a-ninja-person-looking-up-with-3d-pixels-over-d84ba365-bf5d-4333-ac25-0362629be6bf.png'), /* Tu imagen principal */
-                url('https://i.imgur.com/kKzVbHg.png'); /* Ruido digital sutil */
-            background-size: cover, repeat;
-            background-position: center, center;
-            background-repeat: no-repeat, repeat;
+            background-image: url('https://i.ibb.co/wrsD63xF/roningangstudio-a-ninja-person-looking-up-with-3d-pixels-over-29ff83b6-1b00-48ce-828a-63b10f49e88b.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             opacity: 0.95; /* Sutil transparencia para no saturar */
         }
 
@@ -366,4 +364,46 @@
             const workDescTitle = document.getElementById('workDescTitle');
             const workDescription = document.getElementById('workDescription');
             
-            // Reconstruir el título completo para mostrar, buscando en el
+            // Reconstruir el título completo para mostrar, buscando en el DOM
+            const fullTitleSpan = document.querySelector(`.work-item[onclick*="openWork('${number}', '${folderName}'"] span:last-child`);
+            const fullTitle = fullTitleSpan ? fullTitleSpan.textContent : 'Título Desconocido'; // Fallback
+            
+            modalTitle.textContent = `${number} - ${fullTitle}`;
+            workFrame.src = `./${number}_${folderName}/index.html`; // Ruta correcta
+            workDescTitle.textContent = fullTitle;
+            workDescription.textContent = description;
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('workModal');
+            const workFrame = document.getElementById('workFrame');
+            modal.style.display = 'none';
+            workFrame.src = 'about:blank'; // Detiene la ejecución del sketch y limpia el iframe
+        }
+
+        function closeWindow() {
+            if (confirm('¿Estás seguro de que quieres cerrar el portfolio?')) {
+                const win = document.querySelector('.window');
+                win.style.display = 'none'; // Simula cerrar la ventana
+            }
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        document.getElementById('workModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
