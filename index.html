@@ -20,11 +20,26 @@
 
         .desktop {
             min-height: 100vh;
-            background: #008080;
+            background: #000; /* Negro profundo */
             position: relative;
             background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,0,0.1) 35px, rgba(255,255,0,0.1) 70px),
-                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0,0,0,0.05) 35px, rgba(0,0,0,0.05) 70px);
+                url('https://i.imgur.com/6YtJpLX.png'), /* Textura de circuito PCB (azul-verde) */
+                url('https://i.imgur.com/7QvZc6F.png'), /* Patrón de ondas digitales (suave) */
+                url('https://i.imgur.com/kKzVbHg.png'); /* Ruido digital sutil (grano) */
+            background-size: cover, cover, cover;
+            background-position: center, center, center;
+            background-repeat: no-repeat, repeat, repeat;
+            opacity: 0.9; /* Sutil transparencia para no saturar */
+        }
+
+        /* Añade animación suave para efecto hipnótico */
+        @keyframes wavePulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.9; }
+        }
+
+        .desktop {
+            animation: wavePulse 8s infinite ease-in-out;
         }
 
         .window {
@@ -276,7 +291,7 @@
             <div class="content">
                 <div class="logo-container">
                     <div class="logo">
-                        <img src="https://i.ibb.co/mCdtvXVR/RONINGANGSTUDIO-BY-DAMIAN-LINARES.png" alt="RONINGANGSTUDIO-BY-DAMIAN-LINARES" border="0">
+                        <img src="https://i.ibb.co/mCdtvXVR/RONINGANGSTUDIO-BY-DAMIAN-LINARES.png  " alt="RONINGANGSTUDIO-BY-DAMIAN-LINARES" border="0">
                     </div>
                     <div class="artist-info">DAMIAN ALEJANDRO LINARES</div>
                     <div class="studio-info">RONIN GANG STUDIO</div>
