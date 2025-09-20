@@ -6,12 +6,29 @@
     <title>Meditación como Debugging Mental</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
     <style>
-        body {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
             margin: 0;
             padding: 0;
             background: #0a0a0a;
             overflow: hidden;
             font-family: serif;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0;
+            padding: 0;
         }
     </style>
 </head>
@@ -28,6 +45,7 @@
 
         function setup() {
             canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent(document.body);
             colorMode(HSB, 360, 100, 100, 100);
             
             // Definimos los 7 chakras
@@ -260,6 +278,7 @@
 
         function windowResized() {
             resizeCanvas(windowWidth, windowHeight);
+            canvas.parent(document.body);
             
             // Reposicionar chakras
             for (let i = 0; i < chakras.length; i++) {
