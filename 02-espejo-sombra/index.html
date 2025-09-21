@@ -9,15 +9,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             width: 100%; height: 100vh;
-            background: radial-gradient(circle at center, #1a0a2a 0%, #0a0510 100%);
+            background: #000;
             overflow: hidden; font-family: 'Georgia', serif;
             display: flex; align-items: center; justify-content: center;
         }
         canvas {
             display: block;
             box-shadow: 0 0 50px rgba(150, 50, 255, 0.3), inset 0 0 100px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(200, 100, 255, 0.2);
-            border-radius: 8px;
         }
         .loading-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -40,92 +38,59 @@
             50% { opacity: 1; transform: scale(1.02); }
         }
 
-        /* --- REFACTORIZACIÓN: PANEL UNIFICADO CON PESTAÑAS --- */
-        .main-panel {
+        /* --- REFACTORIZACIÓN COMPLETA DE UI: DASHBOARD UNIFICADO --- */
+        .dashboard {
             position: fixed;
-            top: 50px;
-            right: 50px;
-            width: 420px;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(25px);
-            border: 2px solid rgba(200, 100, 255, 0.6);
-            border-radius: 15px;
-            color: #fff;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            border-top: 2px solid rgba(200, 100, 255, 0.6);
             z-index: 100;
-            transform: translateX(120%);
-            transition: transform 1s ease-out;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
             display: flex;
-            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+            color: rgba(255, 255, 255, 0.9);
         }
-        .main-panel.visible { transform: translateX(0); }
-        
-        .panel-tabs {
-            display: flex;
-            border-bottom: 2px solid rgba(200, 100, 255, 0.6);
+        .dash-column {
+            flex: 1;
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0 20px;
+            min-width: 0;
         }
-        .tab-button {
-            flex-grow: 1;
-            padding: 15px;
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            cursor: pointer;
-            transition: background 0.3s, color 0.3s;
-            font-family: 'Georgia', serif;
-            font-size: 14px;
-            letter-spacing: 1px;
+        .dash-column:last-child {
+            border-right: none;
         }
-        .tab-button:hover {
-            background: rgba(200, 100, 255, 0.1);
-            color: #fff;
-        }
-        .tab-button.active {
-            background: rgba(200, 100, 255, 0.2);
+        .dash-column h4 {
             color: #d478ff;
-            text-shadow: 0 0 10px rgba(200, 100, 255, 0.6);
+            margin-bottom: 15px;
+            font-size: 16px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(200, 100, 255, 0.3);
+            padding-bottom: 10px;
+            text-align: center;
         }
 
-        .panel-content {
-            padding: 25px;
-            font-size: 14px;
-            line-height: 1.8;
-            height: 480px; /* Altura fija para consistencia */
-            overflow-y: auto; /* Scroll si el contenido es muy largo */
-        }
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
+        .state-indicator { display: flex; align-items: center; margin: 8px 0; font-size: 14px; }
+        .state-bar { width: 100px; height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 3px; margin-left: auto; overflow: hidden; }
+        .state-fill { height: 100%; background: linear-gradient(90deg, #ff4444, #ffaa44, #44ff44); border-radius: 3px; transition: width 0.5s ease; }
         
-        /* --- ESTILOS INTERNOS DEL PANEL --- */
+        .control-group, .archetype-group {
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .control-group:last-child, .archetype-group:last-child { border-bottom: none; }
+
         .jung-quote {
-            font-style: italic; color: rgba(255, 255, 255, 0.9); margin: 10px 0 20px 0; padding: 15px;
-            border-left: 3px solid rgba(200, 100, 255, 0.7);
+            font-style: italic; font-size: 13px; color: rgba(255, 255, 255, 0.8);
+            margin-top: 10px; padding: 10px;
+            border-left: 2px solid rgba(200, 100, 255, 0.7);
             background: rgba(200, 100, 255, 0.05); border-radius: 5px;
         }
-        .concept-section {
-            margin-bottom: 20px; padding-bottom: 20px;
-            border-bottom: 1px solid rgba(200, 100, 255, 0.2);
-        }
-        .concept-section:last-child { border-bottom: none; }
-        .concept-section h4 { color: #d478ff; margin-bottom: 12px; font-size: 16px; }
-        .control-group { margin: 12px 0; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 13px;}
-        .control-group:last-child { border-bottom: none; }
-        
-        /* --- PANEL IZQUIERDO REUBICADO --- */
-        .psychological-state {
-            position: fixed;
-            top: 50px;
-            left: 50px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid rgba(200, 100, 255, 0.5);
-            border-radius: 15px; padding: 25px;
-            color: rgba(255, 255, 255, 0.9); font-size: 13px;
-            z-index: 100; width: 350px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-        }
-        .state-indicator { display: flex; align-items: center; margin: 8px 0; }
-        .state-bar { width: 100px; height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 3px; margin-left: 10px; overflow: hidden; }
-        .state-fill { height: 100%; background: linear-gradient(90deg, #ff4444, #ffaa44, #44ff44); border-radius: 3px; transition: width 0.5s ease; }
+
         .fade-out { opacity: 0; }
     </style>
 </head>
@@ -135,58 +100,30 @@
         <div class="loading-subtitle">El Espejo de la Sombra Jungiana</div>
     </div>
     
-    <div class="main-panel" id="mainPanel">
-        <div class="panel-tabs">
-            <button class="tab-button active" onclick="showTab('concepto')">Concepto</button>
-            <button class="tab-button" onclick="showTab('arquetipos')">Arquetipos</button>
-            <button class="tab-button" onclick="showTab('controles')">Controles</button>
+    <div class="dashboard">
+        <div class="dash-column">
+            <h4>ESTADO PSICOLÓGICO</h4>
+            <div class="state-indicator"><span>Consciencia:</span><div class="state-bar"><div class="state-fill" id="consciousnessBar"></div></div><span id="consciousnessText">0%</span></div>
+            <div class="state-indicator"><span>Integración:</span><div class="state-bar"><div class="state-fill" id="integrationBar"></div></div><span id="integrationText">0%</span></div>
+            <div class="state-indicator"><span>Individuación:</span><div class="state-bar"><div class="state-fill" id="individuationBar"></div></div><span id="individuationText">0%</span></div>
+            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 14px;"><strong>Fase:</strong> <span id="currentPhase">Inconsciencia</span></div>
         </div>
-
-        <div class="panel-content">
-            <div id="concepto" class="tab-pane active">
-                <div class="jung-quote">"Hasta que no hagas consciente lo inconsciente, dirigirá tu vida y lo llamarás destino."<div style="text-align: right; margin-top: 10px; color: rgba(255,255,255,0.6);">— C.G. Jung</div></div>
-                <div class="concept-section"><h4>LA SOMBRA PERSONAL</h4><p>Representa todos los aspectos de la personalidad que el ego consciente ha rechazado.</p></div>
-                <div class="concept-section"><h4>PROCESO DE INDIVIDUACIÓN</h4><p>La integración progresiva de los contenidos inconscientes hacia la totalidad psíquica.</p></div>
-            </div>
-            <div id="arquetipos" class="tab-pane">
-                <div class="concept-section">
-                    <h4 style="text-align: center;">ESTADO ARQUETÍPICO</h4>
-                    <div id="archetypeList">
-                        <div>Persona: <span id="personaLevel">Dormida</span></div>
-                        <div>Sombra: <span id="shadowLevel">Fragmentada</span></div>
-                        <div>Anima/Animus: <span id="animaLevel">Oculta</span></div>
-                        <div>Self: <span id="selfLevel">Potencial</span></div>
-                    </div>
-                </div>
-                <div class="concept-section">
-                    <h4 style="text-align: center;">SÍMBOLO DOMINANTE</h4>
-                    <div id="dominantSymbol" style="text-align: center; font-size: 1.2em; color: #d478ff;">El Misterio</div>
-                </div>
-            </div>
-            <div id="controles" class="tab-pane">
-                <div class="control-group"><strong>RATÓN:</strong> Aproximación a la Sombra</div>
-                <div class="control-group"><strong>CLICK:</strong> Reiniciar individuación</div>
-                <div class="control-group"><strong>ESPACIO:</strong> Acelerar integración</div>
-                <div class="control-group"><strong>S:</strong> Confrontación directa</div>
-                <div class="control-group"><strong>A:</strong> Activar arquetipos</div>
-                <div class="control-group"><strong>M:</strong> Mandala de totalidad</div>
-                <div class="control-group"><strong>R:</strong> Regenerar sombra</div>
-                <div class="control-group"><strong>I:</strong> Ocultar este panel</div>
-            </div>
+        <div class="dash-column">
+             <h4>ARQUETIPOS Y CONTROLES</h4>
+             <div class="archetype-group">Persona: <span id="personaLevel" style="float: right;">Dormida</span></div>
+             <div class="archetype-group">Sombra: <span id="shadowLevel" style="float: right;">Fragmentada</span></div>
+             <div class="archetype-group">Anima/Animus: <span id="animaLevel" style="float: right;">Oculta</span></div>
+             <div class="archetype-group">Self: <span id="selfLevel" style="float: right;">Potencial</span></div>
+             <div class="archetype-group">Símbolo Dominante: <span id="dominantSymbol" style="float: right; color: #d478ff;">El Misterio</span></div>
+        </div>
+        <div class="dash-column">
+            <h4>CONCEPTO ANALÍTICO</h4>
+            <p style="font-size: 13px;">La integración de la Sombra es el proceso de hacer consciente lo inconsciente para alcanzar la totalidad del Self.</p>
+            <div class="jung-quote">"Uno no se ilumina fantaseando sobre la luz, sino haciendo consciente la oscuridad." — C.G. Jung</div>
         </div>
     </div>
 
-    <div class="psychological-state">
-        <h4 style="color: #d478ff; margin-bottom: 15px;">ESTADO PSICOLÓGICO</h4>
-        <div class="state-indicator"><span>Consciencia:</span><div class="state-bar"><div class="state-fill" id="consciousnessBar"></div></div><span id="consciousnessText">0%</span></div>
-        <div class="state-indicator"><span>Integración:</span><div class="state-bar"><div class="state-fill" id="integrationBar"></div></div><span id="integrationText">0%</span></div>
-        <div class="state-indicator"><span>Individuación:</span><div class="state-bar"><div class="state-fill" id="individuationBar"></div></div><span id="individuationText">0%</span></div>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);"><strong>Fase actual:</strong> <span id="currentPhase">Inconsciencia inicial</span></div>
-    </div>
-    
     <script>
-        // --- El script de p5.js y la lógica de la obra permanece intacto ---
-        // Se añade únicamente la función para las pestañas al final.
         let prevMouseX=0,prevMouseY=0;let psyche={ego:{x:0,y:0,energia:1,estabilidad:1},sombra:{x:0,y:0,radio:0,puntos:[],fragmentos:[],energia:0,visibilidad:0,hostilidad:0.3,arquetipos:[]},anima:{energia:0,manifestaciones:[]},self:{energia:0,mandala:[],unidad:0},complejos:[],consciencia:0,integracion:0,individuacion:0,fase:0,tiempo:0,chakras:[],particulas:[],simbolos:[],conexiones:[],loadingComplete:!1,modoConfronta:!1,arquetiposActivos:!1,mandalaVisible:!1,estadoUnificacion:"ninguno"};const FASES_INDIVIDUACION=["Inconsciencia inicial","Encuentro con la Persona","Confrontación con la Sombra","Encuentro con Anima/Animus","Desarrollo del Self","Individuación realizada"],ARQUETIPOS_SIMBOLOS=["El Misterio","El Espejo","La Serpiente","El Árbol","La Corona","El Círculo","La Espiral","El Ojo"];
         function setup(){createCanvas(windowWidth,windowHeight);colorMode(HSB,360,100,100,100);inicializarPsique();setTimeout(ocultarPantallaCarga,3e3);prevMouseX=mouseX;prevMouseY=mouseY}
         function inicializarPsique(){psyche.estadoUnificacion="ninguno";psyche.consciencia=0;psyche.integracion=0;psyche.individuacion=0;psyche.ego.x=.3*width;psyche.ego.y=.5*height;psyche.sombra.x=.7*width;psyche.sombra.y=.5*height;psyche.sombra.radio=.25*height;generarGeometriaSombra();inicializarChakras();crearParticulas();generarSimbolos();generarComplejos()}
@@ -194,7 +131,7 @@
         function generarGeometriaSombra(){psyche.sombra.puntos=[];psyche.sombra.fragmentos=[];for(let e=0;e<60;e++)psyche.sombra.puntos.push({angulo:map(e,0,60,0,TWO_PI),distancia:random(.6*psyche.sombra.radio,1.1*psyche.sombra.radio),ruidoOffset:random(2e3),velocidad:random(.2,.7),intensidad:random(.5,1)});for(let e=0;e<25;e++)psyche.sombra.fragmentos.push({x:random(-.7*psyche.sombra.radio,.7*psyche.sombra.radio),y:random(-.7*psyche.sombra.radio,.7*psyche.sombra.radio),tam:random(3,15),rotacion:random(TWO_PI),velocidadRot:random(-.03,.03),alpha:random(30,80),arquetipo:floor(random(4)),pulsacion:random(1,3)})}
         function inicializarChakras(){let e=[0,30,60,120,210,240,275];psyche.chakras=[];for(let o=0;o<7;o++)psyche.chakras.push({y:.85*height-o*.09*height,color:e[o],tam:18,energia:0,activo:!1,resonancia:0})}
         function crearParticulas(){psyche.particulas=[];for(let e=0;e<80;e++)psyche.particulas.push({x:random(width),y:random(height),vx:random(-.5,.5),vy:random(-.5,.5),tam:random(1,4),hue:random(240,320),alpha:random(20,70),tipo:floor(random(5))})}
-        function generarSimbolos(){psyche.simbolos=[];for(let e=0;e<12;e++)psyche.simbolos.push({x:random(.1*width,.9*width),y:random(.1*height,.9*height),simbolo:ARQUETIPOS_SIMBOLOS[floor(random(ARQUETIPOS_SIMBOLOS.length))],alpha:0,rotacion:0,escala:random(.5,1.5),energia:0})}
+        function generarSimbolos(){psyche.simbolos=[];for(let e=0;e<12;e++)psyche.simbolos.push({x:random(.1*width,.9*width),y:random(.1*height,.9*height),simbolo:ARQUETIPOS_SIMBOLOS[floor(random(ARQUETIPOS_SIMBOLOS.length))],alpha:0,rotacion:0,escala:random(0.5,1.5),energia:0})}
         function draw(){if(psyche.loadingComplete){if("viajando"===psyche.estadoUnificacion&&(psyche.ego.x=lerp(psyche.ego.x,width/2,.02),psyche.sombra.x=lerp(psyche.sombra.x,width/2,.02),psyche.ego.y=lerp(psyche.ego.y,height/2,.02),psyche.sombra.y=lerp(psyche.sombra.y,height/2,.02),dist(psyche.ego.x,psyche.ego.y,width/2,height/2)<5))psyche.estadoUnificacion="unificado";background(lerp(240,280,psyche.integracion),lerp(60,25,psyche.consciencia),psyche.modoConfronta?1:lerp(2,6,psyche.consciencia));psyche.tiempo+=.008;"unificado"!==psyche.estadoUnificacion&&calcularEstadosPsicologicos();dibujarCampoEnergetico();dibujarParticulas();dibujarComplejos();"unificado"!==psyche.estadoUnificacion&&(dibujarEgo(),dibujarSombra(),dibujarConexionesPsiquicas());dibujarArquetipos();dibujarSimbolos();(psyche.mandalaVisible||"unificado"===psyche.estadoUnificacion)&&dibujarMandalaIndividuacion();actualizarInterfaz();prevMouseX=mouseX;prevMouseY=mouseY}}
         function calcularEstadosPsicologicos(){let e=dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y),o=map(e,width/2,50,0,1,!0),a=dist(mouseX,mouseY,prevMouseX,prevMouseY);psyche.sombra.hostilidad=lerp(psyche.sombra.hostilidad,a>20?.9:.1,a>20?.1:.02);psyche.consciencia=lerp(psyche.consciencia,o*.7+psyche.tiempo*.3,.01)*(1-.5*psyche.sombra.hostilidad);psyche.consciencia=constrain(psyche.consciencia,0,1);psyche.integracion=.6*(psyche.consciencia+.8*psyche.sombra.energia);psyche.individuacion=constrain((.4*psyche.consciencia+.6*psyche.integracion)*(psyche.arquetiposActivos?1.2:1),0,1);if(psyche.individuacion>=.99&&"ninguno"===psyche.estadoUnificacion)psyche.estadoUnificacion="viajando";psyche.sombra.energia=constrain(1.5*psyche.consciencia,0,1);psyche.sombra.visibilidad=psyche.sombra.energia;psyche.fase=floor(psyche.individuacion*FASES_INDIVIDUACION.length);psyche.fase=constrain(psyche.fase,0,FASES_INDIVIDUACION.length-1)}
         function dibujarComplejos(){for(let e of psyche.complejos)e.energia>0&&(e.x+=map(noise(e.ruidoOffset+psyche.tiempo*e.velocidad),0,1,-1,1),e.y+=map(noise(e.ruidoOffset+1e3+psyche.tiempo*e.velocidad),0,1,-1,1),dist(mouseX,mouseY,e.x,e.y)<e.radio&&!e.activado&&(e.activado=!0,e.tiempoActivado=180,psyche.consciencia*=.5),e.activado&&(e.tiempoActivado--,e.tiempoActivado<=0&&(e.activado=!1)),push(),translate(e.x,e.y),(()=>{let o=e.activado?100:40,a=e.activado?100:70;for(let t=2;t>=0;t--)noFill(),stroke(0,80,a,o/(t+1)*(e.activado?2:1)),strokeWeight(1+t),ellipse(0,0,2*e.radio+15*t+(e.activado?10*sin(.5*frameCount):5*sin(3*psyche.tiempo+e.ruidoOffset)));fill(0,90,a-20,90);noStroke();ellipse(0,0,e.radio)})(),pop())}
@@ -204,26 +141,45 @@
         function dibujarSombra(){push();translate(psyche.sombra.x,psyche.sombra.y);noStroke();let e=psyche.modoConfronta?150:lerp(40,120,psyche.sombra.visibilidad),o=lerp(280,0,psyche.sombra.hostilidad),a=lerp(8,20,psyche.sombra.hostilidad);fill(o,60,a,e);beginShape();for(let t of psyche.sombra.puntos){let i=noise(t.ruidoOffset+psyche.tiempo*t.velocidad),n=t.distancia+map(i,0,1,-40,40)*t.intensidad*(1+psyche.sombra.hostilidad);curveVertex(cos(t.angulo)*n,sin(t.angulo)*n)}endShape(CLOSE);if(psyche.sombra.energia>.2||psyche.modoConfronta)for(let t of psyche.sombra.fragmentos){push();translate(t.x,t.y);rotate(t.rotacion+psyche.tiempo*t.velocidadRot);let i=(psyche.modoConfronta?2*t.alpha:3*t.alpha*psyche.sombra.energia);fill(275+20*t.arquetipo+15*sin(psyche.tiempo+.1*t.x),70,60,i);let n=t.tam*(1+.3*sin(psyche.tiempo*t.pulsacion+t.rotacion));switch(t.arquetipo){case 0:ellipse(0,0,n);break;case 1:rect(-n/2,-n/2,n,n);break;case 2:triangle(-n/2,n/2,n/2,n/2,0,-n/2);break;case 3:beginShape();for(let r=0;r<TWO_PI;r+=PI/6){let l=n/2,c=n/4;vertex(cos(r)*l,sin(r)*l),vertex(cos(r+PI/6)*c,sin(r+PI/6)*c)}endShape(CLOSE)}t.rotacion+=t.velocidadRot;pop()}if(psyche.sombra.energia>.3||psyche.modoConfronta){let t=lerp(15,35,psyche.sombra.energia),i=5*sin(3*psyche.tiempo)*(1+2*psyche.sombra.hostilidad);fill(300,80,70,lerp(30,100,psyche.sombra.energia));ellipse(0,0,t+i+10);fill(0,0,5,90);ellipse(0,0,t+i);psyche.integracion>.6&&(fill(0,0,100,150*psyche.integracion),ellipse(0,0,5))}pop()}
         function dibujarConexionesPsiquicas(){if(psyche.integracion>.3)for(let e=0;e<psyche.chakras.length;e++){let o=psyche.chakras[e];if(o.activo&&o.resonancia>.4)for(let a=0;a<floor(2*psyche.integracion)+1;a++){let t=60*sin(1.5*psyche.tiempo+e+.4*a),i=.7*(psyche.sombra.x+cos(.8*psyche.tiempo+e)*t),n=.7*(psyche.sombra.y+sin(.8*psyche.tiempo+e)*t);strokeWeight(lerp(.5,2.5,psyche.integracion));stroke(o.color,40,95,80*o.resonancia);let r=lerp(psyche.ego.x,i,.3)+40*sin(psyche.tiempo+e),l=lerp(o.y,n,.3)+30*cos(psyche.tiempo+e),c=lerp(psyche.ego.x,i,.7)+30*sin(psyche.tiempo+e+PI),s=lerp(o.y,n,.7)+40*cos(psyche.tiempo+e+PI);noFill();beginShape();vertex(psyche.ego.x,o.y);bezierVertex(r,l,c,s,i,n);endShape()}}}
         function dibujarArquetipos(){if(psyche.arquetiposActivos){let e=[{x:.2*width,y:.3*height,t:"Persona"},{x:.8*width,y:.7*height,t:"Sombra"},{x:.5*width,y:.2*height,t:"Anima"},{x:.5*width,y:.8*height,t:"Self"}];for(let o of e){let a=psyche.individuacion*random(.8,1.2);if(a>.3){push();translate(o.x,o.y);for(let t=3;t>=0;t--)noFill(),stroke("Sombra"===o.t?280:"Anima"===o.t?320:200,60,80,a*15/(t+1)),strokeWeight(2-.4*t),ellipse(0,0,50+20*t);fill(200,40,100,120*a);noStroke();textAlign(CENTER,CENTER);textSize(16+10*a);text("Persona"===o.t?"◭":"Sombra"===o.t?"◪":"Anima"===o.t?"☾":"☉",0,0);pop()}}}}
-        function dibujarSimbolos(){for(let e of psyche.simbolos)e.energia=psyche.individuacion*random(.5,1.5),e.alpha=constrain(60*e.energia,0,80),e.rotacion+=.005,e.alpha>10&&(push(),translate(e.x,e.y),rotate(e.rotacion),scale(e.escala*(1+.1*sin(psyche.tiempo+.01*e.x))),fill(220,30,90,e.alpha),noStroke(),textAlign(CENTER,CENTER),textSize(12),text(e.simbolo,0,0),pop())}
+        
+        // --- OPTIMIZACIÓN DE LEGIBILIDAD ---
+        function dibujarSimbolos() {
+            for(let s of psyche.simbolos){
+                s.energia=psyche.individuacion*random(0.5,1.5);
+                s.alpha=constrain(s.energia*60,0,80);
+                s.rotacion+=.005;
+                if(s.alpha > 10) {
+                    push();
+                    translate(s.x, s.y);
+                    rotate(s.rotacion);
+                    scale(s.escala * (1 + sin(psyche.tiempo + s.x * 0.01) * 0.1));
+                    
+                    // Efecto de Halo
+                    noStroke();
+                    fill(0, 0, 0, s.alpha * 0.5); // Sombra/fondo semitransparente
+                    ellipse(0, 0, 45, 45); // Elipse que sirve de fondo
+                    
+                    // Texto principal
+                    fill(220, 30, 100, s.alpha * 1.5); // Aumento de brillo
+                    textAlign(CENTER, CENTER);
+                    textSize(14); // Tamaño aumentado
+                    text(s.simbolo, 0, 0);
+                    pop();
+                }
+            }
+        }
+
         function dibujarMandalaIndividuacion(){push();translate(width/2,height/2);let e="unificado"===psyche.estadoUnificacion?100:60*psyche.individuacion;if(e>10){noFill();stroke(0,0,100,e);strokeWeight(2);ellipse(0,0,300);stroke(200,40,90,.8*e);strokeWeight(1.5);rectMode(CENTER);rect(0,0,200,200);stroke(280,60,70,e);strokeWeight(3);line(-100,0,100,0);line(0,-100,0,100);fill(0,0,100,.6*e);noStroke();ellipse(0,0,30);for(let o=0;o<12;o++){let a=map(o,0,12,0,TWO_PI),t=20*sin(2*psyche.tiempo+.5*o);stroke(57.3*a,50,90,.6*e);strokeWeight(1);line(cos(a)*(80+t),sin(a)*(80+t),cos(a)*(120+t),sin(a)*(120+t))}}pop()}
         function getFaseTexto(e){return FASES_INDIVIDUACION[constrain(e,0,FASES_INDIVIDUACION.length-1)]}
         function getArquetipoLevel(e,o){let a=["Dormido","Emergiendo","Activo","Integrado"];return a[constrain(floor(o*a.length),0,a.length-1)]}
         function getSimboloDominante(e){return ARQUETIPOS_SIMBOLOS[constrain(floor(e*ARQUETIPOS_SIMBOLOS.length),0,ARQUETIPOS_SIMBOLOS.length-1)]}
         function actualizarInterfaz(){document.getElementById("consciousnessBar").style.width=psyche.consciencia*100+"%";document.getElementById("consciousnessText").textContent=round(100*psyche.consciencia)+"%";document.getElementById("integrationBar").style.width=psyche.integracion*100+"%";document.getElementById("integrationText").textContent=round(100*psyche.integracion)+"%";document.getElementById("individuationBar").style.width=psyche.individuacion*100+"%";document.getElementById("individuationText").textContent=round(100*psyche.individuacion)+"%";document.getElementById("currentPhase").textContent=getFaseTexto(psyche.fase);document.getElementById("personaLevel").textContent=getArquetipoLevel("Persona",psyche.consciencia);document.getElementById("shadowLevel").textContent=getArquetipoLevel("Sombra",psyche.sombra.energia);document.getElementById("animaLevel").textContent=getArquetipoLevel("Anima",psyche.integracion);document.getElementById("selfLevel").textContent=getArquetipoLevel("Self",psyche.individuacion);document.getElementById("dominantSymbol").textContent=getSimboloDominante(psyche.individuacion)}
-        function ocultarPantallaCarga(){const e=document.getElementById("loadingScreen"),o=document.getElementById("mainPanel");e.classList.add("fade-out");setTimeout(()=>{e.style.display="none";o.classList.add("visible");psyche.loadingComplete=!0},2e3)}
+        function ocultarPantallaCarga(){const e=document.getElementById("loadingScreen");e.classList.add("fade-out");setTimeout(()=>{e.style.display="none";psyche.loadingComplete=!0},2e3)}
         function mousePressed(){psyche.loadingComplete&&inicializarPsique()}
-        function keyPressed(){if(psyche.loadingComplete){const e=key.toLowerCase();" "===e?psyche.consciencia=min(1,psyche.consciencia+.15):"s"===e?psyche.modoConfronta=!psyche.modoConfronta:"a"===e?psyche.arquetiposActivos=!psyche.arquetiposActivos:"m"===e?psyche.mandalaVisible=!psyche.mandalaVisible:"r"===e?generarGeometriaSombra():"i"===e&&document.getElementById("mainPanel").classList.toggle("visible")}}
+        function keyPressed(){if(psyche.loadingComplete){const e=key.toLowerCase();" "===e?psyche.consciencia=min(1,psyche.consciencia+.15):"s"===e?psyche.modoConfronta=!psyche.modoConfronta:"a"===e?psyche.arquetiposActivos=!psyche.arquetiposActivos:"m"===e?psyche.mandalaVisible=!psyche.mandalaVisible:"r"===e&&generarGeometriaSombra()}}
         function mouseMoved(){if(psyche.loadingComplete&&dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y)<psyche.sombra.radio&&random()<.2)psyche.particulas.push({x:mouseX+random(-15,15),y:mouseY+random(-15,15),vx:random(-.8,.8),vy:random(-.8,.8),tam:random(1,4),hue:lerp(240,280,psyche.integracion),alpha:70,tipo:4})}
         function windowResized(){resizeCanvas(windowWidth,windowHeight);inicializarPsique()}
         function limpiarParticulas(){for(let e=psyche.particulas.length-1;e>=0;e--)psyche.particulas[e].alpha-=.3,psyche.particulas[e].alpha<=0&&psyche.particulas.splice(e,1);psyche.particulas.length>400&&psyche.particulas.splice(0,psyche.particulas.length-400)}setInterval(limpiarParticulas,100);
-
-        // --- LÓGICA DE PESTAÑAS ---
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));
-            document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
-        }
     </script>
 </body>
 </html>
