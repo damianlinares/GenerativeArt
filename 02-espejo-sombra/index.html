@@ -3,197 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Espejo de Sombra Interactivo - Damian Alejandro Linares</title>
+    <title>EL RESPLANDOR DEL INCONSCIENTE - Un Campo de Resonancia Psíquica</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
     <style>
         html, body {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Previene las barras de scroll */
-            background-color: #000; /* Fondo negro por defecto */
+            overflow: hidden;
+            background-color: #000;
+            cursor: none; /* Esconde el cursor por defecto */
         }
         canvas {
-            display: block; /* Elimina cualquier espacio extra debajo del canvas */
+            display: block;
         }
     </style>
 </head>
 <body>
-    <script>
-        // --- OBRA 02: EL ESPEJO DE SOMBRA INTERACTIVO ---
-        // Estilo Visionario. (VERSIÓN DEPURADA)
+    <script id="flowShader" type="x-shader/x-fragment">
+    #ifdef GL_ES
+    precision mediump float;
+    #endif
 
-        let chakras = [];
-        let sombra;
-        let tiempo = 0;
-        let integracion = 0; // 0 = Separación total, 1 = Integración máxima
+    uniform vec2 u_resolution;
+    uniform vec2 u_mouse;
+    uniform float u_time;
+
+    // Función de ruido Perlin 2D (simulado) para el campo de flujo
+    vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+    float snoise(vec2 v){
+      const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+      vec2 i  = floor(v + dot(v, C.yy) );
+      vec2 x0 = v -   i + dot(i, C.xx) ;
+      vec2 v1 = floor(x0.xy + C.zw) ;
+      vec2 v2 = floor(x0.xy + C.yy) ;
+      vec2 v3 = floor(x0.xy + C.xx) ;
+      vec2 x1 = x0 - v1 + C.xx ;
+      vec2 x2 = x0 - v2 + C.yy ;
+      vec2 x3 = x0 - v3 + C.zz ;
+      i = mod(i,289.0);
+      vec3 p = permute( permute( i.y + vec3(0.0, v1.y, v2.y )) + i.x + vec3(0.0, v1.x, v2.x ));
+      vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
+      m = m*m ;
+      m = m*m ;
+      vec3 x(p.x, p.y, p.z);
+      vec3 h = 2.0 * frac(x * C.www) - 1.0;
+      vec3 a = abs(h) - 0.5;
+      vec3 o = floor(h + 0.5);
+      vec3 d = (vec3)step(vec3(0.0), a);
+      h = h - o + d.x * (d.yzx - 1.0);
+      vec3 s = sign(h);
+      h = abs(h);
+      vec3 c = vec3(0.0, 0.0, 0.0);
+      c.x = s.x;
+      c.y = s.y;
+      c.z = s.z;
+      vec4 res = m.x * vec4(h.x, c.x, c.y, c.z) + m.y * vec4(h.y, c.y, c.z, c.x) + m.z * vec4(h.z, c.z, c.x, c.y);
+      return dot(res, vec4(70.0));
+    }
+
+    void main() {
+        vec2 st = gl_FragCoord.xy / u_resolution.xy;
+        vec2 m_st = u_mouse.xy / u_resolution.xy;
+
+        float aspect = u_resolution.x / u_resolution.y;
+        vec2 normalized_st = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
+        
+        // Campo de flujo base (ruido Perlin)
+        float flow_speed = u_time * 0.1;
+        vec2 flow = vec2(
+            snoise(normalized_st * 3.0 + vec2(flow_speed, flow_speed * 0.5)),
+            snoise(normalized_st * 3.0 + vec2(flow_speed * 0.5, flow_speed))
+        ) * 0.5;
+
+        // Influencia del mouse (Emisor de Presencia)
+        float dist_to_mouse = distance(st, m_st);
+        float mouse_influence_radius = 0.2;
+        float mouse_strength = 1.0 - smoothstep(0.0, mouse_influence_radius, dist_to_mouse);
+        
+        // La "Sombra": un área donde la luz es absorbida/distorsionada
+        float shadow_radius = 0.1;
+        float shadow_core_strength = 1.0 - smoothstep(0.0, shadow_radius, dist_to_mouse);
+        
+        // Aplica distorsión al campo de flujo cerca del mouse
+        vec2 mouse_dir = normalize(st - m_st);
+        flow += mouse_dir * mouse_strength * 2.0; 
+        
+        // Dibuja los filamentos como líneas sutiles en el campo de flujo
+        float line_density = 100.0;
+        float line_thickness = 0.002;
+        vec2 displaced_st = st + flow * 0.05; // Desplaza los puntos por el campo de flujo
+
+        float intensity = 0.0;
+        vec3 color = vec3(0.0);
+
+        // Generación de patrones de luz filamentosos
+        float val = snoise(displaced_st * line_density + u_time * 0.05);
+        float stripe = fract(val * 5.0) - 0.5; // Patrones de línea
+        
+        intensity = 1.0 - abs(stripe * 10.0);
+        intensity = max(0.0, intensity); // Asegura que la intensidad no sea negativa
+        
+        // Coloración basada en el movimiento y la posición
+        // Tonos más cálidos hacia el centro de la influencia del mouse
+        vec3 col_inner = vec3(1.0, 0.8, 0.4); // Dorado
+        vec3 col_outer = vec3(0.2, 0.6, 1.0); // Azul etéreo
+        
+        // Mezcla de colores, con la influencia del mouse haciéndolo más cálido
+        color = mix(col_outer, col_inner, mouse_strength);
+
+        // Oscurece la región central de la sombra
+        color *= (1.0 - shadow_core_strength * 0.9); 
+        
+        gl_FragColor = vec4(color * intensity, 1.0);
+    }
+    </script>
+
+    <script>
+        let flowShader;
+
+        function preload() {
+            flowShader = loadShader(null, 'flowShader'); // Carga el shader del script tag
+        }
 
         function setup() {
-            createCanvas(windowWidth, windowHeight);
-            colorMode(HSB, 360, 100, 100, 100);
-
-            // Definimos los 7 chakras
-            let coloresChakra = [0, 30, 60, 120, 210, 240, 275];
-            for (let i = 0; i < 7; i++) {
-                chakras.push({
-                    y: (height * 0.85) - (i * height * 0.1),
-                    color: coloresChakra[i],
-                    tam: 20
-                });
-            }
-
-            // Creamos la figura de la Sombra con puntos fluidos
-            sombra = {
-                puntos: [],
-                x: width / 2,
-                y: height / 2,
-                radio: height * 0.4
-            };
-            for (let i = 0; i < 100; i++) {
-                sombra.puntos.push({
-                    angulo: map(i, 0, 100, 0, TWO_PI),
-                    distancia: random(sombra.radio * 0.8, sombra.radio),
-                    ruidoOffset: random(1000)
-                });
-            }
-
-            textAlign(CENTER, CENTER);
-            textFont('serif');
+            createCanvas(windowWidth, windowHeight, WEBGL);
+            noStroke(); // Deshabilita los bordes para un look más etéreo
         }
 
         function draw() {
-            background(240, 50, 4); // Un azul más oscuro, casi negro
-            tiempo += 0.01;
-
-            // La integración aumenta cuanto más cerca está el ratón del centro de la sombra
-            let distanciaMouse = dist(mouseX, mouseY, sombra.x, sombra.y);
-            let distanciaMaxima = width / 2;
-            integracion = map(distanciaMouse, distanciaMaxima, 50, 0, 1, true);
-
-            // 1. DIBUJAR AURA
-            dibujarAura();
-
-            // 2. DIBUJAR SOMBRA
-            dibujarSombra();
-
-            // 3. DIBUJAR FIGURA CENTRAL Y CHAKRAS
-            dibujarFiguraCentral();
-
-            // 4. DIBUJAR CONEXIÓN (La integración)
-            dibujarConexion();
-
-            // 5. DIBUJAR INTERFAZ
-            mostrarInterfaz();
-        }
-
-
-        function dibujarAura() {
-            let auraTam = width * 0.4 + integracion * 100;
-            let auraColor = lerpColor(color(255, 10), color(300, 80, 50, 20), integracion);
-
-            noFill();
-            stroke(auraColor);
-            strokeWeight(2);
-            beginShape();
-            for (let a = 0; a < TWO_PI; a += 0.1) {
-                let r = auraTam + map(noise(cos(a) + tiempo, sin(a) + tiempo), 0, 1, -50, 50);
-                let x = width / 2 + cos(a) * (r * 0.3); // Aura más vertical
-                let y = height / 2 + sin(a) * r;
-                curveVertex(x, y);
+            // Asegura que el canvas siempre ocupe la ventana completa
+            if (width !== windowWidth || height !== windowHeight) {
+                resizeCanvas(windowWidth, windowHeight);
             }
-            endShape(CLOSE);
-        }
 
-        function dibujarSombra() {
-            push();
-            translate(sombra.x, sombra.y);
-            noStroke();
+            // Pasa las variables uniformes al shader
+            flowShader.setUniform('u_resolution', [width, height]);
+            flowShader.setUniform('u_mouse', [mouseX, height - mouseY]); // Y-invertido para GLSL
+            flowShader.setUniform('u_time', millis() / 1000.0); // Tiempo en segundos
 
-            // El cuerpo oscuro y fluido de la sombra
-            fill(240, 30, 2, 80); // Negro casi transparente
-            beginShape();
-            for (let p of sombra.puntos) {
-                let ruido = noise(p.ruidoOffset + tiempo * 0.5);
-                let d = p.distancia + map(ruido, 0, 1, -40, 40);
-                let x = cos(p.angulo) * d;
-                let y = sin(p.angulo) * d;
-                curveVertex(x, y);
-            }
-            endShape(CLOSE);
-
-            // Patrones internos que se revelan con la integración
-            if (integracion > 0.1) {
-                for (let p of sombra.puntos) {
-                    if (p.angulo % 0.5 < 0.05) { // Algunos puntos brillan
-                        let x = cos(p.angulo) * p.distancia;
-                        let y = sin(p.angulo) * p.distancia;
-                        fill(275, 100, 100, integracion * 80); // Chispas violetas
-                        ellipse(x, y, 5, 5);
-                    }
-                }
-            }
-            pop();
-        }
-
-
-        function dibujarFiguraCentral() {
-            let figuraX = width / 2;
-
-            // La columna de luz se intensifica con la integración
-            strokeWeight(3 + integracion * 4);
-            stroke(0, 0, 100, 50 + integracion * 50);
-            line(figuraX, 0, figuraX, height);
-
-            for (let i = 0; i < chakras.length; i++) {
-                let c = chakras[i];
-                let pulso = sin(tiempo * 5 - i) * 5;
-                // Los chakras laten más fuerte durante la integración
-                let tamActual = c.tam + pulso + integracion * 15;
-
-                noStroke();
-                fill(c.color, 90, 90, 30 + integracion * 50);
-                ellipse(figuraX, c.y, tamActual * 3);
-                fill(c.color, 90, 90, 100);
-                ellipse(figuraX, c.y, tamActual);
-            }
-        }
-
-        function dibujarConexion() {
-            if (integracion > 0.1) {
-                // Zarcillos de luz que conectan el Yo con la Sombra
-                for (let c of chakras) {
-                    let sombraY = random(height * 0.2, height * 0.8);
-                    stroke(c.color, 80, 100, integracion * 40);
-                    strokeWeight(1.5);
-                    line(width / 2, c.y, sombra.x, sombraY);
-                }
-            }
-        }
-
-
-        function mostrarInterfaz() {
-            let estadoTexto = integracion < 0.7 ? "CONFRONTACIÓN" : "INTEGRACIÓN";
-
-            fill(0, 0, 0, 50);
-            rectMode(CENTER);
-            noStroke();
-            rect(width / 2, height - 60, 650, 80, 10);
-
-            fill(0, 0, 100);
-            textSize(24);
-            text("EL ESPEJO DE SOMBRA INTERACTIVO", width / 2, height - 80);
-
-            textSize(18);
-            text("ESTADO: " + estadoTexto, width / 2, height - 45);
+            // Aplica el shader a un plano que cubre toda la pantalla
+            shader(flowShader);
+            rect(0, 0, width, height); // Dibuja un rectángulo que será llenado por el shader
         }
 
         function windowResized() {
             resizeCanvas(windowWidth, windowHeight);
-            sombra.x = width/2;
-            sombra.y = height/2;
-            sombra.radio = height * 0.4;
-            for (let i = 0; i < 7; i++) {
-                chakras[i].y = (height * 0.85) - (i * height * 0.1);
-            }
         }
     </script>
 </body>
