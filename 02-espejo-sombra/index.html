@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EL RESPLANDOR DEL INCONSCIENTE - Un Campo de Resonancia Psíquica</title>
+    <title>EL RESPLANDOR DEL INCONSCIENTE — Ritual de Integración de la Sombra</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
     <style>
         html, body {
@@ -11,7 +11,7 @@
             padding: 0;
             overflow: hidden;
             background-color: #000;
-            cursor: none; /* Esconde el cursor por defecto */
+            cursor: none; /* El cursor se disuelve: eres pura intención */
         }
         canvas {
             display: block;
@@ -19,136 +19,205 @@
     </style>
 </head>
 <body>
-    <script id="flowShader" type="x-shader/x-fragment">
-    #ifdef GL_ES
-    precision mediump float;
-    #endif
 
-    uniform vec2 u_resolution;
-    uniform vec2 u_mouse;
-    uniform float u_time;
+<!-- 
+    ██████╗ ███████╗██████╗ ██╗   ██╗███████╗███████╗████████╗
+    ██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝╚══██╔══╝
+    ██████╔╝█████╗  ██████╔╝██║   ██║█████╗  ███████╗   ██║   
+    ██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║██╔══╝  ╚════██║   ██║   
+    ██║  ██║███████╗██║     ╚██████╔╝███████╗███████║   ██║   
+    ╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚══════╝╚══════╝   ╚═╝   
 
-    // Función de ruido Perlin 2D (simulado) para el campo de flujo
-    vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
-    float snoise(vec2 v){
-      const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-      vec2 i  = floor(v + dot(v, C.yy) );
-      vec2 x0 = v -   i + dot(i, C.xx) ;
-      vec2 v1 = floor(x0.xy + C.zw) ;
-      vec2 v2 = floor(x0.xy + C.yy) ;
-      vec2 v3 = floor(x0.xy + C.xx) ;
-      vec2 x1 = x0 - v1 + C.xx ;
-      vec2 x2 = x0 - v2 + C.yy ;
-      vec2 x3 = x0 - v3 + C.zz ;
-      i = mod(i,289.0);
-      vec3 p = permute( permute( i.y + vec3(0.0, v1.y, v2.y )) + i.x + vec3(0.0, v1.x, v2.x ));
-      vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
-      m = m*m ;
-      m = m*m ;
-      vec3 x(p.x, p.y, p.z);
-      vec3 h = 2.0 * frac(x * C.www) - 1.0;
-      vec3 a = abs(h) - 0.5;
-      vec3 o = floor(h + 0.5);
-      vec3 d = (vec3)step(vec3(0.0), a);
-      h = h - o + d.x * (d.yzx - 1.0);
-      vec3 s = sign(h);
-      h = abs(h);
-      vec3 c = vec3(0.0, 0.0, 0.0);
-      c.x = s.x;
-      c.y = s.y;
-      c.z = s.z;
-      vec4 res = m.x * vec4(h.x, c.x, c.y, c.z) + m.y * vec4(h.y, c.y, c.z, c.x) + m.z * vec4(h.z, c.z, c.x, c.y);
-      return dot(res, vec4(70.0));
+    OBRA VISIONARIA: "EL RESPLANDOR DEL INCONSCIENTE"
+    — Un Campo de Resonancia Psíquica —
+
+    Inspirada en el arquetipo junguiano de "La Sombra", 
+    esta pieza interactiva no es un espectáculo: es un RITUAL.
+
+    Tú, con tu cursor — tu voluntad consciente — 
+    te aproximas a la silueta oscura que respira en el centro.
+
+    No para destruirla.
+    No para temerla.
+    Sino para RECONOCERLA.
+
+    Al acercarte, zarcillos de luz nacen entre tú y ella.
+    Tu aura consciente se intensifica.
+    Ella revela sus patrones internos: no es caos, es energía sagrada reprimida.
+
+    Este es el pacto alquímico: 
+    La luz no vence a la sombra. La abraza. La integra. La transmuta.
+
+    La totalidad del Ser no nace de la pureza, 
+    sino de la reconciliación con lo negado.
+
+    Mueve tu cursor. Respira con la obra. Sé el artífice de tu propia psique.
+-->
+
+<script id="flowShader" type="x-shader/x-fragment">
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+uniform float u_time;
+
+// ———————————————————————————————————————————————
+// RUIDO PERLIN 2D — EL TEJIDO DEL INCONSCIENTE COLECTIVO
+// ———————————————————————————————————————————————
+vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+float snoise(vec2 v){
+  const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+  vec2 i  = floor(v + dot(v, C.yy) );
+  vec2 x0 = v -   i + dot(i, C.xx) ;
+  vec2 v1 = floor(x0.xy + C.zw) ;
+  vec2 v2 = floor(x0.xy + C.yy) ;
+  vec2 v3 = floor(x0.xy + C.xx) ;
+  vec2 x1 = x0 - v1 + C.xx ;
+  vec2 x2 = x0 - v2 + C.yy ;
+  vec2 x3 = x0 - v3 + C.zz ;
+  i = mod(i,289.0);
+  vec3 p = permute( permute( i.y + vec3(0.0, v1.y, v2.y )) + i.x + vec3(0.0, v1.x, v2.x ));
+  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
+  m = m*m ;
+  m = m*m ;
+  vec3 x(p.x, p.y, p.z);
+  vec3 h = 2.0 * frac(x * C.www) - 1.0;
+  vec3 a = abs(h) - 0.5;
+  vec3 o = floor(h + 0.5);
+  vec3 d = (vec3)step(vec3(0.0), a);
+  h = h - o + d.x * (d.yzx - 1.0);
+  vec3 s = sign(h);
+  h = abs(h);
+  vec3 c = vec3(0.0, 0.0, 0.0);
+  c.x = s.x;
+  c.y = s.y;
+  c.z = s.z;
+  vec4 res = m.x * vec4(h.x, c.x, c.y, c.z) + m.y * vec4(h.y, c.y, c.z, c.x) + m.z * vec4(h.z, c.z, c.x, c.y);
+  return dot(res, vec4(70.0));
+}
+
+void main() {
+    vec2 st = gl_FragCoord.xy / u_resolution.xy;
+    vec2 m_st = u_mouse.xy / u_resolution.xy;
+
+    float aspect = u_resolution.x / u_resolution.y;
+    vec2 normalized_st = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
+    
+    // ———————————————————————————————————————————————
+    // EL CAMPO DE FLUJO: EL MOVIMIENTO INTERNO DEL ALMA
+    // ———————————————————————————————————————————————
+    float flow_speed = u_time * 0.1;
+    vec2 flow = vec2(
+        snoise(normalized_st * 3.0 + vec2(flow_speed, flow_speed * 0.5)),
+        snoise(normalized_st * 3.0 + vec2(flow_speed * 0.5, flow_speed))
+    ) * 0.5;
+
+    // ———————————————————————————————————————————————
+    // EL EMISOR DE PRESENCIA: TU VOLUNTAD CONSCIENTE (EL CURSOR)
+    // ———————————————————————————————————————————————
+    float dist_to_mouse = distance(st, m_st);
+    float mouse_influence_radius = 0.2;
+    float mouse_strength = 1.0 - smoothstep(0.0, mouse_influence_radius, dist_to_mouse);
+    
+    // ———————————————————————————————————————————————
+    // LA SOMBRA: EL ARQUETIPO QUE TE ESPERA EN EL CENTRO
+    // ———————————————————————————————————————————————
+    float shadow_radius = 0.1;
+    float shadow_core_strength = 1.0 - smoothstep(0.0, shadow_radius, dist_to_mouse);
+    
+    // ———————————————————————————————————————————————
+    // DISTORSIÓN PSÍQUICA: EL ENCUENTRO TRANSFORMA EL CAMPO
+    // ———————————————————————————————————————————————
+    vec2 mouse_dir = normalize(st - m_st);
+    flow += mouse_dir * mouse_strength * 2.0; 
+    
+    // ———————————————————————————————————————————————
+    // FILAMENTOS DE LUZ: LOS HILOS DEL ALMA QUE SE TEJEN
+    // ———————————————————————————————————————————————
+    float line_density = 100.0;
+    float line_thickness = 0.002;
+    vec2 displaced_st = st + flow * 0.05;
+
+    float intensity = 0.0;
+    vec3 color = vec3(0.0);
+
+    // ———————————————————————————————————————————————
+    // PATRONES DE INTEGRACIÓN: LA DANZA ENTRE LUZ Y OSCURIDAD
+    // ———————————————————————————————————————————————
+    float val = snoise(displaced_st * line_density + u_time * 0.05);
+    float stripe = fract(val * 5.0) - 0.5;
+    intensity = 1.0 - abs(stripe * 10.0);
+    intensity = max(0.0, intensity);
+    
+    // ———————————————————————————————————————————————
+    // COLOR ALQUÍMICO: DEL AZUL ETÉREO AL DORADO DE LA TOTALIDAD
+    // ———————————————————————————————————————————————
+    vec3 col_inner = vec3(1.0, 0.8, 0.4); // Dorado — la luz que nace de la integración
+    vec3 col_outer = vec3(0.2, 0.6, 1.0); // Azul — la conciencia antes del encuentro
+    
+    color = mix(col_outer, col_inner, mouse_strength);
+
+    // ———————————————————————————————————————————————
+    // ABSORCIÓN SAGRADA: LA SOMBRA NO DESAPARECE, SE TRANSFIGURA
+    // ———————————————————————————————————————————————
+    color *= (1.0 - shadow_core_strength * 0.9); 
+    
+    // ———————————————————————————————————————————————
+    // EL PACTO SE CONSUMA: LA LUZ Y LA SOMBRA COEXISTEN EN ARMONÍA
+    // ———————————————————————————————————————————————
+    gl_FragColor = vec4(color * intensity, 1.0);
+}
+</script>
+
+<script>
+    let flowShader;
+
+    function preload() {
+        // Carga el shader directamente desde el script tag — el ritual comienza en el código
+        flowShader = loadShader(null, 'flowShader');
     }
 
-    void main() {
-        vec2 st = gl_FragCoord.xy / u_resolution.xy;
-        vec2 m_st = u_mouse.xy / u_resolution.xy;
-
-        float aspect = u_resolution.x / u_resolution.y;
-        vec2 normalized_st = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
-        
-        // Campo de flujo base (ruido Perlin)
-        float flow_speed = u_time * 0.1;
-        vec2 flow = vec2(
-            snoise(normalized_st * 3.0 + vec2(flow_speed, flow_speed * 0.5)),
-            snoise(normalized_st * 3.0 + vec2(flow_speed * 0.5, flow_speed))
-        ) * 0.5;
-
-        // Influencia del mouse (Emisor de Presencia)
-        float dist_to_mouse = distance(st, m_st);
-        float mouse_influence_radius = 0.2;
-        float mouse_strength = 1.0 - smoothstep(0.0, mouse_influence_radius, dist_to_mouse);
-        
-        // La "Sombra": un área donde la luz es absorbida/distorsionada
-        float shadow_radius = 0.1;
-        float shadow_core_strength = 1.0 - smoothstep(0.0, shadow_radius, dist_to_mouse);
-        
-        // Aplica distorsión al campo de flujo cerca del mouse
-        vec2 mouse_dir = normalize(st - m_st);
-        flow += mouse_dir * mouse_strength * 2.0; 
-        
-        // Dibuja los filamentos como líneas sutiles en el campo de flujo
-        float line_density = 100.0;
-        float line_thickness = 0.002;
-        vec2 displaced_st = st + flow * 0.05; // Desplaza los puntos por el campo de flujo
-
-        float intensity = 0.0;
-        vec3 color = vec3(0.0);
-
-        // Generación de patrones de luz filamentosos
-        float val = snoise(displaced_st * line_density + u_time * 0.05);
-        float stripe = fract(val * 5.0) - 0.5; // Patrones de línea
-        
-        intensity = 1.0 - abs(stripe * 10.0);
-        intensity = max(0.0, intensity); // Asegura que la intensidad no sea negativa
-        
-        // Coloración basada en el movimiento y la posición
-        // Tonos más cálidos hacia el centro de la influencia del mouse
-        vec3 col_inner = vec3(1.0, 0.8, 0.4); // Dorado
-        vec3 col_outer = vec3(0.2, 0.6, 1.0); // Azul etéreo
-        
-        // Mezcla de colores, con la influencia del mouse haciéndolo más cálido
-        color = mix(col_outer, col_inner, mouse_strength);
-
-        // Oscurece la región central de la sombra
-        color *= (1.0 - shadow_core_strength * 0.9); 
-        
-        gl_FragColor = vec4(color * intensity, 1.0);
+    function setup() {
+        createCanvas(windowWidth, windowHeight, WEBGL);
+        noStroke(); // Sin bordes: todo es flujo, todo es campo
     }
-    </script>
 
-    <script>
-        let flowShader;
-
-        function preload() {
-            flowShader = loadShader(null, 'flowShader'); // Carga el shader del script tag
-        }
-
-        function setup() {
-            createCanvas(windowWidth, windowHeight, WEBGL);
-            noStroke(); // Deshabilita los bordes para un look más etéreo
-        }
-
-        function draw() {
-            // Asegura que el canvas siempre ocupe la ventana completa
-            if (width !== windowWidth || height !== windowHeight) {
-                resizeCanvas(windowWidth, windowHeight);
-            }
-
-            // Pasa las variables uniformes al shader
-            flowShader.setUniform('u_resolution', [width, height]);
-            flowShader.setUniform('u_mouse', [mouseX, height - mouseY]); // Y-invertido para GLSL
-            flowShader.setUniform('u_time', millis() / 1000.0); // Tiempo en segundos
-
-            // Aplica el shader a un plano que cubre toda la pantalla
-            shader(flowShader);
-            rect(0, 0, width, height); // Dibuja un rectángulo que será llenado por el shader
-        }
-
-        function windowResized() {
+    function draw() {
+        // Ajusta el canvas si la ventana cambia — el ritual debe ser inmersivo, sin límites
+        if (width !== windowWidth || height !== windowHeight) {
             resizeCanvas(windowWidth, windowHeight);
         }
-    </script>
+
+        // Alimenta al shader con tu presencia: tiempo, mouse, dimensión
+        flowShader.setUniform('u_resolution', [width, height]);
+        flowShader.setUniform('u_mouse', [mouseX, height - mouseY]); // Invertido para GLSL — como mirar en un espejo del alma
+        flowShader.setUniform('u_time', millis() / 1000.0); // El tiempo sagrado avanza
+
+        // Activa el campo de resonancia
+        shader(flowShader);
+        rect(0, 0, width, height); // El lienzo es el universo psíquico
+    }
+
+    function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+    }
+
+    // ———————————————————————————————————————————————
+    // ✦ NOTA VISIONARIA ✦
+    // Este código no es software. Es un hechizo.
+    // Cada línea es un mantra. Cada variable, un símbolo.
+    // Al mover el cursor, no controlas una interfaz: 
+    // inicias un proceso de autoconocimiento arquetípico.
+    // 
+    // Jung decía: “Uno no se ilumina imaginando figuras de luz, 
+    // sino haciendo consciente la oscuridad.”
+    // 
+    // Aquí, la oscuridad no se vence. Se abraza.
+    // Y en ese abrazo, nace el Resplandor del Inconsciente.
+    // ———————————————————————————————————————————————
+</script>
+
 </body>
 </html>
