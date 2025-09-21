@@ -3,24 +3,727 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La pregunta más profunda no tiene una sola respuesta. - Damian Alejandro Linares</title>
+    <title>La Naturaleza del 'Yo'</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-    <!-- resto del código del template -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Georgia', serif;
+        }
+        
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 350px;
+            font-size: 14px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        #timer-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        #timer-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        .modo-observador { color: #ff6b6b !important; }
+        .modo-codigo { color: #4ecdc4 !important; }
+        .modo-maquina { color: #45b7d1 !important; }
+    </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-text">
-            <br>
-            <!-- resto igual -->
+    <div id="info">
+        <h3>🧠 La Naturaleza del 'Yo'</h3>
+        <p><strong>Una exploración automática</strong> de la conciencia</p>
+        <p><strong>Observador:</strong> Conciencia pura y etérea</p>
+        <p><strong>Código:</strong> El yo como información digital</p>
+        <p><strong>Máquina:</strong> El cerebro como hardware biológico</p>
+        <p><em>Cada estado dura 12 segundos...</em></p>
+    </div>
+    
+    <div id="controls">
+        <div id="estado-actual">Estado: Iniciando...</div>
+        <div id="tiempo-restante">Tiempo: --</div>
+        <div id="timer-bar">
+            <div id="timer-progress"></div>
+        </div>
+        <div style="margin-top: 8px; font-size: 12px; opacity: 0.8;">
+            Click para cambiar estado manualmente
         </div>
     </div>
-    
-    <div class="info-panel" id="infoPanel">
-        <div class="info-title"> </div>
-        <!-- resto con la descripción específica -->
-    </div>
-    
-    <!-- resto del HTML igual al template -->
-    <script src="sketch.js"></script>
+
+    <script>
+        // === LA NATURALEZA DEL 'YO' - VERSIÓN EXPANDIDA ===
+        // Una exploración visual de las tres naturalezas de la conciencia
+        
+        let chakras = [];
+        let particulasCodigo = [];
+        let particulasObservador = [];
+        let conexionesNeuronales = [];
+        let tiempo = 0;
+        let transicionTiempo = 0;
+        let estaTransicionando = false;
+        
+        const estadosDelYo = ["OBSERVADOR", "CÓDIGO", "MÁQUINA"];
+        const coloresEstados = ["#ff6b6b", "#4ecdc4", "#45b7d1"];
+        let estadoActual = 0;
+        let estadoAnterior = 0;
+        
+        // Configuración de tiempo (12 segundos = 720 frames a 60fps)
+        const DURACION_ESTADO = 720;
+        const DURACION_TRANSICION = 60;
+        let contadorFrame = 0;
+        
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            colorMode(HSB, 360, 100, 100, 100);
+            
+            // Inicializar chakras con propiedades expandidas
+            let coloresChakra = [0, 30, 60, 120, 210, 240, 275];
+            let nombresChakra = ["Raíz", "Sacro", "Plexo", "Corazón", "Garganta", "Tercer Ojo", "Corona"];
+            
+            for (let i = 0; i < 7; i++) {
+                chakras.push({
+                    y: (height * 0.85) - (i * height * 0.1),
+                    color: coloresChakra[i],
+                    nombre: nombresChakra[i],
+                    tam: 25,
+                    energia: random(0.5, 1.0),
+                    pulso: random(TWO_PI),
+                    orbitas: []
+                });
+                
+                // Órbitas para modo observador
+                for (let j = 0; j < 2; j++) {
+                    chakras[i].orbitas.push({
+                        radio: 40 + j * 20,
+                        angulo: random(TWO_PI),
+                        velocidad: 0.02 + j * 0.01
+                    });
+                }
+            }
+            
+            // Partículas para el estado "Código"
+            for (let i = 0; i < 300; i++) {
+                particulasCodigo.push({
+                    x: random(width),
+                    y: random(height),
+                    valor: floor(random(2)),
+                    velocidad: random(1, 4),
+                    opacidad: random(30, 100),
+                    tamano: random(8, 16)
+                });
+            }
+            
+            // Partículas para el estado "Observador"
+            for (let i = 0; i < 150; i++) {
+                particulasObservador.push({
+                    x: random(width),
+                    y: random(height),
+                    angulo: random(TWO_PI),
+                    radio: random(10, 200),
+                    velocidad: random(0.005, 0.02),
+                    tamano: random(15, 35),
+                    parpadeo: random(100)
+                });
+            }
+            
+            // Conexiones neuronales para el estado "Máquina"
+            for (let i = 0; i < 50; i++) {
+                conexionesNeuronales.push({
+                    x1: random(width * 0.3, width * 0.7),
+                    y1: random(height * 0.2, height * 0.8),
+                    x2: random(width * 0.3, width * 0.7),
+                    y2: random(height * 0.2, height * 0.8),
+                    activa: false,
+                    intensidad: 0,
+                    tiempoActivacion: random(60, 180)
+                });
+            }
+            
+            textAlign(CENTER, CENTER);
+            textFont('serif');
+            
+            // Inicializar interfaz
+            actualizarInterfaz();
+        }
+        
+        function draw() {
+            tiempo += 0.015;
+            contadorFrame++;
+            
+            // Gestión de estados y transiciones
+            gestionarEstados();
+            
+            // Fondo dinámico según el estado
+            dibujarFondo();
+            
+            // Dibujar según el estado actual
+            if (estaTransicionando) {
+                dibujarTransicion();
+            } else {
+                switch (estadosDelYo[estadoActual]) {
+                    case "OBSERVADOR":
+                        dibujarModoObservador();
+                        break;
+                    case "CÓDIGO":
+                        dibujarModoCodigo();
+                        break;
+                    case "MÁQUINA":
+                        dibujarModoMaquina();
+                        break;
+                }
+            }
+            
+            // Efectos globales
+            dibujarEfectosGlobales();
+            
+            // Actualizar interfaz
+            actualizarInterfaz();
+        }
+        
+        function gestionarEstados() {
+            let cicloCompleto = DURACION_ESTADO + DURACION_TRANSICION;
+            let posicionEnCiclo = contadorFrame % cicloCompleto;
+            
+            if (posicionEnCiclo >= DURACION_ESTADO && !estaTransicionando) {
+                // Iniciar transición
+                estaTransicionando = true;
+                estadoAnterior = estadoActual;
+                transicionTiempo = 0;
+            }
+            
+            if (estaTransicionando) {
+                transicionTiempo++;
+                if (transicionTiempo >= DURACION_TRANSICION) {
+                    // Completar transición
+                    estaTransicionando = false;
+                    estadoActual = (estadoActual + 1) % estadosDelYo.length;
+                    transicionTiempo = 0;
+                }
+            }
+        }
+        
+        function dibujarFondo() {
+            let colorBase;
+            switch (estadosDelYo[estadoActual]) {
+                case "OBSERVADOR":
+                    colorBase = color(240, 40, 8);
+                    break;
+                case "CÓDIGO":
+                    colorBase = color(180, 60, 10);
+                    break;
+                case "MÁQUINA":
+                    colorBase = color(220, 50, 12);
+                    break;
+            }
+            
+            if (estaTransicionando) {
+                let colorAnterior, colorNuevo;
+                switch (estadosDelYo[estadoAnterior]) {
+                    case "OBSERVADOR": colorAnterior = color(240, 40, 8); break;
+                    case "CÓDIGO": colorAnterior = color(180, 60, 10); break;
+                    case "MÁQUINA": colorAnterior = color(220, 50, 12); break;
+                }
+                switch (estadosDelYo[(estadoAnterior + 1) % 3]) {
+                    case "OBSERVADOR": colorNuevo = color(240, 40, 8); break;
+                    case "CÓDIGO": colorNuevo = color(180, 60, 10); break;
+                    case "MÁQUINA": colorNuevo = color(220, 50, 12); break;
+                }
+                let progreso = transicionTiempo / DURACION_TRANSICION;
+                colorBase = lerpColor(colorAnterior, colorNuevo, progreso);
+            }
+            
+            background(colorBase);
+        }
+        
+        function dibujarModoObservador() {
+            // Campo de conciencia universal con ojos
+            for (let p of particulasObservador) {
+                p.parpadeo += p.velocidad * 10;
+                let parpadeoVal = 0.5 + 0.5 * sin(p.parpadeo);
+                
+                if (parpadeoVal > 0.3) {
+                    push();
+                    translate(p.x, p.y);
+                    
+                    // Ojo exterior
+                    stroke(200, 30, 90, 20);
+                    strokeWeight(1);
+                    noFill();
+                    ellipse(0, 0, p.tamano, p.tamano * 0.7);
+                    
+                    // Pupila que sigue al centro
+                    let dx = width/2 - p.x;
+                    let dy = height/2 - p.y;
+                    let dist = sqrt(dx*dx + dy*dy);
+                    let mirax = map(dx, -dist, dist, -3, 3);
+                    let miray = map(dy, -dist, dist, -2, 2);
+                    
+                    fill(200, 80, 100, 40 + parpadeoVal * 40);
+                    noStroke();
+                    ellipse(mirax, miray, p.tamano * 0.3);
+                    
+                    pop();
+                }
+            }
+            
+            // Aura expansiva y etérea
+            push();
+            translate(width/2, height/2);
+            for (let i = 1; i < 8; i++) {
+                let radio = width * 0.3 + i * 30 + sin(tiempo + i) * 25;
+                noFill();
+                stroke(200, 60, 90, 8 + i * 2);
+                strokeWeight(i * 0.5);
+                ellipse(0, 0, radio);
+                
+                // Ondas de conciencia
+                stroke(300, 40, 100, 5);
+                strokeWeight(1);
+                ellipse(0, 0, radio + sin(tiempo * 2) * 20);
+            }
+            pop();
+            
+            // Figura de luz central
+            dibujarFiguraBase(1.0);
+            
+            // Tercer ojo especial
+            let tercerOjoY = chakras[5].y;
+            push();
+            translate(width/2, tercerOjoY);
+            
+            // Aura del tercer ojo
+            for (let i = 0; i < 5; i++) {
+                fill(280, 70, 100, 10 - i * 2);
+                ellipse(0, 0, 60 + i * 15);
+            }
+            
+            // Ojo principal
+            fill(280, 90, 100, 90);
+            ellipse(0, 0, 45, 30);
+            
+            // Pupila cósmica
+            fill(240, 100, 20);
+            ellipse(0, 0, 15, 15);
+            
+            // Brillo
+            fill(0, 0, 100, 80);
+            ellipse(-3, -3, 5);
+            
+            // Rayos de sabiduría
+            for (let i = 0; i < 8; i++) {
+                let angulo = map(i, 0, 8, 0, TWO_PI);
+                let longitud = 30 + sin(tiempo * 3 + i) * 10;
+                stroke(280, 60, 100, 40);
+                strokeWeight(2);
+                line(0, 0, cos(angulo) * longitud, sin(angulo) * longitud);
+            }
+            
+            pop();
+        }
+        
+        function dibujarModoCodigo() {
+            // Matriz digital de fondo
+            stroke(120, 60, 50, 30);
+            strokeWeight(0.5);
+            for (let i = 0; i < width; i += 25) {
+                line(i, 0, i, height);
+            }
+            for (let i = 0; i < height; i += 25) {
+                line(0, i, width, i);
+            }
+            
+            // Puntos de conexión en la matriz
+            fill(120, 80, 80, 20);
+            noStroke();
+            for (let x = 0; x < width; x += 50) {
+                for (let y = 0; y < height; y += 50) {
+                    if (random() < 0.1) {
+                        ellipse(x, y, 4);
+                    }
+                }
+            }
+            
+            // Flujo de datos binarios mejorado
+            for (let p of particulasCodigo) {
+                p.y += p.velocidad;
+                if (p.y > height + p.tamano) {
+                    p.y = -p.tamano;
+                    p.x = random(width);
+                    p.valor = floor(random(2));
+                }
+                
+                // Efecto de estela
+                for (let i = 0; i < 5; i++) {
+                    let alpha = p.opacidad * (1 - i * 0.15);
+                    fill(120, 90, 100, alpha);
+                    textSize(p.tamano - i * 2);
+                    text(p.valor, p.x, p.y - i * (p.tamano + 5));
+                }
+            }
+            
+            // Figura geometrizada
+            dibujarFiguraBase(0.7);
+            
+            // Chakras como nodos de datos
+            for (let i = 0; i < chakras.length; i++) {
+                let c = chakras[i];
+                c.pulso += 0.1;
+                
+                push();
+                translate(width/2, c.y);
+                rotate(tiempo * (i % 2 == 0 ? -1 : 1) * 0.5);
+                
+                // Hexágono de datos
+                stroke(c.color, 100, 100, 80);
+                strokeWeight(2);
+                noFill();
+                beginShape();
+                for (let j = 0; j < 6; j++) {
+                    let angulo = map(j, 0, 6, 0, TWO_PI);
+                    let radio = c.tam + sin(c.pulso) * 5;
+                    vertex(cos(angulo) * radio, sin(angulo) * radio);
+                }
+                endShape(CLOSE);
+                
+                // Centro brillante
+                fill(c.color, 80, 100, 60);
+                ellipse(0, 0, 8);
+                
+                // Datos orbitales
+                for (let j = 0; j < 3; j++) {
+                    let orbitAngulo = tiempo * (1 + j * 0.5) + i;
+                    let orbitRadio = c.tam + 15 + j * 8;
+                    let orbitX = cos(orbitAngulo) * orbitRadio;
+                    let orbitY = sin(orbitAngulo) * orbitRadio;
+                    
+                    fill(c.color, 90, 100, 40);
+                    textSize(8);
+                    text(floor(random(2)), orbitX, orbitY);
+                }
+                
+                pop();
+            }
+            
+            // Conexiones de datos entre chakras
+            for (let i = 0; i < chakras.length - 1; i++) {
+                if (frameCount % 30 < 15) { // Parpadeo de conexión
+                    stroke(60, 100, 100, 60);
+                    strokeWeight(1.5);
+                    
+                    // Línea principal
+                    line(width/2, chakras[i].y, width/2, chakras[i+1].y);
+                    
+                    // Paquetes de datos viajando
+                    let progreso = (frameCount * 0.05) % 1;
+                    let dataY = lerp(chakras[i].y, chakras[i+1].y, progreso);
+                    fill(60, 100, 100, 80);
+                    noStroke();
+                    ellipse(width/2, dataY, 6);
+                }
+            }
+        }
+        
+        function dibujarModoMaquina() {
+            // Campo electromagnético
+            for (let i = 0; i < 60; i++) {
+                stroke(200, 70, 100, random(8, 25));
+                strokeWeight(random(0.3, 1.5));
+                let startY = random(height);
+                let endY = startY + random(-80, 80);
+                let curvatura = random(-50, 50);
+                noFill();
+                bezier(0, startY, width * 0.3, startY + curvatura, 
+                       width * 0.7, endY - curvatura, width, endY);
+            }
+            
+            // Impulsos eléctricos
+            if (frameCount % 10 == 0) {
+                for (let i = 0; i < 5; i++) {
+                    stroke(60, 100, 100, 80);
+                    strokeWeight(3);
+                    line(random(width), 0, random(width), height);
+                }
+            }
+            
+            // Figura con definición mecánica
+            dibujarFiguraBase(0.8);
+            
+            // Red neuronal interna compleja
+            actualizarConexionesNeuronales();
+            dibujarRedNeuronal();
+            
+            // Chakras como circuitos
+            for (let i = 0; i < chakras.length; i++) {
+                let c = chakras[i];
+                
+                push();
+                translate(width/2, c.y);
+                
+                // Circuito base
+                stroke(c.color, 80, 100, 60);
+                strokeWeight(2);
+                noFill();
+                
+                // Forma de circuito
+                rectMode(CENTER);
+                rect(0, 0, c.tam * 2, c.tam * 1.2);
+                
+                // Conexiones del circuito
+                stroke(c.color, 90, 100, 40);
+                strokeWeight(1);
+                for (let j = 0; j < 4; j++) {
+                    let lineaAngulo = map(j, 0, 4, 0, TWO_PI);
+                    let lineaX = cos(lineaAngulo) * (c.tam + 10);
+                    let lineaY = sin(lineaAngulo) * (c.tam + 10);
+                    line(0, 0, lineaX, lineaY);
+                }
+                
+                // LED central
+                let intensidad = 50 + sin(tiempo * 8 + i) * 50;
+                fill(c.color, 70, 100, intensidad);
+                ellipse(0, 0, 8);
+                
+                // Chispas eléctricas ocasionales
+                if (random() < 0.05) {
+                    stroke(60, 100, 100, 100);
+                    strokeWeight(1);
+                    for (let k = 0; k < 3; k++) {
+                        let sparkX = random(-c.tam, c.tam);
+                        let sparkY = random(-c.tam, c.tam);
+                        line(0, 0, sparkX, sparkY);
+                    }
+                }
+                
+                pop();
+            }
+        }
+        
+        function dibujarTransicion() {
+            let progreso = transicionTiempo / DURACION_TRANSICION;
+            
+            // Efecto de distorsión durante la transición
+            push();
+            translate(width/2, height/2);
+            
+            // Ondas de transformación
+            for (let r = 50; r < 300; r += 20) {
+                noFill();
+                stroke(0, 0, 100, 20 * (1 - progreso));
+                strokeWeight(2);
+                ellipse(0, 0, r + sin(tiempo * 5 + r * 0.1) * progreso * 50);
+            }
+            
+            // Texto de transición
+            fill(0, 0, 100, 60 + progreso * 40);
+            textSize(18 + progreso * 8);
+            text(`Transformando a ${estadosDelYo[(estadoAnterior + 1) % 3]}...`, 0, 0);
+            
+            pop();
+            
+            // Dibujar ambos estados superpuestos
+            tint(255, 255 * (1 - progreso));
+            switch (estadosDelYo[estadoAnterior]) {
+                case "OBSERVADOR": dibujarModoObservador(); break;
+                case "CÓDIGO": dibujarModoCodigo(); break;
+                case "MÁQUINA": dibujarModoMaquina(); break;
+            }
+            
+            tint(255, 255 * progreso);
+            switch (estadosDelYo[(estadoAnterior + 1) % 3]) {
+                case "OBSERVADOR": dibujarModoObservador(); break;
+                case "CÓDIGO": dibujarModoCodigo(); break;
+                case "MÁQUINA": dibujarModoMaquina(); break;
+            }
+            
+            noTint();
+        }
+        
+        function actualizarConexionesNeuronales() {
+            for (let conexion of conexionesNeuronales) {
+                conexion.tiempoActivacion--;
+                
+                if (conexion.tiempoActivacion <= 0 && !conexion.activa) {
+                    conexion.activa = true;
+                    conexion.intensidad = 100;
+                    conexion.tiempoActivacion = random(120, 300);
+                }
+                
+                if (conexion.activa) {
+                    conexion.intensidad -= 3;
+                    if (conexion.intensidad <= 0) {
+                        conexion.activa = false;
+                    }
+                }
+            }
+        }
+        
+        function dibujarRedNeuronal() {
+            for (let conexion of conexionesNeuronales) {
+                if (conexion.activa && conexion.intensidad > 0) {
+                    // Conexión neuronal
+                    stroke(60, 100, 100, conexion.intensidad * 0.8);
+                    strokeWeight(2 + conexion.intensidad * 0.02);
+                    line(conexion.x1, conexion.y1, conexion.x2, conexion.y2);
+                    
+                    // Nodos neuronales
+                    fill(60, 100, 100, conexion.intensidad);
+                    noStroke();
+                    ellipse(conexion.x1, conexion.y1, 6);
+                    ellipse(conexion.x2, conexion.y2, 6);
+                    
+                    // Pulso que viaja
+                    let pulsoT = (frameCount * 0.1) % 1;
+                    let pulsoX = lerp(conexion.x1, conexion.x2, pulsoT);
+                    let pulsoY = lerp(conexion.y1, conexion.y2, pulsoT);
+                    
+                    fill(300, 100, 100, conexion.intensidad * 0.6);
+                    ellipse(pulsoX, pulsoY, 4);
+                }
+            }
+        }
+        
+        function dibujarFiguraBase(luminosidad) {
+            let alpha = 60 * luminosidad;
+            
+            // Columna central de energía
+            stroke(0, 0, 100, alpha);
+            strokeWeight(4 + luminosidad * 4);
+            line(width / 2, 0, width / 2, height);
+            
+            // Chakras base
+            for (let i = 0; i < chakras.length; i++) {
+                let c = chakras[i];
+                let brillo = 100 * luminosidad;
+                let pulso = sin(tiempo * 3 + i) * 8 * luminosidad;
+                
+                // Aura del chakra
+                noStroke();
+                fill(c.color, 70, brillo, 15 + luminosidad * 15);
+                ellipse(width / 2, c.y, (c.tam + pulso) * 4);
+                
+                // Núcleo del chakra
+                fill(c.color, 90, brillo, 80 + luminosidad * 20);
+                ellipse(width / 2, c.y, c.tam + pulso);
+                
+                // Punto central brillante
+                fill(0, 0, 100, brillo);
+                ellipse(width / 2, c.y, 4);
+            }
+        }
+        
+        function dibujarEfectosGlobales() {
+            // Partículas de energía ambiente
+            for (let i = 0; i < 5; i++) {
+                let x = random(width);
+                let y = random(height);
+                let tam = random(2, 6);
+                
+                fill(random(360), 60, 100, 30);
+                noStroke();
+                ellipse(x, y, tam);
+            }
+            
+            // Pulso global sutil
+            if (frameCount % 120 == 0) {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        // Efecto de pulso que se expande
+                    }, i * 200);
+                }
+            }
+        }
+        
+        function actualizarInterfaz() {
+            let estado = estadosDelYo[estadoActual];
+            let cicloCompleto = DURACION_ESTADO + DURACION_TRANSICION;
+            let posicionEnCiclo = contadorFrame % cicloCompleto;
+            let tiempoRestante = Math.max(0, DURACION_ESTADO - posicionEnCiclo);
+            let progreso = ((posicionEnCiclo % DURACION_ESTADO) / DURACION_ESTADO) * 100;
+            
+            document.getElementById('estado-actual').textContent = 
+                estaTransicionando ? `Transformando...` : `Estado: ${estado}`;
+            
+            document.getElementById('tiempo-restante').textContent = 
+                estaTransicionando ? `Transición: ${Math.ceil((DURACION_TRANSICION - transicionTiempo) / 60)}s` 
+                : `Tiempo: ${Math.ceil(tiempoRestante / 60)}s`;
+            
+            // Actualizar barra de progreso
+            let progressBar = document.getElementById('timer-progress');
+            if (!estaTransicionando) {
+                progressBar.style.width = `${progreso}%`;
+            } else {
+                progressBar.style.width = `${(transicionTiempo / DURACION_TRANSICION) * 100}%`;
+            }
+            
+            // Cambiar clase CSS según el estado
+            let controlsDiv = document.getElementById('controls');
+            controlsDiv.className = `modo-${estado.toLowerCase()}`;
+        }
+        
+        function mousePressed() {
+            // Cambio manual de estado
+            if (!estaTransicionando) {
+                estaTransicionando = true;
+                estadoAnterior = estadoActual;
+                transicionTiempo = 0;
+                contadorFrame = 0; // Reiniciar el ciclo
+            }
+        }
+        
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            
+            // Reposicionar chakras
+            for (let i = 0; i < 7; i++) {
+                chakras[i].y = (height * 0.85) - (i * height * 0.1);
+            }
+            
+            // Reposicionar partículas observador
+            for (let p of particulasObservador) {
+                if (p.x > width) p.x = random(width);
+                if (p.y > height) p.y = random(height);
+            }
+            
+            // Reposicionar conexiones neuronales
+            for (let conexion of conexionesNeuronales) {
+                conexion.x1 = random(width * 0.3, width * 0.7);
+                conexion.x2 = random(width * 0.3, width * 0.7);
+                conexion.y1 = random(height * 0.2, height * 0.8);
+                conexion.y2 = random(height * 0.2, height * 0.8);
+            }
+        }
+    </script>
 </body>
 </html>
