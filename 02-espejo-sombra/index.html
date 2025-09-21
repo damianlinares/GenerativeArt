@@ -336,11 +336,10 @@
 
         // Sistema psicológico complejo
         let psyche = {
-            // Elementos estructurales
             ego: { x: 0, y: 0, energia: 1, estabilidad: 1 },
             sombra: { 
                 x: 0, y: 0, radio: 0, puntos: [], fragmentos: [],
-                energia: 0, visibilidad: 0, hostilidad: 0.3, // Hostilidad añadida
+                energia: 0, visibilidad: 0, hostilidad: 0.3, 
                 arquetipos: []
             },
             anima: { energia: 0, manifestaciones: [] },
@@ -349,48 +348,24 @@
             // --- EVOLUCIÓN --- Nuevos elementos: Complejos
             complejos: [],
 
-            // Estados dinámicos
-            consciencia: 0,
-            integracion: 0,
-            individuacion: 0,
-            fase: 0,
-            tiempo: 0,
+            consciencia: 0, integracion: 0, individuacion: 0,
+            fase: 0, tiempo: 0,
             
-            // Elementos visuales
-            chakras: [],
-            particulas: [],
-            simbolos: [],
-            conexiones: [],
+            chakras: [], particulas: [], simbolos: [], conexiones: [],
             
-            // Estados de interacción
-            loadingComplete: false,
-            modoConfronta: false,
-            arquetiposActivos: false,
-            mandalaVisible: false,
+            loadingComplete: false, modoConfronta: false,
+            arquetiposActivos: false, mandalaVisible: false,
 
             // --- EVOLUCIÓN --- Estado para el clímax
             estadoUnificacion: 'ninguno' // ninguno, viajando, unificado
         };
 
-        // Fases de la individuación según Jung
-        const FASES_INDIVIDUACION = [
-            "Inconsciencia inicial",
-            "Encuentro con la Persona",
-            "Confrontación con la Sombra",
-            "Encuentro con Anima/Animus", 
-            "Desarrollo del Self",
-            "Individuación realizada"
-        ];
-
-        const ARQUETIPOS_SIMBOLOS = [
-            "El Misterio", "El Espejo", "La Serpiente", "El Árbol",
-            "La Corona", "El Círculo", "La Espiral", "El Ojo"
-        ];
+        const FASES_INDIVIDUACION = ["Inconsciencia inicial", "Encuentro con la Persona", "Confrontación con la Sombra", "Encuentro con Anima/Animus", "Desarrollo del Self", "Individuación realizada"];
+        const ARQUETIPOS_SIMBOLOS = ["El Misterio", "El Espejo", "La Serpiente", "El Árbol", "La Corona", "El Círculo", "La Espiral", "El Ojo"];
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
             colorMode(HSB, 360, 100, 100, 100);
-            
             inicializarPsique();
             setTimeout(ocultarPantallaCarga, 3000);
             prevMouseX = mouseX;
@@ -398,14 +373,9 @@
         }
 
         function inicializarPsique() {
-            // Resetear estado de unificación
             psyche.estadoUnificacion = 'ninguno';
-
-            // Posición del ego (centro-izquierda)
             psyche.ego.x = width * 0.3;
             psyche.ego.y = height * 0.5;
-            
-            // Configuración de la sombra (centro-derecha)
             psyche.sombra.x = width * 0.7;
             psyche.sombra.y = height * 0.5;
             psyche.sombra.radio = height * 0.25;
@@ -414,12 +384,9 @@
             inicializarChakras();
             crearParticulas();
             generarSimbolos();
-
-            // --- EVOLUCIÓN --- Generar complejos psíquicos
             generarComplejos();
         }
         
-        // --- EVOLUCIÓN --- Función para crear los complejos
         function generarComplejos() {
             psyche.complejos = [];
             for(let i = 0; i < 5; i++) {
@@ -439,8 +406,6 @@
         function generarGeometriaSombra() {
             psyche.sombra.puntos = [];
             psyche.sombra.fragmentos = [];
-            
-            // Contorno fluido de la sombra
             for (let i = 0; i < 60; i++) {
                 psyche.sombra.puntos.push({
                     angulo: map(i, 0, 60, 0, TWO_PI),
@@ -450,8 +415,6 @@
                     intensidad: random(0.5, 1.0)
                 });
             }
-            
-            // Fragmentos internos (aspectos rechazados)
             for(let i = 0; i < 25; i++) {
                 psyche.sombra.fragmentos.push({
                     x: random(-psyche.sombra.radio * 0.7, psyche.sombra.radio * 0.7),
@@ -469,7 +432,6 @@
         function inicializarChakras() {
             let coloresTradicionales = [0, 30, 60, 120, 210, 240, 275];
             let nombresChakras = ["Raíz", "Sacro", "Plexo", "Corazón", "Garganta", "Tercer Ojo", "Corona"];
-            
             psyche.chakras = [];
             for (let i = 0; i < 7; i++) {
                 psyche.chakras.push({
@@ -489,14 +451,10 @@
             psyche.particulas = [];
             for(let i = 0; i < 80; i++) {
                 psyche.particulas.push({
-                    x: random(width),
-                    y: random(height),
-                    vx: random(-0.5, 0.5),
-                    vy: random(-0.5, 0.5),
-                    tam: random(1, 4),
-                    hue: random(240, 320),
-                    alpha: random(20, 70),
-                    tipo: Math.floor(random(5)),
+                    x: random(width), y: random(height),
+                    vx: random(-0.5, 0.5), vy: random(-0.5, 0.5),
+                    tam: random(1, 4), hue: random(240, 320),
+                    alpha: random(20, 70), tipo: Math.floor(random(5)),
                     arquetipoVinculo: -1
                 });
             }
@@ -509,10 +467,8 @@
                     x: random(width * 0.1, width * 0.9),
                     y: random(height * 0.1, height * 0.9),
                     simbolo: ARQUETIPOS_SIMBOLOS[Math.floor(random(ARQUETIPOS_SIMBOLOS.length))],
-                    alpha: 0,
-                    rotacion: 0,
-                    escala: random(0.5, 1.5),
-                    energia: 0
+                    alpha: 0, rotacion: 0,
+                    escala: random(0.5, 1.5), energia: 0
                 });
             }
         }
@@ -520,7 +476,6 @@
         function draw() {
             if (!psyche.loadingComplete) return;
             
-            // --- EVOLUCIÓN --- Lógica de Unificación del Self
             if(psyche.estadoUnificacion === 'viajando') {
                 psyche.ego.x = lerp(psyche.ego.x, width/2, 0.02);
                 psyche.sombra.x = lerp(psyche.sombra.x, width/2, 0.02);
@@ -531,7 +486,6 @@
                 }
             }
 
-            // Fondo dinámico según el estado psicológico
             let bgHue = lerp(240, 280, psyche.integracion);
             let bgSat = lerp(60, 25, psyche.consciencia);
             let bgBright = psyche.modoConfronta ? 1 : lerp(2, 6, psyche.consciencia);
@@ -539,18 +493,14 @@
             
             psyche.tiempo += 0.008;
             
-            // Calcular estados psicológicos
             if (psyche.estadoUnificacion !== 'unificado') {
                 calcularEstadosPsicologicos();
             }
             
-            // Sistema de renderizado por capas
             dibujarCampoEnergetico();
             dibujarParticulas();
-
-            // --- EVOLUCIÓN --- Dibujar complejos
             dibujarComplejos();
-
+            
             if (psyche.estadoUnificacion !== 'unificado') {
                 dibujarEgo();
                 dibujarSombra();
@@ -565,18 +515,14 @@
             }
             
             actualizarInterfaz();
-
-            // --- EVOLUCIÓN --- Actualizar posición previa del ratón
             prevMouseX = mouseX;
             prevMouseY = mouseY;
         }
 
         function calcularEstadosPsicologicos() {
-            // Consciencia basada en proximidad y tiempo
             let proximidad = dist(mouseX, mouseY, psyche.sombra.x, psyche.sombra.y);
             let factorProximidad = map(proximidad, width/2, 50, 0, 1, true);
             
-            // --- EVOLUCIÓN --- Hostilidad reduce ganancia de consciencia
             let velocidadMouse = dist(mouseX, mouseY, prevMouseX, prevMouseY);
             if (velocidadMouse > 20) {
                  psyche.sombra.hostilidad = lerp(psyche.sombra.hostilidad, 0.9, 0.1);
@@ -584,29 +530,23 @@
                  psyche.sombra.hostilidad = lerp(psyche.sombra.hostilidad, 0.1, 0.02);
             }
             psyche.consciencia = lerp(psyche.consciencia, factorProximidad * 0.7 + psyche.tiempo * 0.3, 0.01) * (1 - psyche.sombra.hostilidad * 0.5);
+            psyche.consciencia = constrain(psyche.consciencia, 0, 1);
             
-            // Integración como síntesis de opuestos
             psyche.integracion = (psyche.consciencia + psyche.sombra.energia * 0.8) * 0.6;
-            
-            // Individuación como proceso total
             psyche.individuacion = (psyche.consciencia * 0.4 + psyche.integracion * 0.6) * (psyche.arquetiposActivos ? 1.2 : 1.0);
-            psyche.individuacion = constrain(psyche.individuacion, 0, 1); // Asegurarse que no pase de 1
+            psyche.individuacion = constrain(psyche.individuacion, 0, 1);
 
-            // --- EVOLUCIÓN --- Activar unificación al llegar al 100%
             if (psyche.individuacion >= 0.99 && psyche.estadoUnificacion === 'ninguno') {
                 psyche.estadoUnificacion = 'viajando';
             }
 
-            // Actualizar energía de la sombra
             psyche.sombra.energia = constrain(psyche.consciencia * 1.5, 0, 1);
             psyche.sombra.visibilidad = psyche.sombra.energia;
             
-            // Determinar fase actual
             psyche.fase = Math.floor(psyche.individuacion * FASES_INDIVIDUACION.length);
             psyche.fase = constrain(psyche.fase, 0, FASES_INDIVIDUACION.length - 1);
         }
         
-        // --- EVOLUCIÓN --- Nueva función para dibujar complejos
         function dibujarComplejos() {
             for(let c of psyche.complejos) {
                 if (c.energia > 0) {
@@ -615,11 +555,10 @@
                     c.x += movimientoX;
                     c.y += movimientoY;
 
-                    // Lógica de activación del complejo
                     if (dist(mouseX, mouseY, c.x, c.y) < c.radio && !c.activado) {
                         c.activado = true;
-                        c.tiempoActivado = 180; // Duración del efecto en frames
-                        psyche.consciencia *= 0.5; // Penalización a la consciencia
+                        c.tiempoActivado = 180;
+                        psyche.consciencia *= 0.5;
                     }
 
                     if(c.activado) {
@@ -629,11 +568,9 @@
                     
                     push();
                     translate(c.x, c.y);
-                    
                     let alphaComplejo = c.activado ? 100 : 40;
                     let brilloComplejo = c.activado ? 100 : 70;
                     
-                    // Aura del complejo
                     for(let i = 2; i >= 0; i--) {
                         noFill();
                         stroke(0, 80, brilloComplejo, alphaComplejo / (i + 1) * (c.activado ? 2 : 1));
@@ -642,18 +579,15 @@
                         ellipse(0, 0, c.radio * 2 + i * 15 + pulsacion);
                     }
                     
-                    // Núcleo
                     fill(0, 90, brilloComplejo - 20, 90);
                     noStroke();
                     ellipse(0, 0, c.radio);
-
                     pop();
                 }
             }
         }
 
         function dibujarCampoEnergetico() {
-            // Campo energético del ego
             let egoRadio = lerp(width * 0.15, width * 0.35, psyche.consciencia);
             for(let i = 4; i >= 0; i--) {
                 let factor = 1 + (i * 0.2);
@@ -665,14 +599,12 @@
                 ellipse(psyche.ego.x, psyche.ego.y, egoRadio * factor * respiracion);
             }
             
-            // Campo energético de la sombra (cuando es consciente)
             if(psyche.sombra.energia > 0.2) {
                 let sombraRadio = lerp(psyche.sombra.radio * 0.5, psyche.sombra.radio * 1.5, psyche.sombra.energia);
                 for(let i = 3; i >= 0; i--) {
                     let factor = 1 + (i * 0.15);
                     let alpha = psyche.sombra.energia * 18 / (i + 1);
                     noFill();
-                    // --- EVOLUCIÓN --- El color ahora es afectado por la hostilidad
                     let hueSombra = lerp(280, 0, psyche.sombra.hostilidad);
                     stroke(hueSombra, 60, 60, alpha);
                     strokeWeight(2 - i * 0.4);
@@ -681,58 +613,28 @@
             }
         }
 
-        // El resto de funciones de dibujo (dibujarParticulas, dibujarEgo, dibujarSombra, etc.)
-        // permanecen mayormente iguales, con pequeños ajustes para acomodar los nuevos estados.
-        // Las funciones de la interfaz y de eventos también se mantienen.
-        // ... (resto del código sin cambios significativos) ...
-        // Se omite el resto del código para brevedad, ya que las funciones principales
-        // de dibujo y control no necesitan cambios drásticos, solo interactúan con
-        // las nuevas variables del objeto 'psyche'.
-         function dibujarParticulas() {
+        function dibujarParticulas() {
             for(let p of psyche.particulas) {
-                let fuerzaEgo = createVector(psyche.ego.x - p.x, psyche.ego.y - p.y);
-                fuerzaEgo.mult(0.00005 * psyche.consciencia);
-                
-                let fuerzaSombra = createVector(psyche.sombra.x - p.x, psyche.sombra.y - p.y);
-                fuerzaSombra.mult(0.00003 * psyche.sombra.energia);
-                
+                let fuerzaEgo = createVector(psyche.ego.x - p.x, psyche.ego.y - p.y).mult(0.00005 * psyche.consciencia);
+                let fuerzaSombra = createVector(psyche.sombra.x - p.x, psyche.sombra.y - p.y).mult(0.00003 * psyche.sombra.energia);
                 p.vx += fuerzaEgo.x + fuerzaSombra.x;
                 p.vy += fuerzaEgo.y + fuerzaSombra.y;
-                
                 p.x += p.vx;
                 p.y += p.vy;
                 p.vx *= 0.995;
                 p.vy *= 0.995;
-                
-                if(p.x < 0) p.x = width;
-                if(p.x > width) p.x = 0;
-                if(p.y < 0) p.y = height;
-                if(p.y > height) p.y = 0;
-                
+                if(p.x < 0) p.x = width; if(p.x > width) p.x = 0; if(p.y < 0) p.y = height; if(p.y > height) p.y = 0;
                 noStroke();
-                let particleAlpha = p.alpha * (psyche.modoConfronta ? 0.3 : 1);
-                fill(p.hue, 60, 90, particleAlpha);
-                
+                fill(p.hue, 60, 90, p.alpha * (psyche.modoConfronta ? 0.3 : 1));
                 push();
                 translate(p.x, p.y);
                 rotate(psyche.tiempo * (p.tipo - 2));
-                
                 switch(p.tipo) {
                     case 0: ellipse(0, 0, p.tam); break;
                     case 1: rect(-p.tam/2, -p.tam/2, p.tam, p.tam); break;
                     case 2: triangle(-p.tam/2, p.tam/2, p.tam/2, p.tam/2, 0, -p.tam/2); break;
-                    case 3: 
-                        beginShape();
-                        for(let a = 0; a < TWO_PI; a += PI/3) {
-                            let r = p.tam/2 * (0.8 + sin(a * 3 + psyche.tiempo * 5) * 0.3);
-                            vertex(cos(a) * r, sin(a) * r);
-                        }
-                        endShape(CLOSE);
-                        break;
-                    case 4:
-                        line(-p.tam/2, 0, p.tam/2, 0);
-                        line(0, -p.tam/2, 0, p.tam/2);
-                        break;
+                    case 3: beginShape(); for(let a=0;a<TWO_PI;a+=PI/3){let r=p.tam/2*(0.8+sin(a*3+psyche.tiempo*5)*0.3);vertex(cos(a)*r,sin(a)*r);}endShape(CLOSE); break;
+                    case 4: line(-p.tam/2,0,p.tam/2,0); line(0,-p.tam/2,0,p.tam/2); break;
                 }
                 pop();
             }
@@ -742,30 +644,20 @@
             strokeWeight(lerp(1, 6, psyche.consciencia));
             stroke(0, 0, 100, lerp(20, 80, psyche.consciencia));
             line(psyche.ego.x, height * 0.9, psyche.ego.x, height * 0.1);
-
-            let chakrasActivos = 0;
-            
             for (let i = 0; i < psyche.chakras.length; i++) {
                 let c = psyche.chakras[i];
                 c.energia = constrain(psyche.consciencia * 8 - i, 0, 1);
                 c.resonancia = psyche.integracion * c.energia;
                 c.activo = c.energia > 0.25;
-                
-                if(c.activo) chakrasActivos++;
-                
                 let pulsacion = sin(psyche.tiempo * 4 - i * 0.6) * lerp(5, 15, c.energia);
                 let tamActual = c.tam + pulsacion;
-                
                 for(let j = 4; j >= 0; j--) {
                     noStroke();
-                    let alphaAura = lerp(2, 35, c.energia) / (j + 1);
-                    fill(c.color, 70, 90, alphaAura);
+                    fill(c.color, 70, 90, lerp(2, 35, c.energia) / (j + 1));
                     ellipse(psyche.ego.x, c.y, tamActual * (1.8 + j * 0.6));
                 }
-                
                 fill(c.color, 80, lerp(40, 100, c.energia), lerp(60, 100, c.energia));
                 ellipse(psyche.ego.x, c.y, tamActual);
-                
                 if(c.energia > 0.4) {
                     push();
                     translate(psyche.ego.x, c.y);
@@ -776,11 +668,9 @@
                     text("◉", 0, 0);
                     pop();
                 }
-                
                 if(c.resonancia > 0.6 && psyche.arquetiposActivos) {
                     stroke(c.color, 60, 100, c.resonancia * 40);
-                    strokeWeight(1);
-                    noFill();
+                    strokeWeight(1); noFill();
                     ellipse(psyche.ego.x, c.y, tamActual * 3);
                 }
             }
@@ -789,73 +679,43 @@
         function dibujarSombra() {
             push();
             translate(psyche.sombra.x, psyche.sombra.y);
-            
             noStroke();
             let sombraAlpha = psyche.modoConfronta ? 150 : lerp(40, 120, psyche.sombra.visibilidad);
-            // --- EVOLUCIÓN --- Color afectado por hostilidad
             let hueSombra = lerp(280, 0, psyche.sombra.hostilidad);
             let brilloSombra = lerp(8, 20, psyche.sombra.hostilidad);
             fill(hueSombra, 60, brilloSombra, sombraAlpha);
-            
             beginShape();
             for (let p of psyche.sombra.puntos) {
                 let ruido = noise(p.ruidoOffset + psyche.tiempo * p.velocidad);
                 let d = p.distancia + map(ruido, 0, 1, -40, 40) * p.intensidad * (1 + psyche.sombra.hostilidad);
-                let x = cos(p.angulo) * d;
-                let y = sin(p.angulo) * d;
-                curveVertex(x, y);
+                curveVertex(cos(p.angulo) * d, sin(p.angulo) * d);
             }
             endShape(CLOSE);
-            
             if (psyche.sombra.energia > 0.2 || psyche.modoConfronta) {
                 for (let f of psyche.sombra.fragmentos) {
                     push();
                     translate(f.x, f.y);
                     rotate(f.rotacion + psyche.tiempo * f.velocidadRot);
-                    
                     let fragmentAlpha = (psyche.modoConfronta ? f.alpha * 2 : f.alpha * psyche.sombra.energia * 3);
-                    let hueVariacion = f.arquetipo * 20 + sin(psyche.tiempo + f.x * 0.1) * 15;
-                    fill(275 + hueVariacion, 70, 60, fragmentAlpha);
-                    
-                    let pulsacion = 1 + sin(psyche.tiempo * f.pulsacion + f.rotacion) * 0.3;
-                    let tamFinal = f.tam * pulsacion;
-                    
-                    switch(f.arquetipo) {
-                        case 0: ellipse(0, 0, tamFinal); break;
-                        case 1: rect(-tamFinal/2, -tamFinal/2, tamFinal, tamFinal); break;
-                        case 2: triangle(-tamFinal/2, tamFinal/2, tamFinal/2, tamFinal/2, 0, -tamFinal/2); break;
-                        case 3: 
-                            beginShape();
-                            for(let a = 0; a < TWO_PI; a += PI/6) {
-                                let r1 = tamFinal/2; let r2 = tamFinal/4;
-                                vertex(cos(a) * r1, sin(a) * r1);
-                                vertex(cos(a + PI/6) * r2, sin(a + PI/6) * r2);
-                            }
-                            endShape(CLOSE);
-                            break;
-                    }
-                    
+                    fill(275 + f.arquetipo*20 + sin(psyche.tiempo+f.x*0.1)*15, 70, 60, fragmentAlpha);
+                    let tamFinal = f.tam * (1 + sin(psyche.tiempo*f.pulsacion+f.rotacion)*0.3);
+                    switch(f.arquetipo){case 0:ellipse(0,0,tamFinal);break;case 1:rect(-tamFinal/2,-tamFinal/2,tamFinal,tamFinal);break;case 2:triangle(-tamFinal/2,tamFinal/2,tamFinal/2,tamFinal/2,0,-tamFinal/2);break;case 3:beginShape();for(let a=0;a<TWO_PI;a+=PI/6){let r1=tamFinal/2;let r2=tamFinal/4;vertex(cos(a)*r1,sin(a)*r1);vertex(cos(a+PI/6)*r2,sin(a+PI/6)*r2);}endShape(CLOSE);break;}
                     f.rotacion += f.velocidadRot;
                     pop();
                 }
             }
-            
             if(psyche.sombra.energia > 0.3 || psyche.modoConfronta) {
                 let nucleoSize = lerp(15, 35, psyche.sombra.energia);
                 let nucleoPulse = sin(psyche.tiempo * 3) * 5 * (1 + psyche.sombra.hostilidad * 2);
-                
                 fill(300, 80, 70, lerp(30, 100, psyche.sombra.energia));
                 ellipse(0, 0, nucleoSize + nucleoPulse + 10);
-                
                 fill(0, 0, 5, 90);
                 ellipse(0, 0, nucleoSize + nucleoPulse);
-                
                 if(psyche.integracion > 0.6) {
                     fill(0, 0, 100, psyche.integracion * 150);
                     ellipse(0, 0, 5);
                 }
             }
-            
             pop();
         }
 
@@ -864,66 +724,167 @@
                 for (let i = 0; i < psyche.chakras.length; i++) {
                     let c = psyche.chakras[i];
                     if(c.activo && c.resonancia > 0.4) {
-                        let conexiones = Math.floor(psyche.integracion * 2) + 1;
-                        
-                        for(let j = 0; j < conexiones; j++) {
-                            let offset = j * 0.4;
-                            let variacion = sin(psyche.tiempo * 1.5 + i + offset) * 60;
-                            
-                            let puntoSombraX = psyche.sombra.x + cos(psyche.tiempo * 0.8 + i) * variacion * 0.7;
-                            let puntoSombraY = psyche.sombra.y + sin(psyche.tiempo * 0.8 + i) * variacion * 0.7;
-                            
+                        for(let j = 0; j < Math.floor(psyche.integracion*2)+1; j++) {
+                            let variacion = sin(psyche.tiempo*1.5+i+j*0.4) * 60;
+                            let pSombraX = psyche.sombra.x + cos(psyche.tiempo*0.8+i)*variacion*0.7;
+                            let pSombraY = psyche.sombra.y + sin(psyche.tiempo*0.8+i)*variacion*0.7;
                             strokeWeight(lerp(0.5, 2.5, psyche.integracion));
-                            let alphaConexion = c.resonancia * 80;
-                            stroke(c.color, 40, 95, alphaConexion);
-                            
-                            let puntoMedio1X = lerp(psyche.ego.x, puntoSombraX, 0.3) + sin(psyche.tiempo + i) * 40;
-                            let puntoMedio1Y = lerp(c.y, puntoSombraY, 0.3) + cos(psyche.tiempo + i) * 30;
-                            let puntoMedio2X = lerp(psyche.ego.x, puntoSombraX, 0.7) + sin(psyche.tiempo + i + PI) * 30;
-                            let puntoMedio2Y = lerp(c.y, puntoSombraY, 0.7) + cos(psyche.tiempo + i + PI) * 40;
-                            
+                            stroke(c.color, 40, 95, c.resonancia * 80);
+                            let pM1X = lerp(psyche.ego.x, pSombraX, 0.3) + sin(psyche.tiempo + i) * 40;
+                            let pM1Y = lerp(c.y, pSombraY, 0.3) + cos(psyche.tiempo + i) * 30;
+                            let pM2X = lerp(psyche.ego.x, pSombraX, 0.7) + sin(psyche.tiempo + i + PI) * 30;
+                            let pM2Y = lerp(c.y, pSombraY, 0.7) + cos(psyche.tiempo + i + PI) * 40;
                             noFill();
                             beginShape();
                             vertex(psyche.ego.x, c.y);
-                            bezierVertex(puntoMedio1X, puntoMedio1Y, puntoMedio2X, puntoMedio2Y, puntoSombraX, puntoSombraY);
+                            bezierVertex(pM1X, pM1Y, pM2X, pM2Y, pSombraX, pSombraY);
                             endShape();
-                            
-                            if(random() < 0.1) {
-                                let t = (sin(psyche.tiempo * 2 + i * 0.5) + 1) / 2;
-                                let flujoX = lerp(psyche.ego.x, puntoSombraX, t);
-                                let flujoY = lerp(c.y, puntoSombraY, t);
-                                
-                                fill(c.color, 80, 100, 80);
-                                noStroke();
-                                ellipse(flujoX, flujoY, 3);
-                            }
                         }
                     }
                 }
             }
         }
 
-        function dibujarArquetipos() { /* Sin cambios */ }
-        function dibujarSimbolos() { /* Sin cambios */ }
-        function dibujarMandalaIndividuacion() { /* Sin cambios */ }
+        function dibujarArquetipos() {
+            if(psyche.arquetiposActivos) {
+                let arquetiposPosiciones = [{x:width*0.2,y:height*0.3,t:"Persona"},{x:width*0.8,y:height*0.7,t:"Sombra"},{x:width*0.5,y:height*0.2,t:"Anima"},{x:width*0.5,y:height*0.8,t:"Self"}];
+                for(let arq of arquetiposPosiciones) {
+                    let energia = psyche.individuacion * random(0.8, 1.2);
+                    if(energia > 0.3) {
+                        push();
+                        translate(arq.x, arq.y);
+                        for(let i=3;i>=0;i--){noFill();stroke((arq.t==="Sombra"?280:arq.t==="Anima"?320:200),60,80,energia*15/(i+1));strokeWeight(2-i*0.4);ellipse(0,0,50+i*20);}
+                        fill(200, 40, 100, energia * 120);
+                        noStroke(); textAlign(CENTER, CENTER);
+                        textSize(16 + energia * 10);
+                        text((arq.t==="Persona"?"◭":arq.t==="Sombra"?"◪":arq.t==="Anima"?"☾":"☉"), 0, 0);
+                        pop();
+                    }
+                }
+            }
+        }
+
+        function dibujarSimbolos() {
+            for(let s of psyche.simbolos) {
+                s.energia = psyche.individuacion * random(0.5, 1.5);
+                s.alpha = constrain(s.energia * 60, 0, 80);
+                s.rotacion += 0.005;
+                if(s.alpha > 10) {
+                    push();
+                    translate(s.x, s.y);
+                    rotate(s.rotacion);
+                    scale(s.escala * (1 + sin(psyche.tiempo + s.x * 0.01) * 0.1));
+                    fill(220, 30, 90, s.alpha);
+                    noStroke(); textAlign(CENTER, CENTER);
+                    textSize(12); text(s.simbolo, 0, 0);
+                    pop();
+                }
+            }
+        }
+
+        function dibujarMandalaIndividuacion() {
+            push();
+            translate(width/2, height/2);
+            let mandalaAlpha = psyche.estadoUnificacion === 'unificado' ? 100 : psyche.individuacion * 60;
+            if(mandalaAlpha > 10) {
+                noFill(); stroke(0, 0, 100, mandalaAlpha); strokeWeight(2);
+                ellipse(0, 0, 300);
+                stroke(200, 40, 90, mandalaAlpha * 0.8); strokeWeight(1.5);
+                rectMode(CENTER); rect(0, 0, 200, 200);
+                stroke(280, 60, 70, mandalaAlpha); strokeWeight(3);
+                line(-100, 0, 100, 0); line(0, -100, 0, 100);
+                fill(0, 0, 100, mandalaAlpha * 0.6); noStroke();
+                ellipse(0, 0, 30);
+                for(let i = 0; i < 12; i++) {
+                    let angulo = map(i, 0, 12, 0, TWO_PI);
+                    let pulsacion = sin(psyche.tiempo * 2 + i * 0.5) * 20;
+                    stroke(angulo * 57.3, 50, 90, mandalaAlpha * 0.6); strokeWeight(1);
+                    line(cos(angulo)*(80+pulsacion),sin(angulo)*(80+pulsacion),cos(angulo)*(120+pulsacion),sin(angulo)*(120+pulsacion));
+                }
+            }
+            pop();
+        }
+
         function getFaseTexto(fase) { return FASES_INDIVIDUACION[constrain(fase, 0, FASES_INDIVIDUACION.length - 1)]; }
+
         function getArquetipoLevel(tipo, energia) {
             let levels = ["Dormido", "Emergiendo", "Activo", "Integrado"];
-            let index = Math.floor(energia * levels.length);
-            return levels[constrain(index, 0, levels.length - 1)];
+            return levels[constrain(Math.floor(energia * levels.length), 0, levels.length - 1)];
         }
+
         function getSimboloDominante(individuacion) {
-            let index = Math.floor(individuacion * ARQUETIPOS_SIMBOLOS.length);
-            return ARQUETIPOS_SIMBOLOS[constrain(index, 0, ARQUETIPOS_SIMBOLOS.length - 1)];
+            return ARQUETIPOS_SIMBOLOS[constrain(Math.floor(individuacion * ARQUETIPOS_SIMBOLOS.length), 0, ARQUETIPOS_SIMBOLOS.length - 1)];
         }
-        function actualizarInterfaz() { /* Sin cambios */ }
-        function ocultarPantallaCarga() { /* Sin cambios */ }
-        function mousePressed() { /* Sin cambios */ }
-        function keyPressed() { /* Sin cambios */ }
-        function mouseMoved() { /* Sin cambios */ }
-        function windowResized() { /* Sin cambios */ }
-        function limpiarParticulas() { /* Sin cambios */ }
-        setInterval(limpiarParticulas, 3000);
+
+        function actualizarInterfaz() {
+            document.getElementById('consciousnessBar').style.width = (psyche.consciencia * 100) + '%';
+            document.getElementById('consciousnessText').textContent = Math.round(psyche.consciencia * 100) + '%';
+            document.getElementById('integrationBar').style.width = (psyche.integracion * 100) + '%';
+            document.getElementById('integrationText').textContent = Math.round(psyche.integracion * 100) + '%';
+            document.getElementById('individuationBar').style.width = (psyche.individuacion * 100) + '%';
+            document.getElementById('individuationText').textContent = Math.round(psyche.individuacion * 100) + '%';
+            document.getElementById('currentPhase').textContent = getFaseTexto(psyche.fase);
+            document.getElementById('personaLevel').textContent = getArquetipoLevel("Persona", psyche.consciencia);
+            document.getElementById('shadowLevel').textContent = getArquetipoLevel("Sombra", psyche.sombra.energia);
+            document.getElementById('animaLevel').textContent = getArquetipoLevel("Anima", psyche.integracion);
+            document.getElementById('selfLevel').textContent = getArquetipoLevel("Self", psyche.individuacion);
+            document.getElementById('dominantSymbol').textContent = getSimboloDominante(psyche.individuacion);
+        }
+
+        function ocultarPantallaCarga() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const philosophicalPanel = document.getElementById('philosophicalPanel');
+            loadingScreen.classList.add('fade-out');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                philosophicalPanel.classList.add('visible');
+                psyche.loadingComplete = true;
+            }, 2000);
+        }
+
+        function mousePressed() {
+            if (psyche.loadingComplete) {
+                psyche.consciencia = 0; psyche.integracion = 0; psyche.individuacion = 0;
+                inicializarPsique();
+            }
+        }
+
+        function keyPressed() {
+            if (!psyche.loadingComplete) return;
+            if(key === ' ') { psyche.consciencia = min(1.0, psyche.consciencia + 0.15); } 
+            else if(key.toLowerCase() === 's') { psyche.modoConfronta = !psyche.modoConfronta; } 
+            else if(key.toLowerCase() === 'a') { psyche.arquetiposActivos = !psyche.arquetiposActivos; } 
+            else if(key.toLowerCase() === 'm') { psyche.mandalaVisible = !psyche.mandalaVisible; } 
+            else if(key.toLowerCase() === 'r') { generarGeometriaSombra(); } 
+            else if(key.toLowerCase() === 'i') { document.getElementById('philosophicalPanel').classList.toggle('visible'); }
+        }
+
+        function mouseMoved() {
+            if (!psyche.loadingComplete) return;
+            let distanciaSombra = dist(mouseX, mouseY, psyche.sombra.x, psyche.sombra.y);
+            if(distanciaSombra < psyche.sombra.radio && random() < 0.2) {
+                psyche.particulas.push({ x: mouseX+random(-15,15), y: mouseY+random(-15,15), vx: random(-0.8,0.8), vy: random(-0.8,0.8), tam: random(1,4), hue: lerp(240,280,psyche.integracion), alpha: 70, tipo: 4, arquetipoVinculo: -1 });
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            inicializarPsique(); // Re-inicializar para ajustar posiciones a nuevo tamaño
+        }
+
+        function limpiarParticulas() {
+            for(let i = psyche.particulas.length - 1; i >= 0; i--) {
+                psyche.particulas[i].alpha -= 0.3;
+                if(psyche.particulas[i].alpha <= 0) {
+                    psyche.particulas.splice(i, 1);
+                }
+            }
+            if(psyche.particulas.length > 400) {
+                psyche.particulas.splice(0, psyche.particulas.length - 400);
+            }
+        }
+        setInterval(limpiarParticulas, 100);
+
     </script>
 </body>
 </html>
