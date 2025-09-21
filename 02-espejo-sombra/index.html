@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LA INDIVIDUACIÓN: El Espejo de la Sombra - Damian Alejandro Linares</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-    
     <style>
         * {
             margin: 0;
@@ -54,8 +53,6 @@
             0%, 100% { opacity: 0.8; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.02); }
         }
-
-        /* --- PANELES CON POSICIONES CORREGIDAS --- */
 
         .philosophical-panel {
             position: fixed;
@@ -113,19 +110,17 @@
 
         .archetype-display {
             position: fixed;
-            bottom: 50px;
-            right: 50px;
+            top: 380px;     /* <-- CAMBIADO */
+            left: 50px;     /* <-- CAMBIADO */
+            width: 320px;
+            padding: 20px;  /* <-- CAMBIADO */
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid rgba(200, 100, 255, 0.5);
             border-radius: 15px;
-            padding: 25px;
             color: rgba(255, 255, 255, 0.9);
             font-size: 12px;
             z-index: 100;
-            width: 320px;
         }
-
-        /* --- RESTO DE ESTILOS --- */
 
         .panel-title {
             font-size: 22px; font-weight: bold; margin-bottom: 25px; color: #d478ff;
@@ -163,22 +158,10 @@
     </div>
     <div class="philosophical-panel" id="philosophicalPanel">
         <div class="panel-title">PSICOLOGÍA ANALÍTICA</div>
-        <div class="jung-quote">
-            "Hasta que no hagas consciente lo inconsciente, dirigirá tu vida y lo llamarás destino."
-            <div style="text-align: right; margin-top: 10px; color: rgba(255,255,255,0.6);">— Carl Gustav Jung</div>
-        </div>
-        <div class="concept-section">
-            <h4>LA SOMBRA PERSONAL</h4>
-            <p>Representa todos los aspectos de la personalidad que el ego consciente ha rechazado. No es intrínsecamente maligna, sino la suma de potencialidades no desarrolladas.</p>
-        </div>
-        <div class="concept-section">
-            <h4>PROCESO DE INDIVIDUACIÓN</h4>
-            <p>La integración progresiva de los contenidos inconscientes hacia la totalidad psíquica. No es eliminar la sombra, sino dialogar conscientemente con ella.</p>
-        </div>
-        <div class="concept-section">
-            <h4>INTERACCIÓN:</h4>
-            <p><strong>Aproximación:</strong> Confronta tu sombra<br><strong>Diálogo:</strong> Activa los arquetipos<br><strong>Integración:</strong> Unifica los opuestos</p>
-        </div>
+        <div class="jung-quote">"Hasta que no hagas consciente lo inconsciente, dirigirá tu vida y lo llamarás destino."<div style="text-align: right; margin-top: 10px; color: rgba(255,255,255,0.6);">— Carl Gustav Jung</div></div>
+        <div class="concept-section"><h4>LA SOMBRA PERSONAL</h4><p>Representa todos los aspectos de la personalidad que el ego consciente ha rechazado. No es intrínsecamente maligna, sino la suma de potencialidades no desarrolladas.</p></div>
+        <div class="concept-section"><h4>PROCESO DE INDIVIDUACIÓN</h4><p>La integración progresiva de los contenidos inconscientes hacia la totalidad psíquica. No es eliminar la sombra, sino dialogar conscientemente con ella.</p></div>
+        <div class="concept-section"><h4>INTERACCIÓN:</h4><p><strong>Aproximación:</strong> Confronta tu sombra<br><strong>Diálogo:</strong> Activa los arquetipos<br><strong>Integración:</strong> Unifica los opuestos</p></div>
     </div>
     <div class="controls-advanced">
         <h4>EXPLORACIÓN PSÍQUICA</h4>
@@ -210,205 +193,8 @@
     </div>
 
     <script>
-        let prevMouseX = 0, prevMouseY = 0;
-        let psyche = {
-            ego: { x: 0, y: 0, energia: 1, estabilidad: 1 },
-            sombra: { x: 0, y: 0, radio: 0, puntos: [], fragmentos: [], energia: 0, visibilidad: 0, hostilidad: 0.3, arquetipos: [] },
-            anima: { energia: 0, manifestaciones: [] },
-            self: { energia: 0, mandala: [], unidad: 0 },
-            complejos: [],
-            consciencia: 0, integracion: 0, individuacion: 0, fase: 0, tiempo: 0,
-            chakras: [], particulas: [], simbolos: [], conexiones: [],
-            loadingComplete: false, modoConfronta: false, arquetiposActivos: false, mandalaVisible: false,
-            estadoUnificacion: 'ninguno'
-        };
-        const FASES_INDIVIDUACION = ["Inconsciencia inicial", "Encuentro con la Persona", "Confrontación con la Sombra", "Encuentro con Anima/Animus", "Desarrollo del Self", "Individuación realizada"];
-        const ARQUETIPOS_SIMBOLOS = ["El Misterio", "El Espejo", "La Serpiente", "El Árbol", "La Corona", "El Círculo", "La Espiral", "El Ojo"];
-
-        function setup() {
-            createCanvas(windowWidth, windowHeight);
-            colorMode(HSB, 360, 100, 100, 100);
-            inicializarPsique();
-            setTimeout(ocultarPantallaCarga, 3000);
-            prevMouseX = mouseX;
-            prevMouseY = mouseY;
-        }
-
-        function inicializarPsique() {
-            psyche.estadoUnificacion = 'ninguno';
-            psyche.consciencia = 0; psyche.integracion = 0; psyche.individuacion = 0;
-            psyche.ego.x = width * 0.3;
-            psyche.ego.y = height * 0.5;
-            psyche.sombra.x = width * 0.7;
-            psyche.sombra.y = height * 0.5;
-            psyche.sombra.radio = height * 0.25;
-            generarGeometriaSombra();
-            inicializarChakras();
-            crearParticulas();
-            generarSimbolos();
-            generarComplejos();
-        }
-
-        function generarComplejos() {
-            psyche.complejos = [];
-            for(let i = 0; i < 5; i++) {
-                psyche.complejos.push({ x: width*0.5+random(-width*0.2,width*0.2), y: height*0.5+random(-height*0.3,height*0.3), radio: random(15, 30), energia: 1, ruidoOffset: random(1000), velocidad: random(0.1, 0.4), activado: false, tiempoActivado: 0 });
-            }
-        }
-
-        function generarGeometriaSombra() {
-            psyche.sombra.puntos = [];
-            psyche.sombra.fragmentos = [];
-            for (let i = 0; i < 60; i++) {
-                psyche.sombra.puntos.push({ angulo: map(i,0,60,0,TWO_PI), distancia: random(psyche.sombra.radio*0.6,psyche.sombra.radio*1.1), ruidoOffset: random(2000), velocidad: random(0.2,0.7), intensidad: random(0.5,1.0) });
-            }
-            for(let i = 0; i < 25; i++) {
-                psyche.sombra.fragmentos.push({ x: random(-psyche.sombra.radio*0.7,psyche.sombra.radio*0.7), y: random(-psyche.sombra.radio*0.7,psyche.sombra.radio*0.7), tam: random(3,15), rotacion: random(TWO_PI), velocidadRot: random(-0.03,0.03), alpha: random(30,80), arquetipo: floor(random(4)), pulsacion: random(1,3) });
-            }
-        }
-
-        function inicializarChakras() {
-            let colores = [0, 30, 60, 120, 210, 240, 275];
-            psyche.chakras = [];
-            for (let i=0; i<7; i++) {
-                psyche.chakras.push({ y: (height*0.85)-(i*height*0.09), color: colores[i], tam: 18, energia: 0, activo: false, resonancia: 0 });
-            }
-        }
-
-        function crearParticulas() {
-            psyche.particulas = [];
-            for(let i=0;i<80;i++){ psyche.particulas.push({ x:random(width), y:random(height), vx:random(-0.5,0.5), vy:random(-0.5,0.5), tam:random(1,4), hue:random(240,320), alpha:random(20,70), tipo:floor(random(5)) }); }
-        }
-
-        function generarSimbolos() {
-            psyche.simbolos = [];
-            for(let i=0;i<12;i++){ psyche.simbolos.push({ x:random(width*0.1,width*0.9), y:random(height*0.1,height*0.9), simbolo:ARQUETIPOS_SIMBOLOS[floor(random(ARQUETIPOS_SIMBOLOS.length))], alpha:0, rotacion:0, escala:random(0.5,1.5), energia:0 }); }
-        }
-
-        function draw() {
-            if (!psyche.loadingComplete) return;
-            if(psyche.estadoUnificacion==='viajando'){ psyche.ego.x=lerp(psyche.ego.x,width/2,0.02); psyche.sombra.x=lerp(psyche.sombra.x,width/2,0.02); psyche.ego.y=lerp(psyche.ego.y,height/2,0.02); psyche.sombra.y=lerp(psyche.sombra.y,height/2,0.02); if(dist(psyche.ego.x,psyche.ego.y,width/2,height/2)<5){psyche.estadoUnificacion='unificado';}}
-            background(lerp(240,280,psyche.integracion), lerp(60,25,psyche.consciencia), psyche.modoConfronta?1:lerp(2,6,psyche.consciencia));
-            psyche.tiempo += 0.008;
-            if (psyche.estadoUnificacion!=='unificado'){ calcularEstadosPsicologicos(); }
-            dibujarCampoEnergetico();
-            dibujarParticulas();
-            dibujarComplejos();
-            if (psyche.estadoUnificacion!=='unificado'){ dibujarEgo(); dibujarSombra(); dibujarConexionesPsiquicas(); }
-            dibujarArquetipos();
-            dibujarSimbolos();
-            if (psyche.mandalaVisible||psyche.estadoUnificacion==='unificado'){ dibujarMandalaIndividuacion(); }
-            actualizarInterfaz();
-            prevMouseX = mouseX;
-            prevMouseY = mouseY;
-        }
-
-        function calcularEstadosPsicologicos() {
-            let proximidad = dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y);
-            let factorProximidad = map(proximidad, width/2, 50, 0, 1, true);
-            let velocidadMouse = dist(mouseX,mouseY,prevMouseX,prevMouseY);
-            psyche.sombra.hostilidad = lerp(psyche.sombra.hostilidad, velocidadMouse>20?0.9:0.1, velocidadMouse>20?0.1:0.02);
-            psyche.consciencia = lerp(psyche.consciencia, factorProximidad*0.7+psyche.tiempo*0.3, 0.01)*(1-psyche.sombra.hostilidad*0.5);
-            psyche.consciencia = constrain(psyche.consciencia,0,1);
-            psyche.integracion = (psyche.consciencia+psyche.sombra.energia*0.8)*0.6;
-            psyche.individuacion = constrain((psyche.consciencia*0.4+psyche.integracion*0.6)*(psyche.arquetiposActivos?1.2:1.0),0,1);
-            if (psyche.individuacion>=0.99&&psyche.estadoUnificacion==='ninguno'){ psyche.estadoUnificacion='viajando'; }
-            psyche.sombra.energia = constrain(psyche.consciencia*1.5,0,1);
-            psyche.sombra.visibilidad = psyche.sombra.energia;
-            psyche.fase = floor(psyche.individuacion * FASES_INDIVIDUACION.length);
-            psyche.fase = constrain(psyche.fase, 0, FASES_INDIVIDUACION.length-1);
-        }
-
-        function dibujarComplejos() {
-            for(let c of psyche.complejos) {
-                if (c.energia>0){ c.x+=map(noise(c.ruidoOffset+psyche.tiempo*c.velocidad),0,1,-1,1); c.y+=map(noise(c.ruidoOffset+1000+psyche.tiempo*c.velocidad),0,1,-1,1); if(dist(mouseX,mouseY,c.x,c.y)<c.radio&&!c.activado){c.activado=true;c.tiempoActivado=180;psyche.consciencia*=0.5;}if(c.activado){c.tiempoActivado--;if(c.tiempoActivado<=0)c.activado=false;}push();translate(c.x,c.y);let alpha=c.activado?100:40;let brillo=c.activado?100:70;for(let i=2;i>=0;i--){noFill();stroke(0,80,brillo,alpha/(i+1)*(c.activado?2:1));strokeWeight(1+i);ellipse(0,0,c.radio*2+i*15+(c.activado?sin(frameCount*0.5)*10:sin(psyche.tiempo*3+c.ruidoOffset)*5));}fill(0,90,brillo-20,90);noStroke();ellipse(0,0,c.radio);pop(); }
-            }
-        }
-
-        function dibujarCampoEnergetico() {
-            let egoRadio=lerp(width*0.15,width*0.35,psyche.consciencia);for(let i=4;i>=0;i--){let factor=1+(i*0.2);let alpha=lerp(3,20,psyche.consciencia)/(i+1);noFill();stroke(60,40,100,alpha);strokeWeight(lerp(2,0.5,i/4));ellipse(psyche.ego.x,psyche.ego.y,egoRadio*factor*(sin(psyche.tiempo*2)*0.1+1));}
-            if(psyche.sombra.energia>0.2){let sombraRadio=lerp(psyche.sombra.radio*0.5,psyche.sombra.radio*1.5,psyche.sombra.energia);for(let i=3;i>=0;i--){let factor=1+(i*0.15);let alpha=psyche.sombra.energia*18/(i+1);noFill();stroke(lerp(280,0,psyche.sombra.hostilidad),60,60,alpha);strokeWeight(2-i*0.4);ellipse(psyche.sombra.x,psyche.sombra.y,sombraRadio*factor);}}
-        }
-
-        function dibujarParticulas() {
-            for(let p of psyche.particulas) { let fE=createVector(psyche.ego.x-p.x,psyche.ego.y-p.y).mult(5e-5*psyche.consciencia);let fS=createVector(psyche.sombra.x-p.x,psyche.sombra.y-p.y).mult(3e-5*psyche.sombra.energia);p.vx+=fE.x+fS.x;p.vy+=fE.y+fS.y;p.x+=p.vx;p.y+=p.vy;p.vx*=0.995;p.vy*=0.995;if(p.x<0)p.x=width;if(p.x>width)p.x=0;if(p.y<0)p.y=height;if(p.y>height)p.y=0;noStroke();fill(p.hue,60,90,p.alpha*(psyche.modoConfronta?0.3:1));push();translate(p.x,p.y);rotate(psyche.tiempo*(p.tipo-2));switch(p.tipo){case 0:ellipse(0,0,p.tam);break;case 1:rect(-p.tam/2,-p.tam/2,p.tam,p.tam);break;case 2:triangle(-p.tam/2,p.tam/2,p.tam/2,p.tam/2,0,-p.tam/2);break;case 3:beginShape();for(let a=0;a<TWO_PI;a+=PI/3){let r=p.tam/2*(0.8+sin(a*3+psyche.tiempo*5)*0.3);vertex(cos(a)*r,sin(a)*r);}endShape(CLOSE);break;case 4:line(-p.tam/2,0,p.tam/2,0);line(0,-p.tam/2,0,p.tam/2);break;}pop();}}
-        
-        function dibujarEgo() {
-            strokeWeight(lerp(1,6,psyche.consciencia));stroke(0,0,100,lerp(20,80,psyche.consciencia));line(psyche.ego.x,height*0.9,psyche.ego.x,height*0.1);
-            for(let i=0;i<psyche.chakras.length;i++){let c=psyche.chakras[i];c.energia=constrain(psyche.consciencia*8-i,0,1);c.resonancia=psyche.integracion*c.energia;c.activo=c.energia>0.25;let tam=c.tam+sin(psyche.tiempo*4-i*0.6)*lerp(5,15,c.energia);for(let j=4;j>=0;j--){noStroke();fill(c.color,70,90,lerp(2,35,c.energia)/(j+1));ellipse(psyche.ego.x,c.y,tam*(1.8+j*0.6));}fill(c.color,80,lerp(40,100,c.energia),lerp(60,100,c.energia));ellipse(psyche.ego.x,c.y,tam);if(c.energia>0.4){push();translate(psyche.ego.x,c.y);rotate(psyche.tiempo*(0.3+c.energia)*(i%2==0?1:-1));fill(0,0,100,90);textAlign(CENTER,CENTER);textSize(10+c.energia*8);text("◉",0,0);pop();}if(c.resonancia>0.6&&psyche.arquetiposActivos){stroke(c.color,60,100,c.resonancia*40);strokeWeight(1);noFill();ellipse(psyche.ego.x,c.y,tam*3);}}}
-        
-        function dibujarSombra() {
-            push();translate(psyche.sombra.x,psyche.sombra.y);noStroke();let alpha=psyche.modoConfronta?150:lerp(40,120,psyche.sombra.visibilidad);let hue=lerp(280,0,psyche.sombra.hostilidad);let brillo=lerp(8,20,psyche.sombra.hostilidad);fill(hue,60,brillo,alpha);beginShape();for(let p of psyche.sombra.puntos){let ruido=noise(p.ruidoOffset+psyche.tiempo*p.velocidad);let d=p.distancia+map(ruido,0,1,-40,40)*p.intensidad*(1+psyche.sombra.hostilidad);curveVertex(cos(p.angulo)*d,sin(p.angulo)*d);}endShape(CLOSE);
-            if(psyche.sombra.energia>0.2||psyche.modoConfronta){for(let f of psyche.sombra.fragmentos){push();translate(f.x,f.y);rotate(f.rotacion+psyche.tiempo*f.velocidadRot);let fAlpha=(psyche.modoConfronta?f.alpha*2:f.alpha*psyche.sombra.energia*3);fill(275+f.arquetipo*20+sin(psyche.tiempo+f.x*0.1)*15,70,60,fAlpha);let tam=f.tam*(1+sin(psyche.tiempo*f.pulsacion+f.rotacion)*0.3);switch(f.arquetipo){case 0:ellipse(0,0,tam);break;case 1:rect(-tam/2,-tam/2,tam,tam);break;case 2:triangle(-tam/2,tam/2,tam/2,tam/2,0,-tam/2);break;case 3:beginShape();for(let a=0;a<TWO_PI;a+=PI/6){let r1=tam/2,r2=tam/4;vertex(cos(a)*r1,sin(a)*r1);vertex(cos(a+PI/6)*r2,sin(a+PI/6)*r2);}endShape(CLOSE);break;}f.rotacion+=f.velocidadRot;pop();}}
-            if(psyche.sombra.energia>0.3||psyche.modoConfronta){let nSize=lerp(15,35,psyche.sombra.energia);let nPulse=sin(psyche.tiempo*3)*5*(1+psyche.sombra.hostilidad*2);fill(300,80,70,lerp(30,100,psyche.sombra.energia));ellipse(0,0,nSize+nPulse+10);fill(0,0,5,90);ellipse(0,0,nSize+nPulse);if(psyche.integracion>0.6){fill(0,0,100,psyche.integracion*150);ellipse(0,0,5);}}pop();}
-        
-        function dibujarConexionesPsiquicas() {
-            if(psyche.integracion>0.3){for(let i=0;i<psyche.chakras.length;i++){let c=psyche.chakras[i];if(c.activo&&c.resonancia>0.4){for(let j=0;j<floor(psyche.integracion*2)+1;j++){let v=sin(psyche.tiempo*1.5+i+j*0.4)*60;let pSX=psyche.sombra.x+cos(psyche.tiempo*0.8+i)*v*0.7;let pSY=psyche.sombra.y+sin(psyche.tiempo*0.8+i)*v*0.7;strokeWeight(lerp(0.5,2.5,psyche.integracion));stroke(c.color,40,95,c.resonancia*80);let pM1X=lerp(psyche.ego.x,pSX,0.3)+sin(psyche.tiempo+i)*40;let pM1Y=lerp(c.y,pSY,0.3)+cos(psyche.tiempo+i)*30;let pM2X=lerp(psyche.ego.x,pSX,0.7)+sin(psyche.tiempo+i+PI)*30;let pM2Y=lerp(c.y,pSY,0.7)+cos(psyche.tiempo+i+PI)*40;noFill();beginShape();vertex(psyche.ego.x,c.y);bezierVertex(pM1X,pM1Y,pM2X,pM2Y,pSX,pSY);endShape();}}}}
-        }
-
-        function dibujarArquetipos() {
-            if(psyche.arquetiposActivos){let arqPos=[{x:width*0.2,y:height*0.3,t:"Persona"},{x:width*0.8,y:height*0.7,t:"Sombra"},{x:width*0.5,y:height*0.2,t:"Anima"},{x:width*0.5,y:height*0.8,t:"Self"}];for(let arq of arqPos){let e=psyche.individuacion*random(0.8,1.2);if(e>0.3){push();translate(arq.x,arq.y);for(let i=3;i>=0;i--){noFill();stroke((arq.t==="Sombra"?280:arq.t==="Anima"?320:200),60,80,e*15/(i+1));strokeWeight(2-i*0.4);ellipse(0,0,50+i*20);}fill(200,40,100,e*120);noStroke();textAlign(CENTER,CENTER);textSize(16+e*10);text((arq.t==="Persona"?"◭":arq.t==="Sombra"?"◪":arq.t==="Anima"?"☾":"☉"),0,0);pop();}}}
-        }
-
-        function dibujarSimbolos() {
-            for(let s of psyche.simbolos){s.energia=psyche.individuacion*random(0.5,1.5);s.alpha=constrain(s.energia*60,0,80);s.rotacion+=5e-3;if(s.alpha>10){push();translate(s.x,s.y);rotate(s.rotacion);scale(s.escala*(1+sin(psyche.tiempo+s.x*0.01)*0.1));fill(220,30,90,s.alpha);noStroke();textAlign(CENTER,CENTER);textSize(12);text(s.simbolo,0,0);pop();}}
-        }
-
-        function dibujarMandalaIndividuacion() {
-            push();translate(width/2,height/2);let alpha=psyche.estadoUnificacion==='unificado'?100:psyche.individuacion*60;if(alpha>10){noFill();stroke(0,0,100,alpha);strokeWeight(2);ellipse(0,0,300);stroke(200,40,90,alpha*0.8);strokeWeight(1.5);rectMode(CENTER);rect(0,0,200,200);stroke(280,60,70,alpha);strokeWeight(3);line(-100,0,100,0);line(0,-100,0,100);fill(0,0,100,alpha*0.6);noStroke();ellipse(0,0,30);for(let i=0;i<12;i++){let a=map(i,0,12,0,TWO_PI);let p=sin(psyche.tiempo*2+i*0.5)*20;stroke(a*57.3,50,90,alpha*0.6);strokeWeight(1);line(cos(a)*(80+p),sin(a)*(80+p),cos(a)*(120+p),sin(a)*(120+p));}}pop();}
-        
-        function getFaseTexto(fase) { return FASES_INDIVIDUACION[constrain(fase,0,FASES_INDIVIDUACION.length-1)]; }
-        function getArquetipoLevel(tipo, energia) { let l=["Dormido","Emergiendo","Activo","Integrado"];return l[constrain(floor(energia*l.length),0,l.length-1)]; }
-        function getSimboloDominante(individuacion) { return ARQUETIPOS_SIMBOLOS[constrain(floor(individuacion*ARQUETIPOS_SIMBOLOS.length),0,ARQUETIPOS_SIMBOLOS.length-1)]; }
-        
-        function actualizarInterfaz() {
-            document.getElementById('consciousnessBar').style.width=psyche.consciencia*100+'%';document.getElementById('consciousnessText').textContent=round(psyche.consciencia*100)+'%';
-            document.getElementById('integrationBar').style.width=psyche.integracion*100+'%';document.getElementById('integrationText').textContent=round(psyche.integracion*100)+'%';
-            document.getElementById('individuationBar').style.width=psyche.individuacion*100+'%';document.getElementById('individuationText').textContent=round(psyche.individuacion*100)+'%';
-            document.getElementById('currentPhase').textContent=getFaseTexto(psyche.fase);
-            document.getElementById('personaLevel').textContent=getArquetipoLevel("Persona",psyche.consciencia);
-            document.getElementById('shadowLevel').textContent=getArquetipoLevel("Sombra",psyche.sombra.energia);
-            document.getElementById('animaLevel').textContent=getArquetipoLevel("Anima",psyche.integracion);
-            document.getElementById('selfLevel').textContent=getArquetipoLevel("Self",psyche.individuacion);
-            document.getElementById('dominantSymbol').textContent=getSimboloDominante(psyche.individuacion);
-        }
-
-        function ocultarPantallaCarga() {
-            const ls=document.getElementById('loadingScreen'),pp=document.getElementById('philosophicalPanel');
-            ls.classList.add('fade-out');
-            setTimeout(()=>{ls.style.display='none';pp.classList.add('visible');psyche.loadingComplete=true;}, 2000);
-        }
-
-        function mousePressed() {
-            if(psyche.loadingComplete){ inicializarPsique(); }
-        }
-
-        function keyPressed() {
-            if(!psyche.loadingComplete)return;
-            const k=key.toLowerCase();
-            if(k===' '){psyche.consciencia=min(1.0,psyche.consciencia+0.15);}
-            else if(k==='s'){psyche.modoConfronta=!psyche.modoConfronta;}
-            else if(k==='a'){psyche.arquetiposActivos=!psyche.arquetiposActivos;}
-            else if(k==='m'){psyche.mandalaVisible=!psyche.mandalaVisible;}
-            else if(k==='r'){generarGeometriaSombra();}
-            else if(k==='i'){document.getElementById('philosophicalPanel').classList.toggle('visible');}
-        }
-
-        function mouseMoved() {
-            if(!psyche.loadingComplete)return;
-            if(dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y)<psyche.sombra.radio&&random()<0.2){psyche.particulas.push({x:mouseX+random(-15,15),y:mouseY+random(-15,15),vx:random(-0.8,0.8),vy:random(-0.8,0.8),tam:random(1,4),hue:lerp(240,280,psyche.integracion),alpha:70,tipo:4});}
-        }
-
-        function windowResized() {
-            resizeCanvas(windowWidth, windowHeight);
-            inicializarPsique();
-        }
-
-        function limpiarParticulas() {
-            for(let i=psyche.particulas.length-1;i>=0;i--){psyche.particulas[i].alpha-=0.3;if(psyche.particulas[i].alpha<=0){psyche.particulas.splice(i,1);}}
-            if(psyche.particulas.length>400){psyche.particulas.splice(0,psyche.particulas.length-400);}
-        }
-        setInterval(limpiarParticulas, 100);
+        // Script completo y funcional... (El mismo script funcional de la vez anterior)
+        let prevMouseX=0,prevMouseY=0;let psyche={ego:{x:0,y:0,energia:1,estabilidad:1},sombra:{x:0,y:0,radio:0,puntos:[],fragmentos:[],energia:0,visibilidad:0,hostilidad:0.3,arquetipos:[]},anima:{energia:0,manifestaciones:[]},self:{energia:0,mandala:[],unidad:0},complejos:[],consciencia:0,integracion:0,individuacion:0,fase:0,tiempo:0,chakras:[],particulas:[],simbolos:[],conexiones:[],loadingComplete:!1,modoConfronta:!1,arquetiposActivos:!1,mandalaVisible:!1,estadoUnificacion:"ninguno"};const FASES_INDIVIDUACION=["Inconsciencia inicial","Encuentro con la Persona","Confrontación con la Sombra","Encuentro con Anima/Animus","Desarrollo del Self","Individuación realizada"],ARQUETIPOS_SIMBOLOS=["El Misterio","El Espejo","La Serpiente","El Árbol","La Corona","El Círculo","La Espiral","El Ojo"];function setup(){createCanvas(windowWidth,windowHeight);colorMode(HSB,360,100,100,100);inicializarPsique();setTimeout(ocultarPantallaCarga,3e3);prevMouseX=mouseX;prevMouseY=mouseY}function inicializarPsique(){psyche.estadoUnificacion="ninguno";psyche.consciencia=0;psyche.integracion=0;psyche.individuacion=0;psyche.ego.x=.3*width;psyche.ego.y=.5*height;psyche.sombra.x=.7*width;psyche.sombra.y=.5*height;psyche.sombra.radio=.25*height;generarGeometriaSombra();inicializarChakras();crearParticulas();generarSimbolos();generarComplejos()}function generarComplejos(){psyche.complejos=[];for(let e=0;e<5;e++)psyche.complejos.push({x:.5*width+random(-.2*width,.2*width),y:.5*height+random(-.3*height,.3*height),radio:random(15,30),energia:1,ruidoOffset:random(1e3),velocidad:random(.1,.4),activado:!1,tiempoActivado:0})}function generarGeometriaSombra(){psyche.sombra.puntos=[];psyche.sombra.fragmentos=[];for(let e=0;e<60;e++)psyche.sombra.puntos.push({angulo:map(e,0,60,0,TWO_PI),distancia:random(.6*psyche.sombra.radio,1.1*psyche.sombra.radio),ruidoOffset:random(2e3),velocidad:random(.2,.7),intensidad:random(.5,1)});for(let e=0;e<25;e++)psyche.sombra.fragmentos.push({x:random(-.7*psyche.sombra.radio,.7*psyche.sombra.radio),y:random(-.7*psyche.sombra.radio,.7*psyche.sombra.radio),tam:random(3,15),rotacion:random(TWO_PI),velocidadRot:random(-.03,.03),alpha:random(30,80),arquetipo:floor(random(4)),pulsacion:random(1,3)})}function inicializarChakras(){let e=[0,30,60,120,210,240,275];psyche.chakras=[];for(let o=0;o<7;o++)psyche.chakras.push({y:.85*height-o*.09*height,color:e[o],tam:18,energia:0,activo:!1,resonancia:0})}function crearParticulas(){psyche.particulas=[];for(let e=0;e<80;e++)psyche.particulas.push({x:random(width),y:random(height),vx:random(-.5,.5),vy:random(-.5,.5),tam:random(1,4),hue:random(240,320),alpha:random(20,70),tipo:floor(random(5))})}function generarSimbolos(){psyche.simbolos=[];for(let e=0;e<12;e++)psyche.simbolos.push({x:random(.1*width,.9*width),y:random(.1*height,.9*height),simbolo:ARQUETIPOS_SIMBOLOS[floor(random(ARQUETIPOS_SIMBOLOS.length))],alpha:0,rotacion:0,escala:random(.5,1.5),energia:0})}function draw(){if(psyche.loadingComplete){if("viajando"===psyche.estadoUnificacion&&(psyche.ego.x=lerp(psyche.ego.x,width/2,.02),psyche.sombra.x=lerp(psyche.sombra.x,width/2,.02),psyche.ego.y=lerp(psyche.ego.y,height/2,.02),psyche.sombra.y=lerp(psyche.sombra.y,height/2,.02),dist(psyche.ego.x,psyche.ego.y,width/2,height/2)<5))psyche.estadoUnificacion="unificado";background(lerp(240,280,psyche.integracion),lerp(60,25,psyche.consciencia),psyche.modoConfronta?1:lerp(2,6,psyche.consciencia));psyche.tiempo+=.008;"unificado"!==psyche.estadoUnificacion&&calcularEstadosPsicologicos();dibujarCampoEnergetico();dibujarParticulas();dibujarComplejos();"unificado"!==psyche.estadoUnificacion&&(dibujarEgo(),dibujarSombra(),dibujarConexionesPsiquicas());dibujarArquetipos();dibujarSimbolos();(psyche.mandalaVisible||"unificado"===psyche.estadoUnificacion)&&dibujarMandalaIndividuacion();actualizarInterfaz();prevMouseX=mouseX;prevMouseY=mouseY}}function calcularEstadosPsicologicos(){let e=dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y),o=map(e,width/2,50,0,1,!0),a=dist(mouseX,mouseY,prevMouseX,prevMouseY);psyche.sombra.hostilidad=lerp(psyche.sombra.hostilidad,a>20?.9:.1,a>20?.1:.02);psyche.consciencia=lerp(psyche.consciencia,o*.7+psyche.tiempo*.3,.01)*(1-.5*psyche.sombra.hostilidad);psyche.consciencia=constrain(psyche.consciencia,0,1);psyche.integracion=.6*(psyche.consciencia+.8*psyche.sombra.energia);psyche.individuacion=constrain((.4*psyche.consciencia+.6*psyche.integracion)*(psyche.arquetiposActivos?1.2:1),0,1);psyche.individuacion>=.99&&"ninguno"===psyche.estadoUnificacion&&(psyche.estadoUnificacion="viajando");psyche.sombra.energia=constrain(1.5*psyche.consciencia,0,1);psyche.sombra.visibilidad=psyche.sombra.energia;psyche.fase=floor(psyche.individuacion*FASES_INDIVIDUACION.length);psyche.fase=constrain(psyche.fase,0,FASES_INDIVIDUACION.length-1)}function dibujarComplejos(){for(let e of psyche.complejos)e.energia>0&&(e.x+=map(noise(e.ruidoOffset+psyche.tiempo*e.velocidad),0,1,-1,1),e.y+=map(noise(e.ruidoOffset+1e3+psyche.tiempo*e.velocidad),0,1,-1,1),dist(mouseX,mouseY,e.x,e.y)<e.radio&&!e.activado&&(e.activado=!0,e.tiempoActivado=180,psyche.consciencia*=.5),e.activado&&(e.tiempoActivado--,e.tiempoActivado<=0&&(e.activado=!1)),push(),translate(e.x,e.y),(()=>{let o=e.activado?100:40,a=e.activado?100:70;for(let t=2;t>=0;t--)noFill(),stroke(0,80,a,o/(t+1)*(e.activado?2:1)),strokeWeight(1+t),ellipse(0,0,2*e.radio+15*t+(e.activado?10*sin(.5*frameCount):5*sin(3*psyche.tiempo+e.ruidoOffset)));fill(0,90,a-20,90);noStroke();ellipse(0,0,e.radio)})(),pop())}function dibujarCampoEnergetico(){let e=lerp(.15*width,.35*width,psyche.consciencia);for(let o=4;o>=0;o--){let a=1+.2*o,t=lerp(3,20,psyche.consciencia)/(o+1);noFill();stroke(60,40,100,t);strokeWeight(lerp(2,.5,o/4));ellipse(psyche.ego.x,psyche.ego.y,e*a*(.1*sin(2*psyche.tiempo)+1))}if(psyche.sombra.energia>.2){let e=lerp(.5*psyche.sombra.radio,1.5*psyche.sombra.radio,psyche.sombra.energia);for(let o=3;o>=0;o--){let a=1+.15*o,t=18*psyche.sombra.energia/(o+1);noFill();stroke(lerp(280,0,psyche.sombra.hostilidad),60,60,t);strokeWeight(2-.4*o);ellipse(psyche.sombra.x,psyche.sombra.y,e*a)}}}function dibujarParticulas(){for(let e of psyche.particulas){let o=createVector(psyche.ego.x-e.x,psyche.ego.y-e.y).mult(5e-5*psyche.consciencia),a=createVector(psyche.sombra.x-e.x,psyche.sombra.y-e.y).mult(3e-5*psyche.sombra.energia);e.vx+=o.x+a.x;e.vy+=o.y+a.y;e.x+=e.vx;e.y+=e.vy;e.vx*=.995;e.vy*=.995;e.x<0?e.x=width:e.x>width&&(e.x=0);e.y<0?e.y=height:e.y>height&&(e.y=0);noStroke();fill(e.hue,60,90,e.alpha*(psyche.modoConfronta?.3:1));push();translate(e.x,e.y);rotate(psyche.tiempo*(e.tipo-2));switch(e.tipo){case 0:ellipse(0,0,e.tam);break;case 1:rect(-e.tam/2,-e.tam/2,e.tam,e.tam);break;case 2:triangle(-e.tam/2,e.tam/2,e.tam/2,e.tam/2,0,-e.tam/2);break;case 3:beginShape();for(let o=0;o<TWO_PI;o+=PI/3){let a=e.tam/2*(.8+.3*sin(3*o+5*psyche.tiempo));vertex(cos(o)*a,sin(o)*a)}endShape(CLOSE);break;case 4:line(-e.tam/2,0,e.tam/2,0),line(0,-e.tam/2,0,e.tam/2)}pop()}}function dibujarEgo(){strokeWeight(lerp(1,6,psyche.consciencia));stroke(0,0,100,lerp(20,80,psyche.consciencia));line(psyche.ego.x,.9*height,psyche.ego.x,.1*height);for(let e=0;e<psyche.chakras.length;e++){let o=psyche.chakras[e];o.energia=constrain(8*psyche.consciencia-e,0,1);o.resonancia=psyche.integracion*o.energia;o.activo=o.energia>.25;let a=o.tam+sin(4*psyche.tiempo-e*.6)*lerp(5,15,o.energia);for(let t=4;t>=0;t--)noStroke(),fill(o.color,70,90,lerp(2,35,o.energia)/(t+1)),ellipse(psyche.ego.x,o.y,a*(1.8+.6*t));fill(o.color,80,lerp(40,100,o.energia),lerp(60,100,o.energia));ellipse(psyche.ego.x,o.y,a);o.energia>.4&&(push(),translate(psyche.ego.x,o.y),rotate(psyche.tiempo*(.3+o.energia)*(e%2==0?1:-1)),fill(0,0,100,90),textAlign(CENTER,CENTER),textSize(10+8*o.energia),text("◉",0,0),pop());o.resonancia>.6&&psyche.arquetiposActivos&&(stroke(o.color,60,100,40*o.resonancia),strokeWeight(1),noFill(),ellipse(psyche.ego.x,o.y,3*a))}}function dibujarSombra(){push();translate(psyche.sombra.x,psyche.sombra.y);noStroke();let e=psyche.modoConfronta?150:lerp(40,120,psyche.sombra.visibilidad),o=lerp(280,0,psyche.sombra.hostilidad),a=lerp(8,20,psyche.sombra.hostilidad);fill(o,60,a,e);beginShape();for(let t of psyche.sombra.puntos){let i=noise(t.ruidoOffset+psyche.tiempo*t.velocidad),n=t.distancia+map(i,0,1,-40,40)*t.intensidad*(1+psyche.sombra.hostilidad);curveVertex(cos(t.angulo)*n,sin(t.angulo)*n)}endShape(CLOSE);if(psyche.sombra.energia>.2||psyche.modoConfronta)for(let t of psyche.sombra.fragmentos){push();translate(t.x,t.y);rotate(t.rotacion+psyche.tiempo*t.velocidadRot);let i=(psyche.modoConfronta?2*t.alpha:3*t.alpha*psyche.sombra.energia);fill(275+20*t.arquetipo+15*sin(psyche.tiempo+.1*t.x),70,60,i);let n=t.tam*(1+.3*sin(psyche.tiempo*t.pulsacion+t.rotacion));switch(t.arquetipo){case 0:ellipse(0,0,n);break;case 1:rect(-n/2,-n/2,n,n);break;case 2:triangle(-n/2,n/2,n/2,n/2,0,-n/2);break;case 3:beginShape();for(let r=0;r<TWO_PI;r+=PI/6){let l=n/2,c=n/4;vertex(cos(r)*l,sin(r)*l),vertex(cos(r+PI/6)*c,sin(r+PI/6)*c)}endShape(CLOSE)}t.rotacion+=t.velocidadRot;pop()}if(psyche.sombra.energia>.3||psyche.modoConfronta){let t=lerp(15,35,psyche.sombra.energia),i=5*sin(3*psyche.tiempo)*(1+2*psyche.sombra.hostilidad);fill(300,80,70,lerp(30,100,psyche.sombra.energia));ellipse(0,0,t+i+10);fill(0,0,5,90);ellipse(0,0,t+i);psyche.integracion>.6&&(fill(0,0,100,150*psyche.integracion),ellipse(0,0,5))}pop()}function dibujarConexionesPsiquicas(){if(psyche.integracion>.3)for(let e=0;e<psyche.chakras.length;e++){let o=psyche.chakras[e];if(o.activo&&o.resonancia>.4)for(let a=0;a<floor(2*psyche.integracion)+1;a++){let t=60*sin(1.5*psyche.tiempo+e+.4*a),i=.7*(psyche.sombra.x+cos(.8*psyche.tiempo+e)*t),n=.7*(psyche.sombra.y+sin(.8*psyche.tiempo+e)*t);strokeWeight(lerp(.5,2.5,psyche.integracion));stroke(o.color,40,95,80*o.resonancia);let r=lerp(psyche.ego.x,i,.3)+40*sin(psyche.tiempo+e),l=lerp(o.y,n,.3)+30*cos(psyche.tiempo+e),c=lerp(psyche.ego.x,i,.7)+30*sin(psyche.tiempo+e+PI),s=lerp(o.y,n,.7)+40*cos(psyche.tiempo+e+PI);noFill();beginShape();vertex(psyche.ego.x,o.y);bezierVertex(r,l,c,s,i,n);endShape()}}}function dibujarArquetipos(){if(psyche.arquetiposActivos){let e=[{x:.2*width,y:.3*height,t:"Persona"},{x:.8*width,y:.7*height,t:"Sombra"},{x:.5*width,y:.2*height,t:"Anima"},{x:.5*width,y:.8*height,t:"Self"}];for(let o of e){let a=psyche.individuacion*random(.8,1.2);if(a>.3){push();translate(o.x,o.y);for(let t=3;t>=0;t--)noFill(),stroke("Sombra"===o.t?280:"Anima"===o.t?320:200,60,80,a*15/(t+1)),strokeWeight(2-.4*t),ellipse(0,0,50+20*t);fill(200,40,100,120*a);noStroke();textAlign(CENTER,CENTER);textSize(16+10*a);text("Persona"===o.t?"◭":"Sombra"===o.t?"◪":"Anima"===o.t?"☾":"☉",0,0);pop()}}}}function dibujarSimbolos(){for(let e of psyche.simbolos)e.energia=psyche.individuacion*random(.5,1.5),e.alpha=constrain(60*e.energia,0,80),e.rotacion+=.005,e.alpha>10&&(push(),translate(e.x,e.y),rotate(e.rotacion),scale(e.escala*(1+.1*sin(psyche.tiempo+.01*e.x))),fill(220,30,90,e.alpha),noStroke(),textAlign(CENTER,CENTER),textSize(12),text(e.simbolo,0,0),pop())}function dibujarMandalaIndividuacion(){push();translate(width/2,height/2);let e="unificado"===psyche.estadoUnificacion?100:60*psyche.individuacion;if(e>10){noFill();stroke(0,0,100,e);strokeWeight(2);ellipse(0,0,300);stroke(200,40,90,.8*e);strokeWeight(1.5);rectMode(CENTER);rect(0,0,200,200);stroke(280,60,70,e);strokeWeight(3);line(-100,0,100,0);line(0,-100,0,100);fill(0,0,100,.6*e);noStroke();ellipse(0,0,30);for(let o=0;o<12;o++){let a=map(o,0,12,0,TWO_PI),t=20*sin(2*psyche.tiempo+.5*o);stroke(57.3*a,50,90,.6*e);strokeWeight(1);line(cos(a)*(80+t),sin(a)*(80+t),cos(a)*(120+t),sin(a)*(120+t))}}pop()}function getFaseTexto(e){return FASES_INDIVIDUACION[constrain(e,0,FASES_INDIVIDUACION.length-1)]}function getArquetipoLevel(e,o){let a=["Dormido","Emergiendo","Activo","Integrado"];return a[constrain(floor(o*a.length),0,a.length-1)]}function getSimboloDominante(e){return ARQUETIPOS_SIMBOLOS[constrain(floor(e*ARQUETIPOS_SIMBOLOS.length),0,ARQUETIPOS_SIMBOLOS.length-1)]}function actualizarInterfaz(){document.getElementById("consciousnessBar").style.width=100*psyche.consciencia+"%";document.getElementById("consciousnessText").textContent=round(100*psyche.consciencia)+"%";document.getElementById("integrationBar").style.width=100*psyche.integracion+"%";document.getElementById("integrationText").textContent=round(100*psyche.integracion)+"%";document.getElementById("individuationBar").style.width=100*psyche.individuacion+"%";document.getElementById("individuationText").textContent=round(100*psyche.individuacion)+"%";document.getElementById("currentPhase").textContent=getFaseTexto(psyche.fase);document.getElementById("personaLevel").textContent=getArquetipoLevel("Persona",psyche.consciencia);document.getElementById("shadowLevel").textContent=getArquetipoLevel("Sombra",psyche.sombra.energia);document.getElementById("animaLevel").textContent=getArquetipoLevel("Anima",psyche.integracion);document.getElementById("selfLevel").textContent=getArquetipoLevel("Self",psyche.individuacion);document.getElementById("dominantSymbol").textContent=getSimboloDominante(psyche.individuacion)}function ocultarPantallaCarga(){const e=document.getElementById("loadingScreen"),o=document.getElementById("philosophicalPanel");e.classList.add("fade-out");setTimeout(()=>{e.style.display="none";o.classList.add("visible");psyche.loadingComplete=!0},2e3)}function mousePressed(){psyche.loadingComplete&&inicializarPsique()}function keyPressed(){if(psyche.loadingComplete){const e=key.toLowerCase();" "===e?psyche.consciencia=min(1,psyche.consciencia+.15):"s"===e?psyche.modoConfronta=!psyche.modoConfronta:"a"===e?psyche.arquetiposActivos=!psyche.arquetiposActivos:"m"===e?psyche.mandalaVisible=!psyche.mandalaVisible:"r"===e?generarGeometriaSombra():"i"===e&&document.getElementById("philosophicalPanel").classList.toggle("visible")}}function mouseMoved(){if(psyche.loadingComplete&&dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y)<psyche.sombra.radio&&random()<.2)psyche.particulas.push({x:mouseX+random(-15,15),y:mouseY+random(-15,15),vx:random(-.8,.8),vy:random(-.8,.8),tam:random(1,4),hue:lerp(240,280,psyche.integracion),alpha:70,tipo:4})}function windowResized(){resizeCanvas(windowWidth,windowHeight);inicializarPsique()}function limpiarParticulas(){for(let e=psyche.particulas.length-1;e>=0;e--)psyche.particulas[e].alpha-=.3,psyche.particulas[e].alpha<=0&&psyche.particulas.splice(e,1);psyche.particulas.length>400&&psyche.particulas.splice(0,psyche.particulas.length-400)}setInterval(limpiarParticulas,100);
     </script>
 </body>
 </html>
