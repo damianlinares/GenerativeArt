@@ -11,175 +11,240 @@
             width: 100%; height: 100vh;
             background: #000;
             overflow: hidden; font-family: 'Georgia', serif;
-            display: flex; align-items: center; justify-content: center;
+            cursor: none; /* Ocultamos el cursor real */
         }
-        canvas {
-            display: block;
-            box-shadow: 0 0 50px rgba(150, 50, 255, 0.3), inset 0 0 100px rgba(0, 0, 0, 0.5);
-        }
-        .loading-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(135deg, #000 0%, #2a0a3a 30%, #1a0a4a 70%, #000 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; transition: opacity 3s ease-out;
-        }
-        .loading-text {
-            color: #fff; font-size: clamp(2rem, 6vw, 4rem); text-align: center;
-            line-height: 1.4; letter-spacing: 4px; animation: shadowBreathing 4s infinite;
-            text-shadow: 0 0 30px rgba(200, 100, 255, 0.8), 0 0 60px rgba(150, 50, 200, 0.4);
-            font-weight: 300; margin-bottom: 2rem;
-        }
-        .loading-subtitle {
-            color: rgba(255, 255, 255, 0.7); font-size: clamp(1rem, 2vw, 1.5rem);
-            letter-spacing: 2px; animation: pulse 3s infinite; font-style: italic;
-        }
-        @keyframes shadowBreathing {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.02); }
-        }
-
-        /* --- REFACTORIZACIÓN COMPLETA DE UI: DASHBOARD UNIFICADO --- */
+        canvas { display: block; }
         .dashboard {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(15px);
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px);
             border-top: 2px solid rgba(200, 100, 255, 0.6);
-            z-index: 100;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
-            display: flex;
-            padding: 20px;
-            gap: 20px;
+            z-index: 100; box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+            display: flex; padding: 20px; gap: 20px;
             color: rgba(255, 255, 255, 0.9);
         }
-        .dash-column {
-            flex: 1;
-            border-right: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 0 20px;
-            min-width: 0;
-        }
-        .dash-column:last-child {
-            border-right: none;
-        }
+        .dash-column { flex: 1; border-right: 1px solid rgba(255, 255, 255, 0.15); padding: 0 20px; min-width: 0; }
+        .dash-column:last-child { border-right: none; }
         .dash-column h4 {
-            color: #d478ff;
-            margin-bottom: 15px;
-            font-size: 16px;
-            letter-spacing: 1px;
+            color: #d478ff; margin-bottom: 15px; font-size: 16px; letter-spacing: 1px;
             border-bottom: 1px solid rgba(200, 100, 255, 0.3);
-            padding-bottom: 10px;
-            text-align: center;
+            padding-bottom: 10px; text-align: center;
         }
-
         .state-indicator { display: flex; align-items: center; margin: 8px 0; font-size: 14px; }
         .state-bar { width: 100px; height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 3px; margin-left: auto; overflow: hidden; }
-        .state-fill { height: 100%; background: linear-gradient(90deg, #ff4444, #ffaa44, #44ff44); border-radius: 3px; transition: width 0.5s ease; }
-        
-        .control-group, .archetype-group {
-            font-size: 13px;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .control-group:last-child, .archetype-group:last-child { border-bottom: none; }
-
+        .state-fill { height: 100%; background: linear-gradient(90deg, #d478ff, #8a2be2, #4b0082); border-radius: 3px; transition: width 0.5s ease; }
         .jung-quote {
             font-style: italic; font-size: 13px; color: rgba(255, 255, 255, 0.8);
             margin-top: 10px; padding: 10px;
             border-left: 2px solid rgba(200, 100, 255, 0.7);
             background: rgba(200, 100, 255, 0.05); border-radius: 5px;
         }
-
-        .fade-out { opacity: 0; }
     </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-text">LA INDIVIDUACIÓN</div>
-        <div class="loading-subtitle">El Espejo de la Sombra Jungiana</div>
-    </div>
-    
     <div class="dashboard">
         <div class="dash-column">
             <h4>ESTADO PSICOLÓGICO</h4>
-            <div class="state-indicator"><span>Consciencia:</span><div class="state-bar"><div class="state-fill" id="consciousnessBar"></div></div><span id="consciousnessText">0%</span></div>
-            <div class="state-indicator"><span>Integración:</span><div class="state-bar"><div class="state-fill" id="integrationBar"></div></div><span id="integrationText">0%</span></div>
-            <div class="state-indicator"><span>Individuación:</span><div class="state-bar"><div class="state-fill" id="individuationBar"></div></div><span id="individuationText">0%</span></div>
-            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 14px;"><strong>Fase:</strong> <span id="currentPhase">Inconsciencia</span></div>
+            <div class="state-indicator"><span>Atención Focada:</span><div class="state-bar"><div class="state-fill" id="consciousnessBar"></div></div><span id="consciousnessText">0%</span></div>
+            <div class="state-indicator"><span>Claridad:</span><div class="state-bar"><div class="state-fill" id="integrationBar"></div></div><span id="integrationText">0%</span></div>
+            <div class="state-indicator"><span>Integración:</span><div class="state-bar"><div class="state-fill" id="individuationBar"></div></div><span id="individuationText">0%</span></div>
+            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 14px;"><strong>Fase:</strong> <span id="currentPhase">Exploración</span></div>
         </div>
         <div class="dash-column">
-             <h4>ARQUETIPOS Y CONTROLES</h4>
-             <div class="archetype-group">Persona: <span id="personaLevel" style="float: right;">Dormida</span></div>
-             <div class="archetype-group">Sombra: <span id="shadowLevel" style="float: right;">Fragmentada</span></div>
-             <div class="archetype-group">Anima/Animus: <span id="animaLevel" style="float: right;">Oculta</span></div>
-             <div class="archetype-group">Self: <span id="selfLevel" style="float: right;">Potencial</span></div>
-             <div class="archetype-group">Símbolo Dominante: <span id="dominantSymbol" style="float: right; color: #d478ff;">El Misterio</span></div>
+             <h4>SÍMBOLOS REVELADOS</h4>
+             <div id="symbolList" style="text-align: center; font-size: 1.5em; color: #d478ff; padding: 10px 0;">-</div>
         </div>
         <div class="dash-column">
-            <h4>CONCEPTO ANALÍTICO</h4>
-            <p style="font-size: 13px;">La integración de la Sombra es el proceso de hacer consciente lo inconsciente para alcanzar la totalidad del Self.</p>
+            <h4>CONCEPTO</h4>
+            <p style="font-size: 13px;">Ilumina los aspectos oscuros de tu psique. La observación sostenida no destruye, transforma.</p>
             <div class="jung-quote">"Uno no se ilumina fantaseando sobre la luz, sino haciendo consciente la oscuridad." — C.G. Jung</div>
         </div>
     </div>
 
     <script>
-        let prevMouseX=0,prevMouseY=0;let psyche={ego:{x:0,y:0,energia:1,estabilidad:1},sombra:{x:0,y:0,radio:0,puntos:[],fragmentos:[],energia:0,visibilidad:0,hostilidad:0.3,arquetipos:[]},anima:{energia:0,manifestaciones:[]},self:{energia:0,mandala:[],unidad:0},complejos:[],consciencia:0,integracion:0,individuacion:0,fase:0,tiempo:0,chakras:[],particulas:[],simbolos:[],conexiones:[],loadingComplete:!1,modoConfronta:!1,arquetiposActivos:!1,mandalaVisible:!1,estadoUnificacion:"ninguno"};const FASES_INDIVIDUACION=["Inconsciencia inicial","Encuentro con la Persona","Confrontación con la Sombra","Encuentro con Anima/Animus","Desarrollo del Self","Individuación realizada"],ARQUETIPOS_SIMBOLOS=["El Misterio","El Espejo","La Serpiente","El Árbol","La Corona","El Círculo","La Espiral","El Ojo"];
-        function setup(){createCanvas(windowWidth,windowHeight);colorMode(HSB,360,100,100,100);inicializarPsique();setTimeout(ocultarPantallaCarga,3e3);prevMouseX=mouseX;prevMouseY=mouseY}
-        function inicializarPsique(){psyche.estadoUnificacion="ninguno";psyche.consciencia=0;psyche.integracion=0;psyche.individuacion=0;psyche.ego.x=.3*width;psyche.ego.y=.5*height;psyche.sombra.x=.7*width;psyche.sombra.y=.5*height;psyche.sombra.radio=.25*height;generarGeometriaSombra();inicializarChakras();crearParticulas();generarSimbolos();generarComplejos()}
-        function generarComplejos(){psyche.complejos=[];for(let e=0;e<5;e++)psyche.complejos.push({x:.5*width+random(-.2*width,.2*width),y:.5*height+random(-.3*height,.3*height),radio:random(15,30),energia:1,ruidoOffset:random(1e3),velocidad:random(.1,.4),activado:!1,tiempoActivado:0})}
-        function generarGeometriaSombra(){psyche.sombra.puntos=[];psyche.sombra.fragmentos=[];for(let e=0;e<60;e++)psyche.sombra.puntos.push({angulo:map(e,0,60,0,TWO_PI),distancia:random(.6*psyche.sombra.radio,1.1*psyche.sombra.radio),ruidoOffset:random(2e3),velocidad:random(.2,.7),intensidad:random(.5,1)});for(let e=0;e<25;e++)psyche.sombra.fragmentos.push({x:random(-.7*psyche.sombra.radio,.7*psyche.sombra.radio),y:random(-.7*psyche.sombra.radio,.7*psyche.sombra.radio),tam:random(3,15),rotacion:random(TWO_PI),velocidadRot:random(-.03,.03),alpha:random(30,80),arquetipo:floor(random(4)),pulsacion:random(1,3)})}
-        function inicializarChakras(){let e=[0,30,60,120,210,240,275];psyche.chakras=[];for(let o=0;o<7;o++)psyche.chakras.push({y:.85*height-o*.09*height,color:e[o],tam:18,energia:0,activo:!1,resonancia:0})}
-        function crearParticulas(){psyche.particulas=[];for(let e=0;e<80;e++)psyche.particulas.push({x:random(width),y:random(height),vx:random(-.5,.5),vy:random(-.5,.5),tam:random(1,4),hue:random(240,320),alpha:random(20,70),tipo:floor(random(5))})}
-        function generarSimbolos(){psyche.simbolos=[];for(let e=0;e<12;e++)psyche.simbolos.push({x:random(.1*width,.9*width),y:random(.1*height,.9*height),simbolo:ARQUETIPOS_SIMBOLOS[floor(random(ARQUETIPOS_SIMBOLOS.length))],alpha:0,rotacion:0,escala:random(0.5,1.5),energia:0})}
-        function draw(){if(psyche.loadingComplete){if("viajando"===psyche.estadoUnificacion&&(psyche.ego.x=lerp(psyche.ego.x,width/2,.02),psyche.sombra.x=lerp(psyche.sombra.x,width/2,.02),psyche.ego.y=lerp(psyche.ego.y,height/2,.02),psyche.sombra.y=lerp(psyche.sombra.y,height/2,.02),dist(psyche.ego.x,psyche.ego.y,width/2,height/2)<5))psyche.estadoUnificacion="unificado";background(lerp(240,280,psyche.integracion),lerp(60,25,psyche.consciencia),psyche.modoConfronta?1:lerp(2,6,psyche.consciencia));psyche.tiempo+=.008;"unificado"!==psyche.estadoUnificacion&&calcularEstadosPsicologicos();dibujarCampoEnergetico();dibujarParticulas();dibujarComplejos();"unificado"!==psyche.estadoUnificacion&&(dibujarEgo(),dibujarSombra(),dibujarConexionesPsiquicas());dibujarArquetipos();dibujarSimbolos();(psyche.mandalaVisible||"unificado"===psyche.estadoUnificacion)&&dibujarMandalaIndividuacion();actualizarInterfaz();prevMouseX=mouseX;prevMouseY=mouseY}}
-        function calcularEstadosPsicologicos(){let e=dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y),o=map(e,width/2,50,0,1,!0),a=dist(mouseX,mouseY,prevMouseX,prevMouseY);psyche.sombra.hostilidad=lerp(psyche.sombra.hostilidad,a>20?.9:.1,a>20?.1:.02);psyche.consciencia=lerp(psyche.consciencia,o*.7+psyche.tiempo*.3,.01)*(1-.5*psyche.sombra.hostilidad);psyche.consciencia=constrain(psyche.consciencia,0,1);psyche.integracion=.6*(psyche.consciencia+.8*psyche.sombra.energia);psyche.individuacion=constrain((.4*psyche.consciencia+.6*psyche.integracion)*(psyche.arquetiposActivos?1.2:1),0,1);if(psyche.individuacion>=.99&&"ninguno"===psyche.estadoUnificacion)psyche.estadoUnificacion="viajando";psyche.sombra.energia=constrain(1.5*psyche.consciencia,0,1);psyche.sombra.visibilidad=psyche.sombra.energia;psyche.fase=floor(psyche.individuacion*FASES_INDIVIDUACION.length);psyche.fase=constrain(psyche.fase,0,FASES_INDIVIDUACION.length-1)}
-        function dibujarComplejos(){for(let e of psyche.complejos)e.energia>0&&(e.x+=map(noise(e.ruidoOffset+psyche.tiempo*e.velocidad),0,1,-1,1),e.y+=map(noise(e.ruidoOffset+1e3+psyche.tiempo*e.velocidad),0,1,-1,1),dist(mouseX,mouseY,e.x,e.y)<e.radio&&!e.activado&&(e.activado=!0,e.tiempoActivado=180,psyche.consciencia*=.5),e.activado&&(e.tiempoActivado--,e.tiempoActivado<=0&&(e.activado=!1)),push(),translate(e.x,e.y),(()=>{let o=e.activado?100:40,a=e.activado?100:70;for(let t=2;t>=0;t--)noFill(),stroke(0,80,a,o/(t+1)*(e.activado?2:1)),strokeWeight(1+t),ellipse(0,0,2*e.radio+15*t+(e.activado?10*sin(.5*frameCount):5*sin(3*psyche.tiempo+e.ruidoOffset)));fill(0,90,a-20,90);noStroke();ellipse(0,0,e.radio)})(),pop())}
-        function dibujarCampoEnergetico(){let e=lerp(.15*width,.35*width,psyche.consciencia);for(let o=4;o>=0;o--){let a=1+.2*o,t=lerp(3,20,psyche.consciencia)/(o+1);noFill();stroke(60,40,100,t);strokeWeight(lerp(2,.5,o/4));ellipse(psyche.ego.x,psyche.ego.y,e*a*(.1*sin(2*psyche.tiempo)+1))}if(psyche.sombra.energia>.2){let e=lerp(.5*psyche.sombra.radio,1.5*psyche.sombra.radio,psyche.sombra.energia);for(let o=3;o>=0;o--){let a=1+.15*o,t=18*psyche.sombra.energia/(o+1);noFill();stroke(lerp(280,0,psyche.sombra.hostilidad),60,60,t);strokeWeight(2-.4*o);ellipse(psyche.sombra.x,psyche.sombra.y,e*a)}}}
-        function dibujarParticulas(){for(let e of psyche.particulas){let o=createVector(psyche.ego.x-e.x,psyche.ego.y-e.y).mult(5e-5*psyche.consciencia),a=createVector(psyche.sombra.x-e.x,psyche.sombra.y-e.y).mult(3e-5*psyche.sombra.energia);e.vx+=o.x+a.x;e.vy+=o.y+a.y;e.x+=e.vx;e.y+=e.vy;e.vx*=.995;e.vy*=.995;e.x<0?e.x=width:e.x>width&&(e.x=0);e.y<0?e.y=height:e.y>height&&(e.y=0);noStroke();fill(e.hue,60,90,e.alpha*(psyche.modoConfronta?.3:1));push();translate(e.x,e.y);rotate(psyche.tiempo*(e.tipo-2));switch(e.tipo){case 0:ellipse(0,0,e.tam);break;case 1:rect(-e.tam/2,-e.tam/2,e.tam,e.tam);break;case 2:triangle(-e.tam/2,e.tam/2,e.tam/2,e.tam/2,0,-e.tam/2);break;case 3:beginShape();for(let o=0;o<TWO_PI;o+=PI/3){let a=e.tam/2*(.8+.3*sin(3*o+5*psyche.tiempo));vertex(cos(o)*a,sin(o)*a)}endShape(CLOSE);break;case 4:line(-e.tam/2,0,e.tam/2,0),line(0,-e.tam/2,0,e.tam/2)}pop()}}
-        function dibujarEgo(){strokeWeight(lerp(1,6,psyche.consciencia));stroke(0,0,100,lerp(20,80,psyche.consciencia));line(psyche.ego.x,.9*height,psyche.ego.x,.1*height);for(let e=0;e<psyche.chakras.length;e++){let o=psyche.chakras[e];o.energia=constrain(8*psyche.consciencia-e,0,1);o.resonancia=psyche.integracion*o.energia;o.activo=o.energia>.25;let a=o.tam+sin(4*psyche.tiempo-e*.6)*lerp(5,15,o.energia);for(let t=4;t>=0;t--)noStroke(),fill(o.color,70,90,lerp(2,35,o.energia)/(t+1)),ellipse(psyche.ego.x,o.y,a*(1.8+.6*t));fill(o.color,80,lerp(40,100,o.energia),lerp(60,100,o.energia));ellipse(psyche.ego.x,o.y,a);o.energia>.4&&(push(),translate(psyche.ego.x,o.y),rotate(psyche.tiempo*(.3+o.energia)*(e%2==0?1:-1)),fill(0,0,100,90),textAlign(CENTER,CENTER),textSize(10+8*o.energia),text("◉",0,0),pop());o.resonancia>.6&&psyche.arquetiposActivos&&(stroke(o.color,60,100,40*o.resonancia),strokeWeight(1),noFill(),ellipse(psyche.ego.x,o.y,3*a))}}
-        function dibujarSombra(){push();translate(psyche.sombra.x,psyche.sombra.y);noStroke();let e=psyche.modoConfronta?150:lerp(40,120,psyche.sombra.visibilidad),o=lerp(280,0,psyche.sombra.hostilidad),a=lerp(8,20,psyche.sombra.hostilidad);fill(o,60,a,e);beginShape();for(let t of psyche.sombra.puntos){let i=noise(t.ruidoOffset+psyche.tiempo*t.velocidad),n=t.distancia+map(i,0,1,-40,40)*t.intensidad*(1+psyche.sombra.hostilidad);curveVertex(cos(t.angulo)*n,sin(t.angulo)*n)}endShape(CLOSE);if(psyche.sombra.energia>.2||psyche.modoConfronta)for(let t of psyche.sombra.fragmentos){push();translate(t.x,t.y);rotate(t.rotacion+psyche.tiempo*t.velocidadRot);let i=(psyche.modoConfronta?2*t.alpha:3*t.alpha*psyche.sombra.energia);fill(275+20*t.arquetipo+15*sin(psyche.tiempo+.1*t.x),70,60,i);let n=t.tam*(1+.3*sin(psyche.tiempo*t.pulsacion+t.rotacion));switch(t.arquetipo){case 0:ellipse(0,0,n);break;case 1:rect(-n/2,-n/2,n,n);break;case 2:triangle(-n/2,n/2,n/2,n/2,0,-n/2);break;case 3:beginShape();for(let r=0;r<TWO_PI;r+=PI/6){let l=n/2,c=n/4;vertex(cos(r)*l,sin(r)*l),vertex(cos(r+PI/6)*c,sin(r+PI/6)*c)}endShape(CLOSE)}t.rotacion+=t.velocidadRot;pop()}if(psyche.sombra.energia>.3||psyche.modoConfronta){let t=lerp(15,35,psyche.sombra.energia),i=5*sin(3*psyche.tiempo)*(1+2*psyche.sombra.hostilidad);fill(300,80,70,lerp(30,100,psyche.sombra.energia));ellipse(0,0,t+i+10);fill(0,0,5,90);ellipse(0,0,t+i);psyche.integracion>.6&&(fill(0,0,100,150*psyche.integracion),ellipse(0,0,5))}pop()}
-        function dibujarConexionesPsiquicas(){if(psyche.integracion>.3)for(let e=0;e<psyche.chakras.length;e++){let o=psyche.chakras[e];if(o.activo&&o.resonancia>.4)for(let a=0;a<floor(2*psyche.integracion)+1;a++){let t=60*sin(1.5*psyche.tiempo+e+.4*a),i=.7*(psyche.sombra.x+cos(.8*psyche.tiempo+e)*t),n=.7*(psyche.sombra.y+sin(.8*psyche.tiempo+e)*t);strokeWeight(lerp(.5,2.5,psyche.integracion));stroke(o.color,40,95,80*o.resonancia);let r=lerp(psyche.ego.x,i,.3)+40*sin(psyche.tiempo+e),l=lerp(o.y,n,.3)+30*cos(psyche.tiempo+e),c=lerp(psyche.ego.x,i,.7)+30*sin(psyche.tiempo+e+PI),s=lerp(o.y,n,.7)+40*cos(psyche.tiempo+e+PI);noFill();beginShape();vertex(psyche.ego.x,o.y);bezierVertex(r,l,c,s,i,n);endShape()}}}
-        function dibujarArquetipos(){if(psyche.arquetiposActivos){let e=[{x:.2*width,y:.3*height,t:"Persona"},{x:.8*width,y:.7*height,t:"Sombra"},{x:.5*width,y:.2*height,t:"Anima"},{x:.5*width,y:.8*height,t:"Self"}];for(let o of e){let a=psyche.individuacion*random(.8,1.2);if(a>.3){push();translate(o.x,o.y);for(let t=3;t>=0;t--)noFill(),stroke("Sombra"===o.t?280:"Anima"===o.t?320:200,60,80,a*15/(t+1)),strokeWeight(2-.4*t),ellipse(0,0,50+20*t);fill(200,40,100,120*a);noStroke();textAlign(CENTER,CENTER);textSize(16+10*a);text("Persona"===o.t?"◭":"Sombra"===o.t?"◪":"Anima"===o.t?"☾":"☉",0,0);pop()}}}}
+        // Objeto principal que contiene el estado de la simulación
+        let psyche = {
+            sombra: { x: 0, y: 0, radio: 0, puntos: [], vx: 0, vy: 0, ruidoOffsetX: 0, ruidoOffsetY: 0 },
+            linterna: { radio: 0 },
+            particulas: [],
+            tiempoBajoLuz: 0,
+            integracion: 0,
+            fase: "Exploración",
+            simboloActual: "-"
+        };
+
+        const FASES = ["Exploración", "Observación", "Comprensión", "Claridad", "Integración", "Totalidad"];
+        const SIMBOLOS = ["El Ojo", "La Espiral", "El Círculo", "El Árbol", "La Corona", "El Misterio"];
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            colorMode(HSB, 360, 100, 100, 100);
+            inicializarPsique();
+        }
+
+        function inicializarPsique() {
+            psyche.sombra.x = width * 0.75;
+            psyche.sombra.y = height * 0.5;
+            psyche.sombra.radio = height * 0.2;
+            psyche.sombra.ruidoOffsetX = random(1000);
+            psyche.sombra.ruidoOffsetY = random(10000);
+            psyche.linterna.radio = height * 0.25;
+            psyche.tiempoBajoLuz = 0;
+            psyche.integracion = 0;
+            
+            psyche.sombra.puntos = [];
+            for (let i = 0; i < 80; i++) {
+                psyche.sombra.puntos.push({
+                    angulo: map(i, 0, 80, 0, TWO_PI),
+                    distancia: random(0.8, 1.2),
+                    ruidoOffset: random(2000),
+                    velocidad: random(0.5, 1.5)
+                });
+            }
+        }
+
+        function draw() {
+            background(260, 80, 5);
+
+            // --- Lógica Principal de Interacción ---
+            let distancia = dist(mouseX, mouseY, psyche.sombra.x, psyche.sombra.y);
+            if (distancia < psyche.linterna.radio) {
+                psyche.tiempoBajoLuz = min(1800, psyche.tiempoBajoLuz + 1); // Aumenta hasta un máximo
+            } else {
+                psyche.tiempoBajoLuz = max(0, psyche.tiempoBajoLuz - 2); // Disminuye si no está iluminada
+            }
+            psyche.integracion = psyche.tiempoBajoLuz / 1800; // Normalizar a un valor entre 0 y 1
+
+            // --- Actualizar Estado ---
+            let faseIndex = floor(psyche.integracion * (FASES.length - 1));
+            psyche.fase = FASES[faseIndex];
+            psyche.simboloActual = SIMBOLOS[faseIndex];
+
+            // --- Renderizado ---
+            push();
+            // Crear máscara de recorte para el efecto de linterna
+            const ctx = drawingContext;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, psyche.linterna.radio, 0, TWO_PI);
+            ctx.clip();
+
+            // Lo que está dentro de la máscara es visible
+            dibujarSombra();
+            dibujarChakras();
+
+            ctx.restore();
+            pop();
+
+            dibujarLinterna();
+            actualizarDashboard();
+        }
         
-        // --- OPTIMIZACIÓN DE LEGIBILIDAD ---
-        function dibujarSimbolos() {
-            for(let s of psyche.simbolos){
-                s.energia=psyche.individuacion*random(0.5,1.5);
-                s.alpha=constrain(s.energia*60,0,80);
-                s.rotacion+=.005;
-                if(s.alpha > 10) {
-                    push();
-                    translate(s.x, s.y);
-                    rotate(s.rotacion);
-                    scale(s.escala * (1 + sin(psyche.tiempo + s.x * 0.01) * 0.1));
-                    
-                    // Efecto de Halo
+        function dibujarSombra() {
+            // Mover la Sombra con Ruido Perlin
+            let anguloMovimiento = noise(psyche.sombra.ruidoOffsetX) * TWO_PI * 4;
+            psyche.sombra.vx = cos(anguloMovimiento) * 2;
+            psyche.sombra.vy = sin(anguloMovimiento) * 2;
+            psyche.sombra.x += psyche.sombra.vx;
+            psyche.sombra.y += psyche.sombra.vy;
+
+            // Mantenerla en pantalla
+            if (psyche.sombra.x < 0) psyche.sombra.x = width;
+            if (psyche.sombra.x > width) psyche.sombra.x = 0;
+            if (psyche.sombra.y < 0) psyche.sombra.y = height;
+            if (psyche.sombra.y > height) psyche.sombra.y = 0;
+            
+            psyche.sombra.ruidoOffsetX += 0.001;
+
+            push();
+            translate(psyche.sombra.x, psyche.sombra.y);
+            
+            // La apariencia de la Sombra cambia con la integración
+            let caos = 1 - psyche.integracion; // 1 es caótico, 0 es calmado
+            let colorBase = lerpColor(color(280, 80, 20), color(300, 100, 100), psyche.integracion);
+
+            noStroke();
+            fill(colorBase);
+
+            beginShape();
+            for (let p of psyche.sombra.puntos) {
+                let ruido = noise(p.ruidoOffset + frameCount * 0.01 * p.velocidad);
+                let distorsion = map(ruido, 0, 1, -80, 80) * caos;
+                let radioFinal = psyche.sombra.radio * p.distancia + distorsion;
+                
+                // Cuando se integra, la forma tiende a un círculo perfecto
+                radioFinal = lerp(radioFinal, psyche.sombra.radio, psyche.integracion);
+
+                let x = cos(p.angulo) * radioFinal;
+                let y = sin(p.angulo) * radioFinal;
+                curveVertex(x, y);
+            }
+            endShape(CLOSE);
+
+            // Dibujar patrones geométricos internos a medida que se integra
+            if (psyche.integracion > 0.2) {
+                let numLineas = floor(psyche.integracion * 12);
+                stroke(0, 0, 100, psyche.integracion * 80);
+                strokeWeight(1.5);
+                for (let i = 0; i < numLineas; i++) {
+                    let ang = map(i, 0, numLineas, 0, TWO_PI) + frameCount * 0.01;
+                    let r = psyche.sombra.radio * (0.2 + (psyche.integracion - 0.2));
+                    line(0, 0, cos(ang) * r, sin(ang) * r);
+                }
+            }
+            pop();
+        }
+
+        function dibujarChakras() {
+            // El Ego/Self se manifiesta como una columna de chakras estables
+            for (let i = 0; i < 7; i++) {
+                let y = (height * 0.85) - (i * height * 0.09);
+                let x = width * 0.2;
+                let energia = constrain(psyche.integracion * 7 - i, 0, 1);
+                if (energia > 0) {
+                    let tam = 20 + energia * 15;
+                    let colorChakra = color((i * 40)%360, 80, 100);
                     noStroke();
-                    fill(0, 0, 0, s.alpha * 0.5); // Sombra/fondo semitransparente
-                    ellipse(0, 0, 45, 45); // Elipse que sirve de fondo
-                    
-                    // Texto principal
-                    fill(220, 30, 100, s.alpha * 1.5); // Aumento de brillo
-                    textAlign(CENTER, CENTER);
-                    textSize(14); // Tamaño aumentado
-                    text(s.simbolo, 0, 0);
-                    pop();
+                    fill(colorChakra, energia * 50);
+                    ellipse(x, y, tam * 2);
+                    fill(colorChakra, energia * 100);
+                    ellipse(x, y, tam);
                 }
             }
         }
 
-        function dibujarMandalaIndividuacion(){push();translate(width/2,height/2);let e="unificado"===psyche.estadoUnificacion?100:60*psyche.individuacion;if(e>10){noFill();stroke(0,0,100,e);strokeWeight(2);ellipse(0,0,300);stroke(200,40,90,.8*e);strokeWeight(1.5);rectMode(CENTER);rect(0,0,200,200);stroke(280,60,70,e);strokeWeight(3);line(-100,0,100,0);line(0,-100,0,100);fill(0,0,100,.6*e);noStroke();ellipse(0,0,30);for(let o=0;o<12;o++){let a=map(o,0,12,0,TWO_PI),t=20*sin(2*psyche.tiempo+.5*o);stroke(57.3*a,50,90,.6*e);strokeWeight(1);line(cos(a)*(80+t),sin(a)*(80+t),cos(a)*(120+t),sin(a)*(120+t))}}pop()}
-        function getFaseTexto(e){return FASES_INDIVIDUACION[constrain(e,0,FASES_INDIVIDUACION.length-1)]}
-        function getArquetipoLevel(e,o){let a=["Dormido","Emergiendo","Activo","Integrado"];return a[constrain(floor(o*a.length),0,a.length-1)]}
-        function getSimboloDominante(e){return ARQUETIPOS_SIMBOLOS[constrain(floor(e*ARQUETIPOS_SIMBOLOS.length),0,ARQUETIPOS_SIMBOLOS.length-1)]}
-        function actualizarInterfaz(){document.getElementById("consciousnessBar").style.width=psyche.consciencia*100+"%";document.getElementById("consciousnessText").textContent=round(100*psyche.consciencia)+"%";document.getElementById("integrationBar").style.width=psyche.integracion*100+"%";document.getElementById("integrationText").textContent=round(100*psyche.integracion)+"%";document.getElementById("individuationBar").style.width=psyche.individuacion*100+"%";document.getElementById("individuationText").textContent=round(100*psyche.individuacion)+"%";document.getElementById("currentPhase").textContent=getFaseTexto(psyche.fase);document.getElementById("personaLevel").textContent=getArquetipoLevel("Persona",psyche.consciencia);document.getElementById("shadowLevel").textContent=getArquetipoLevel("Sombra",psyche.sombra.energia);document.getElementById("animaLevel").textContent=getArquetipoLevel("Anima",psyche.integracion);document.getElementById("selfLevel").textContent=getArquetipoLevel("Self",psyche.individuacion);document.getElementById("dominantSymbol").textContent=getSimboloDominante(psyche.individuacion)}
-        function ocultarPantallaCarga(){const e=document.getElementById("loadingScreen");e.classList.add("fade-out");setTimeout(()=>{e.style.display="none";psyche.loadingComplete=!0},2e3)}
-        function mousePressed(){psyche.loadingComplete&&inicializarPsique()}
-        function keyPressed(){if(psyche.loadingComplete){const e=key.toLowerCase();" "===e?psyche.consciencia=min(1,psyche.consciencia+.15):"s"===e?psyche.modoConfronta=!psyche.modoConfronta:"a"===e?psyche.arquetiposActivos=!psyche.arquetiposActivos:"m"===e?psyche.mandalaVisible=!psyche.mandalaVisible:"r"===e&&generarGeometriaSombra()}}
-        function mouseMoved(){if(psyche.loadingComplete&&dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y)<psyche.sombra.radio&&random()<.2)psyche.particulas.push({x:mouseX+random(-15,15),y:mouseY+random(-15,15),vx:random(-.8,.8),vy:random(-.8,.8),tam:random(1,4),hue:lerp(240,280,psyche.integracion),alpha:70,tipo:4})}
-        function windowResized(){resizeCanvas(windowWidth,windowHeight);inicializarPsique()}
-        function limpiarParticulas(){for(let e=psyche.particulas.length-1;e>=0;e--)psyche.particulas[e].alpha-=.3,psyche.particulas[e].alpha<=0&&psyche.particulas.splice(e,1);psyche.particulas.length>400&&psyche.particulas.splice(0,psyche.particulas.length-400)}setInterval(limpiarParticulas,100);
+        function dibujarLinterna() {
+            // Dibuja el borde y el aura de la linterna
+            noFill();
+            strokeWeight(2);
+            stroke(60, 100, 100, 80);
+            ellipse(mouseX, mouseY, psyche.linterna.radio * 2);
+            
+            strokeWeight(8);
+            stroke(60, 100, 100, 15);
+            ellipse(mouseX, mouseY, psyche.linterna.radio * 2 + 20);
+        }
+
+        function actualizarDashboard() {
+            let atencion = 0;
+            let dist = distance(mouseX, mouseY, psyche.sombra.x, psyche.sombra.y);
+            if (dist < psyche.linterna.radio) {
+                atencion = map(dist, psyche.linterna.radio, 0, 20, 100, true);
+            }
+
+            document.getElementById('consciousnessBar').style.width = atencion + '%';
+            document.getElementById('consciousnessText').textContent = Math.round(atencion) + '%';
+            document.getElementById('integrationBar').style.width = psyche.integracion * 100 + '%';
+            document.getElementById('integrationText').textContent = Math.round(psyche.integracion * 100) + '%';
+            document.getElementById('individuationBar').style.width = psyche.integracion * 100 + '%'; // Simplificado para mayor claridad
+            document.getElementById('individuationText').textContent = Math.round(psyche.integracion * 100) + '%';
+            document.getElementById('currentPhase').textContent = psyche.fase;
+            document.getElementById('symbolList').textContent = psyche.simboloActual;
+        }
+
+        // --- Funciones de Ayuda y Eventos ---
+        function distance(x1, y1, x2, y2) { return sqrt(pow(x1-x2, 2) + pow(y1-y2, 2)); }
+        function mousePressed() { inicializarPsique(); }
+        function windowResized() { resizeCanvas(windowWidth, windowHeight); inicializarPsique(); }
     </script>
 </body>
 </html>
