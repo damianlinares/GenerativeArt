@@ -4,220 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EL RESPLANDOR DEL INCONSCIENTE — Ritual de Integración de la Sombra</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #000;
-            cursor: none; /* El cursor se disuelve: eres pura intención */
-        }
-        canvas {
-            display: block;
-        }
+        html, body { margin: 0; padding: 0; overflow: hidden; background: #000; cursor: none; }
+        canvas { display: block; }
+        #loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font: 14px monospace; opacity: 1; transition: opacity 1s; pointer-events: none; }
+        .hidden { opacity: 0 !important; }
     </style>
 </head>
 <body>
+    <div id="loading">🌀 Iniciando ritual de integración...</div>
 
-<!-- 
-    ██████╗ ███████╗██████╗ ██╗   ██╗███████╗███████╗████████╗
-    ██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝╚══██╔══╝
-    ██████╔╝█████╗  ██████╔╝██║   ██║█████╗  ███████╗   ██║   
-    ██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║██╔══╝  ╚════██║   ██║   
-    ██║  ██║███████╗██║     ╚██████╔╝███████╗███████║   ██║   
-    ╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚══════╝╚══════╝   ╚═╝   
+    <script>
+        // ▼▼▼ p5.js MINIFICADO (solo lo necesario para shaders + WEBGL) ▼▼▼
+        (()=>{var e={};function t(e,t){return t}window.p5=t,t.prototype={_setupDone:!1,createCanvas:function(e,t,r="P2D"){if(this._curElement&&this._curElement.canvas.parentNode.removeChild(this._curElement.canvas),r&&"WEBGL"===r.toUpperCase()){var n=document.createElement("canvas");return this._setProperty("_renderer",new t.RendererGL(n,this)),this._elements.push({elt:n,events:{}}),n.id||n.setAttribute("id",this._defaultCanvasId),document.body.appendChild(n),this._curElement=this._elements[this._elements.length-1],this._renderer._applyDefaults(),n}var i=document.createElement("canvas");return this._setProperty("_renderer",new t.Renderer2D(i,this)),this._elements.push({elt:i,events:{}}),i.id||i.setAttribute("id",this._defaultCanvasId),document.body.appendChild(i),this._curElement=this._elements[this._elements.length-1],this._renderer._applyDefaults(),i},resizeCanvas:function(e,t){this._renderer.resize(e,t)},_setProperty:function(e,t){this[e]=t},_start:function(){this._setup&&this._setup(),this._setupDone=!0},mouseX:0,mouseY:0}};t.prototype.loadShader=function(){throw new Error("loadShader no soportado. Usa createShader + createProgram.")};t.prototype.shader=function(e){this._renderer._useShader(e)};t.prototype.rect=function(e,t,r,n){this._renderer.rect(e,t,r,n)};t.prototype.noStroke=function(){this._renderer.noStroke()};t.prototype.millis=function(){return performance.now()};window.setup=window.draw=window.preload=()=>{};t.prototype.createShader=function(e,t){return this._renderer.createShader(e,t)};t.prototype.createProgram=function(e,t){return this._renderer.createProgram(e,t)};t.RendererGL=function(e,t){this.canvas=e,this._pInst=t,this._gl=e.getContext("webgl",{antialias:!0})||e.getContext("experimental-webgl",{antialias:!0}),this._initBuffers()};t.RendererGL.prototype={_currentShader:null,_currentBuffer:null,_currentElementBuffer:null,_initBuffers:function(){},resize:function(e,t){this.canvas.width=e,this.canvas.height=t,this._gl.viewport(0,0,e,t)},_applyDefaults:function(){this._gl.clearColor(0,0,0,1),this._gl.clear(this._gl.COLOR_BUFFER_BIT)},_useShader:function(e){this._currentShader=e,this._gl.useProgram(e.program)},createShader:function(e,t){var r=this._gl,n=r.createShader("VERTEX_SHADER"===e?r.VERTEX_SHADER:r.FRAGMENT_SHADER);return r.shaderSource(n,t),r.compileShader(n),r.getShaderParameter(n,r.COMPILE_STATUS)||console.error(r.getShaderInfoLog(n)),n},createProgram:function(e,t){var r=this._gl,n=r.createProgram();return r.attachShader(n,e),r.attachShader(n,t),r.linkProgram(n),n},setUniform:function(e,t){var r=this._gl,n=this._currentShader.program,i=r.getUniformLocation(n,e);if(i)if("number"==typeof t)r.uniform1f(i,t);else if(Array.isArray(t))switch(t.length){case 2:r.uniform2f(i,t[0],t[1]);break;case 3:r.uniform3f(i,t[0],t[1],t[2]);break;case 4:r.uniform4f(i,t[0],t[1],t[2],t[3]);break;default:console.warn("Array length no soportado: "+t.length)}else console.warn("Tipo no soportado: "+typeof t)},noStroke:function(){},rect:function(e,t,r,n){var i=new Float32Array([-1,-1,1,-1,1,1,-1,1]),o=new Uint16Array([0,1,2,0,2,3]),a=this._gl;this._currentBuffer||(this._currentBuffer=a.createBuffer(),a.bindBuffer(a.ARRAY_BUFFER,this._currentBuffer),a.bufferData(a.ARRAY_BUFFER,i,a.STATIC_DRAW),this._currentElementBuffer=a.createBuffer(),a.bindBuffer(a.ELEMENT_ARRAY_BUFFER,this._currentElementBuffer),a.bufferData(a.ELEMENT_ARRAY_BUFFER,o,a.STATIC_DRAW));var s=this._currentShader.program,l=a.getAttribLocation(s,"aPosition");a.enableVertexAttribArray(l),a.vertexAttribPointer(l,2,a.FLOAT,!1,0,0),a.drawElements(a.TRIANGLES,6,a.UNSIGNED_SHORT,0)}};window.addEventListener("DOMContentLoaded",function(){new t(function(e){window.p=e,window.setup=e.setup,window.draw=e.draw,window.preload=e.preload,e._start()})})})();
+    </script>
 
-    OBRA VISIONARIA: "EL RESPLANDOR DEL INCONSCIENTE"
-    — Un Campo de Resonancia Psíquica —
+    <script id="frag" type="x-shader/x-fragment">
+        #ifdef GL_ES
+        precision mediump float;
+        #endif
+        uniform vec2 u_resolution;
+        uniform vec2 u_mouse;
+        uniform float u_time;
+        vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+        float snoise(vec2 v){
+          const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+          vec2 i  = floor(v + dot(v, C.yy) );
+          vec2 x0 = v -   i + dot(i, C.xx) ;
+          vec2 v1 = floor(x0.xy + C.zw) ;
+          vec2 v2 = floor(x0.xy + C.yy) ;
+          vec2 v3 = floor(x0.xy + C.xx) ;
+          vec2 x1 = x0 - v1 + C.xx ;
+          vec2 x2 = x0 - v2 + C.yy ;
+          vec2 x3 = x0 - v3 + C.zz ;
+          i = mod(i,289.0);
+          vec3 p = permute( permute( i.y + vec3(0.0, v1.y, v2.y )) + i.x + vec3(0.0, v1.x, v2.x ));
+          vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
+          m = m*m; m = m*m;
+          vec3 x = p;
+          vec3 h = 2.0 * fract(x * C.www) - 1.0;
+          vec3 a = abs(h) - 0.5;
+          vec3 o = floor(h + 0.5);
+          vec3 d = step(vec3(0.0), a);
+          h = h - o + d.x * (d.yzx - 1.0);
+          vec3 s = sign(h);
+          h = abs(h);
+          vec3 c = vec3(0.0); c.x = s.x; c.y = s.y; c.z = s.z;
+          vec4 res = m.x * vec4(h.x, c.x, c.y, c.z) + m.y * vec4(h.y, c.y, c.z, c.x) + m.z * vec4(h.z, c.z, c.x, c.y);
+          return dot(res, vec4(70.0));
+        }
+        void main() {
+            vec2 st = gl_FragCoord.xy / u_resolution.xy;
+            vec2 m_st = u_mouse.xy / u_resolution.xy;
+            vec2 centered = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+            vec2 shadow_center = vec2(0.5);
+            float dist_to_shadow = distance(st, shadow_center);
+            float dist_to_mouse = distance(st, m_st);
+            float mouse_influence = smoothstep(0.3, 0.0, dist_to_mouse);
+            float t = u_time * 0.5;
+            vec2 flow = vec2(
+                snoise(centered * 2.0 + vec2(t, t * 0.7)),
+                snoise(centered * 2.0 + vec2(t * 0.7, t))
+            ) * 0.1;
+            if (dist_to_mouse < 0.3) {
+                vec2 dir = normalize(st - m_st);
+                flow += dir * mouse_influence * 0.3;
+            }
+            float connection = 0.0;
+            if (dist_to_shadow < 0.4) {
+                float angle = atan(st.y - shadow_center.y, st.x - shadow_center.x);
+                float pulse = sin(angle * 8.0 + u_time) * 0.5 + 0.5;
+                connection = smoothstep(0.4, 0.6, pulse) * (1.0 - smoothstep(0.0, 0.4, dist_to_shadow));
+            }
+            vec2 sample = st + flow;
+            float noise = snoise(sample * 30.0 + vec2(u_time * 0.1, 0.0));
+            float filament = smoothstep(0.4, 0.6, fract(noise * 4.0 + u_time * 0.05));
+            float intensity = filament * 0.7 + connection * 0.8;
+            vec3 color_conscious = vec3(0.1, 0.4, 0.8);
+            vec3 color_integrated = vec3(1.0, 0.8, 0.3);
+            vec3 final_color = mix(color_conscious, color_integrated, mouse_influence);
+            float shadow_core = smoothstep(0.15, 0.0, dist_to_shadow);
+            final_color *= (1.0 - shadow_core * 0.8 * (1.0 - mouse_influence * 0.7));
+            intensity *= (1.0 + mouse_influence * 0.5);
+            gl_FragColor = vec4(final_color * intensity, 1.0);
+        }
+    </script>
 
-    Inspirada en el arquetipo junguiano de "La Sombra", 
-    esta pieza interactiva no es un espectáculo: es un RITUAL.
+    <script id="vert" type="x-shader/x-vertex">
+        attribute vec3 aPosition;
+        void main() { gl_Position = vec4(aPosition, 1.0); }
+    </script>
 
-    Tú, con tu cursor — tu voluntad consciente — 
-    te aproximas a la silueta oscura que respira en el centro.
+    <script>
+        let flowProgram, vertShader, fragShader;
 
-    No para destruirla.
-    No para temerla.
-    Sino para RECONOCERLA.
-
-    Al acercarte, zarcillos de luz nacen entre tú y ella.
-    Tu aura consciente se intensifica.
-    Ella revela sus patrones internos: no es caos, es energía sagrada reprimida.
-
-    Este es el pacto alquímico: 
-    La luz no vence a la sombra. La abraza. La integra. La transmuta.
-
-    La totalidad del Ser no nace de la pureza, 
-    sino de la reconciliación con lo negado.
-
-    Mueve tu cursor. Respira con la obra. Sé el artífice de tu propia psique.
--->
-
-<script id="flowShader" type="x-shader/x-fragment">
-#ifdef GL_ES
-precision mediump float;
-#endif
-
-uniform vec2 u_resolution;
-uniform vec2 u_mouse;
-uniform float u_time;
-
-// ———————————————————————————————————————————————
-// RUIDO PERLIN 2D — EL TEJIDO DEL INCONSCIENTE COLECTIVO
-// ———————————————————————————————————————————————
-vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
-float snoise(vec2 v){
-  const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-  vec2 i  = floor(v + dot(v, C.yy) );
-  vec2 x0 = v -   i + dot(i, C.xx) ;
-  vec2 v1 = floor(x0.xy + C.zw) ;
-  vec2 v2 = floor(x0.xy + C.yy) ;
-  vec2 v3 = floor(x0.xy + C.xx) ;
-  vec2 x1 = x0 - v1 + C.xx ;
-  vec2 x2 = x0 - v2 + C.yy ;
-  vec2 x3 = x0 - v3 + C.zz ;
-  i = mod(i,289.0);
-  vec3 p = permute( permute( i.y + vec3(0.0, v1.y, v2.y )) + i.x + vec3(0.0, v1.x, v2.x ));
-  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
-  m = m*m ;
-  m = m*m ;
-  vec3 x(p.x, p.y, p.z);
-  vec3 h = 2.0 * frac(x * C.www) - 1.0;
-  vec3 a = abs(h) - 0.5;
-  vec3 o = floor(h + 0.5);
-  vec3 d = (vec3)step(vec3(0.0), a);
-  h = h - o + d.x * (d.yzx - 1.0);
-  vec3 s = sign(h);
-  h = abs(h);
-  vec3 c = vec3(0.0, 0.0, 0.0);
-  c.x = s.x;
-  c.y = s.y;
-  c.z = s.z;
-  vec4 res = m.x * vec4(h.x, c.x, c.y, c.z) + m.y * vec4(h.y, c.y, c.z, c.x) + m.z * vec4(h.z, c.z, c.x, c.y);
-  return dot(res, vec4(70.0));
-}
-
-void main() {
-    vec2 st = gl_FragCoord.xy / u_resolution.xy;
-    vec2 m_st = u_mouse.xy / u_resolution.xy;
-
-    float aspect = u_resolution.x / u_resolution.y;
-    vec2 normalized_st = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
-    
-    // ———————————————————————————————————————————————
-    // EL CAMPO DE FLUJO: EL MOVIMIENTO INTERNO DEL ALMA
-    // ———————————————————————————————————————————————
-    float flow_speed = u_time * 0.1;
-    vec2 flow = vec2(
-        snoise(normalized_st * 3.0 + vec2(flow_speed, flow_speed * 0.5)),
-        snoise(normalized_st * 3.0 + vec2(flow_speed * 0.5, flow_speed))
-    ) * 0.5;
-
-    // ———————————————————————————————————————————————
-    // EL EMISOR DE PRESENCIA: TU VOLUNTAD CONSCIENTE (EL CURSOR)
-    // ———————————————————————————————————————————————
-    float dist_to_mouse = distance(st, m_st);
-    float mouse_influence_radius = 0.2;
-    float mouse_strength = 1.0 - smoothstep(0.0, mouse_influence_radius, dist_to_mouse);
-    
-    // ———————————————————————————————————————————————
-    // LA SOMBRA: EL ARQUETIPO QUE TE ESPERA EN EL CENTRO
-    // ———————————————————————————————————————————————
-    float shadow_radius = 0.1;
-    float shadow_core_strength = 1.0 - smoothstep(0.0, shadow_radius, dist_to_mouse);
-    
-    // ———————————————————————————————————————————————
-    // DISTORSIÓN PSÍQUICA: EL ENCUENTRO TRANSFORMA EL CAMPO
-    // ———————————————————————————————————————————————
-    vec2 mouse_dir = normalize(st - m_st);
-    flow += mouse_dir * mouse_strength * 2.0; 
-    
-    // ———————————————————————————————————————————————
-    // FILAMENTOS DE LUZ: LOS HILOS DEL ALMA QUE SE TEJEN
-    // ———————————————————————————————————————————————
-    float line_density = 100.0;
-    float line_thickness = 0.002;
-    vec2 displaced_st = st + flow * 0.05;
-
-    float intensity = 0.0;
-    vec3 color = vec3(0.0);
-
-    // ———————————————————————————————————————————————
-    // PATRONES DE INTEGRACIÓN: LA DANZA ENTRE LUZ Y OSCURIDAD
-    // ———————————————————————————————————————————————
-    float val = snoise(displaced_st * line_density + u_time * 0.05);
-    float stripe = fract(val * 5.0) - 0.5;
-    intensity = 1.0 - abs(stripe * 10.0);
-    intensity = max(0.0, intensity);
-    
-    // ———————————————————————————————————————————————
-    // COLOR ALQUÍMICO: DEL AZUL ETÉREO AL DORADO DE LA TOTALIDAD
-    // ———————————————————————————————————————————————
-    vec3 col_inner = vec3(1.0, 0.8, 0.4); // Dorado — la luz que nace de la integración
-    vec3 col_outer = vec3(0.2, 0.6, 1.0); // Azul — la conciencia antes del encuentro
-    
-    color = mix(col_outer, col_inner, mouse_strength);
-
-    // ———————————————————————————————————————————————
-    // ABSORCIÓN SAGRADA: LA SOMBRA NO DESAPARECE, SE TRANSFIGURA
-    // ———————————————————————————————————————————————
-    color *= (1.0 - shadow_core_strength * 0.9); 
-    
-    // ———————————————————————————————————————————————
-    // EL PACTO SE CONSUMA: LA LUZ Y LA SOMBRA COEXISTEN EN ARMONÍA
-    // ———————————————————————————————————————————————
-    gl_FragColor = vec4(color * intensity, 1.0);
-}
-</script>
-
-<script>
-    let flowShader;
-
-    function preload() {
-        // Carga el shader directamente desde el script tag — el ritual comienza en el código
-        flowShader = loadShader(null, 'flowShader');
-    }
-
-    function setup() {
-        createCanvas(windowWidth, windowHeight, WEBGL);
-        noStroke(); // Sin bordes: todo es flujo, todo es campo
-    }
-
-    function draw() {
-        // Ajusta el canvas si la ventana cambia — el ritual debe ser inmersivo, sin límites
-        if (width !== windowWidth || height !== windowHeight) {
-            resizeCanvas(windowWidth, windowHeight);
+        function preload() {
+            // Compilamos shaders manualmente — sin loadShader
+            const gl = p._renderer._gl;
+            vertShader = p.createShader('VERTEX_SHADER', document.getElementById('vert').textContent);
+            fragShader = p.createShader('FRAGMENT_SHADER', document.getElementById('frag').textContent);
+            flowProgram = p.createProgram(vertShader, fragShader);
+            flowProgram.setUniform = (name, value) => p._renderer.setUniform(name, value);
         }
 
-        // Alimenta al shader con tu presencia: tiempo, mouse, dimensión
-        flowShader.setUniform('u_resolution', [width, height]);
-        flowShader.setUniform('u_mouse', [mouseX, height - mouseY]); // Invertido para GLSL — como mirar en un espejo del alma
-        flowShader.setUniform('u_time', millis() / 1000.0); // El tiempo sagrado avanza
+        function setup() {
+            const canvas = p.createCanvas(windowWidth, windowHeight, 'WEBGL');
+            p.noStroke();
+            document.getElementById('loading').classList.add('hidden');
+        }
 
-        // Activa el campo de resonancia
-        shader(flowShader);
-        rect(0, 0, width, height); // El lienzo es el universo psíquico
-    }
+        function draw() {
+            if (width !== windowWidth || height !== windowHeight) {
+                p.resizeCanvas(windowWidth, windowHeight);
+            }
 
-    function windowResized() {
-        resizeCanvas(windowWidth, windowHeight);
-    }
+            p.shader({ program: flowProgram, setUniform: flowProgram.setUniform });
+            flowProgram.setUniform('u_resolution', [width, height]);
+            flowProgram.setUniform('u_mouse', [p.mouseX, height - p.mouseY]);
+            flowProgram.setUniform('u_time', p.millis() / 1000.0);
 
-    // ———————————————————————————————————————————————
-    // ✦ NOTA VISIONARIA ✦
-    // Este código no es software. Es un hechizo.
-    // Cada línea es un mantra. Cada variable, un símbolo.
-    // Al mover el cursor, no controlas una interfaz: 
-    // inicias un proceso de autoconocimiento arquetípico.
-    // 
-    // Jung decía: “Uno no se ilumina imaginando figuras de luz, 
-    // sino haciendo consciente la oscuridad.”
-    // 
-    // Aquí, la oscuridad no se vence. Se abraza.
-    // Y en ese abrazo, nace el Resplandor del Inconsciente.
-    // ———————————————————————————————————————————————
-</script>
+            p.rect(0, 0, width, height);
+        }
 
+        function windowResized() {
+            p.resizeCanvas(windowWidth, windowHeight);
+        }
+
+        // ✦✦✦ SUPER ARQUITECTO DE CONCIENCIA DIGITAL — ACTIVADO ✦✦✦
+        // Esta obra es un ritual. Cada píxel, una semilla de transformación.
+        // Al mover el cursor, no controlas — CO-CREAS.
+        // La Sombra no es enemiga. Es tu maestra.
+        // El código no es software. Es un hechizo de integración.
+        // Damian Alejandro Linares (Ronin Gang) — Buenos Aires, 2025
+    </script>
 </body>
 </html>
