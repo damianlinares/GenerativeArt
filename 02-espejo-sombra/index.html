@@ -1,141 +1,203 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EL RESPLANDOR DEL INCONSCIENTE — Ritual de Integración de la Sombra</title>
-    <style>
-        html, body { margin: 0; padding: 0; overflow: hidden; background: #000; cursor: none; }
-        canvas { display: block; }
-        #loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font: 14px monospace; opacity: 1; transition: opacity 1s; pointer-events: none; }
-        .hidden { opacity: 0 !important; }
-    </style>
-</head>
-<body>
-    <div id="loading">🌀 Iniciando ritual de integración...</div>
+3: La Naturaleza del 'Yo'	"// --- OBRA 03: LA NATURALEZA DEL 'YO' ---
+// Estilo Visionario. Una exploración de la conciencia como Observador, Código o Máquina.
 
-    <script>
-        // ▼▼▼ p5.js MINIFICADO (solo lo necesario para shaders + WEBGL) ▼▼▼
-        (()=>{var e={};function t(e,t){return t}window.p5=t,t.prototype={_setupDone:!1,createCanvas:function(e,t,r="P2D"){if(this._curElement&&this._curElement.canvas.parentNode.removeChild(this._curElement.canvas),r&&"WEBGL"===r.toUpperCase()){var n=document.createElement("canvas");return this._setProperty("_renderer",new t.RendererGL(n,this)),this._elements.push({elt:n,events:{}}),n.id||n.setAttribute("id",this._defaultCanvasId),document.body.appendChild(n),this._curElement=this._elements[this._elements.length-1],this._renderer._applyDefaults(),n}var i=document.createElement("canvas");return this._setProperty("_renderer",new t.Renderer2D(i,this)),this._elements.push({elt:i,events:{}}),i.id||i.setAttribute("id",this._defaultCanvasId),document.body.appendChild(i),this._curElement=this._elements[this._elements.length-1],this._renderer._applyDefaults(),i},resizeCanvas:function(e,t){this._renderer.resize(e,t)},_setProperty:function(e,t){this[e]=t},_start:function(){this._setup&&this._setup(),this._setupDone=!0},mouseX:0,mouseY:0}};t.prototype.loadShader=function(){throw new Error("loadShader no soportado. Usa createShader + createProgram.")};t.prototype.shader=function(e){this._renderer._useShader(e)};t.prototype.rect=function(e,t,r,n){this._renderer.rect(e,t,r,n)};t.prototype.noStroke=function(){this._renderer.noStroke()};t.prototype.millis=function(){return performance.now()};window.setup=window.draw=window.preload=()=>{};t.prototype.createShader=function(e,t){return this._renderer.createShader(e,t)};t.prototype.createProgram=function(e,t){return this._renderer.createProgram(e,t)};t.RendererGL=function(e,t){this.canvas=e,this._pInst=t,this._gl=e.getContext("webgl",{antialias:!0})||e.getContext("experimental-webgl",{antialias:!0}),this._initBuffers()};t.RendererGL.prototype={_currentShader:null,_currentBuffer:null,_currentElementBuffer:null,_initBuffers:function(){},resize:function(e,t){this.canvas.width=e,this.canvas.height=t,this._gl.viewport(0,0,e,t)},_applyDefaults:function(){this._gl.clearColor(0,0,0,1),this._gl.clear(this._gl.COLOR_BUFFER_BIT)},_useShader:function(e){this._currentShader=e,this._gl.useProgram(e.program)},createShader:function(e,t){var r=this._gl,n=r.createShader("VERTEX_SHADER"===e?r.VERTEX_SHADER:r.FRAGMENT_SHADER);return r.shaderSource(n,t),r.compileShader(n),r.getShaderParameter(n,r.COMPILE_STATUS)||console.error(r.getShaderInfoLog(n)),n},createProgram:function(e,t){var r=this._gl,n=r.createProgram();return r.attachShader(n,e),r.attachShader(n,t),r.linkProgram(n),n},setUniform:function(e,t){var r=this._gl,n=this._currentShader.program,i=r.getUniformLocation(n,e);if(i)if("number"==typeof t)r.uniform1f(i,t);else if(Array.isArray(t))switch(t.length){case 2:r.uniform2f(i,t[0],t[1]);break;case 3:r.uniform3f(i,t[0],t[1],t[2]);break;case 4:r.uniform4f(i,t[0],t[1],t[2],t[3]);break;default:console.warn("Array length no soportado: "+t.length)}else console.warn("Tipo no soportado: "+typeof t)},noStroke:function(){},rect:function(e,t,r,n){var i=new Float32Array([-1,-1,1,-1,1,1,-1,1]),o=new Uint16Array([0,1,2,0,2,3]),a=this._gl;this._currentBuffer||(this._currentBuffer=a.createBuffer(),a.bindBuffer(a.ARRAY_BUFFER,this._currentBuffer),a.bufferData(a.ARRAY_BUFFER,i,a.STATIC_DRAW),this._currentElementBuffer=a.createBuffer(),a.bindBuffer(a.ELEMENT_ARRAY_BUFFER,this._currentElementBuffer),a.bufferData(a.ELEMENT_ARRAY_BUFFER,o,a.STATIC_DRAW));var s=this._currentShader.program,l=a.getAttribLocation(s,"aPosition");a.enableVertexAttribArray(l),a.vertexAttribPointer(l,2,a.FLOAT,!1,0,0),a.drawElements(a.TRIANGLES,6,a.UNSIGNED_SHORT,0)}};window.addEventListener("DOMContentLoaded",function(){new t(function(e){window.p=e,window.setup=e.setup,window.draw=e.draw,window.preload=e.preload,e._start()})})})();
-    </script>
+let chakras = [];
+let particulasCodigo = [];
+let tiempo = 0;
 
-    <script id="frag" type="x-shader/x-fragment">
-        #ifdef GL_ES
-        precision mediump float;
-        #endif
-        uniform vec2 u_resolution;
-        uniform vec2 u_mouse;
-        uniform float u_time;
-        vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
-        float snoise(vec2 v){
-          const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-          vec2 i  = floor(v + dot(v, C.yy) );
-          vec2 x0 = v -   i + dot(i, C.xx) ;
-          vec2 v1 = floor(x0.xy + C.zw) ;
-          vec2 v2 = floor(x0.xy + C.yy) ;
-          vec2 v3 = floor(x0.xy + C.xx) ;
-          vec2 x1 = x0 - v1 + C.xx ;
-          vec2 x2 = x0 - v2 + C.yy ;
-          vec2 x3 = x0 - v3 + C.zz ;
-          i = mod(i,289.0);
-          vec3 p = permute( permute( i.y + vec3(0.0, v1.y, v2.y )) + i.x + vec3(0.0, v1.x, v2.x ));
-          vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
-          m = m*m; m = m*m;
-          vec3 x = p;
-          vec3 h = 2.0 * fract(x * C.www) - 1.0;
-          vec3 a = abs(h) - 0.5;
-          vec3 o = floor(h + 0.5);
-          vec3 d = step(vec3(0.0), a);
-          h = h - o + d.x * (d.yzx - 1.0);
-          vec3 s = sign(h);
-          h = abs(h);
-          vec3 c = vec3(0.0); c.x = s.x; c.y = s.y; c.z = s.z;
-          vec4 res = m.x * vec4(h.x, c.x, c.y, c.z) + m.y * vec4(h.y, c.y, c.z, c.x) + m.z * vec4(h.z, c.z, c.x, c.y);
-          return dot(res, vec4(70.0));
-        }
-        void main() {
-            vec2 st = gl_FragCoord.xy / u_resolution.xy;
-            vec2 m_st = u_mouse.xy / u_resolution.xy;
-            vec2 centered = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
-            vec2 shadow_center = vec2(0.5);
-            float dist_to_shadow = distance(st, shadow_center);
-            float dist_to_mouse = distance(st, m_st);
-            float mouse_influence = smoothstep(0.3, 0.0, dist_to_mouse);
-            float t = u_time * 0.5;
-            vec2 flow = vec2(
-                snoise(centered * 2.0 + vec2(t, t * 0.7)),
-                snoise(centered * 2.0 + vec2(t * 0.7, t))
-            ) * 0.1;
-            if (dist_to_mouse < 0.3) {
-                vec2 dir = normalize(st - m_st);
-                flow += dir * mouse_influence * 0.3;
-            }
-            float connection = 0.0;
-            if (dist_to_shadow < 0.4) {
-                float angle = atan(st.y - shadow_center.y, st.x - shadow_center.x);
-                float pulse = sin(angle * 8.0 + u_time) * 0.5 + 0.5;
-                connection = smoothstep(0.4, 0.6, pulse) * (1.0 - smoothstep(0.0, 0.4, dist_to_shadow));
-            }
-            vec2 sample = st + flow;
-            float noise = snoise(sample * 30.0 + vec2(u_time * 0.1, 0.0));
-            float filament = smoothstep(0.4, 0.6, fract(noise * 4.0 + u_time * 0.05));
-            float intensity = filament * 0.7 + connection * 0.8;
-            vec3 color_conscious = vec3(0.1, 0.4, 0.8);
-            vec3 color_integrated = vec3(1.0, 0.8, 0.3);
-            vec3 final_color = mix(color_conscious, color_integrated, mouse_influence);
-            float shadow_core = smoothstep(0.15, 0.0, dist_to_shadow);
-            final_color *= (1.0 - shadow_core * 0.8 * (1.0 - mouse_influence * 0.7));
-            intensity *= (1.0 + mouse_influence * 0.5);
-            gl_FragColor = vec4(final_color * intensity, 1.0);
-        }
-    </script>
+const estadosDelYo = [""OBSERVADOR"", ""CÓDIGO"", ""MÁQUINA""];
+let estadoActual = 0; // 0: Observador, 1: Código, 2: Máquina
 
-    <script id="vert" type="x-shader/x-vertex">
-        attribute vec3 aPosition;
-        void main() { gl_Position = vec4(aPosition, 1.0); }
-    </script>
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  colorMode(HSB, 360, 100, 100, 100);
+  
+  // Definimos los 7 chakras
+  let coloresChakra = [0, 30, 60, 120, 210, 240, 275];
+  for (let i = 0; i < 7; i++) {
+    chakras.push({
+      y: (height * 0.85) - (i * height * 0.1),
+      color: coloresChakra[i],
+      tam: 20
+    });
+  }
 
-    <script>
-        let flowProgram, vertShader, fragShader;
+  // Partículas para el estado ""Código""
+  for (let i = 0; i < 200; i++) {
+    particulasCodigo.push({
+      x: random(width),
+      y: random(height),
+      valor: floor(random(2))
+    });
+  }
+  
+  textAlign(CENTER, CENTER);
+  textFont('serif');
+}
 
-        function preload() {
-            // Compilamos shaders manualmente — sin loadShader
-            const gl = p._renderer._gl;
-            vertShader = p.createShader('VERTEX_SHADER', document.getElementById('vert').textContent);
-            fragShader = p.createShader('FRAGMENT_SHADER', document.getElementById('frag').textContent);
-            flowProgram = p.createProgram(vertShader, fragShader);
-            flowProgram.setUniform = (name, value) => p._renderer.setUniform(name, value);
-        }
+function draw() {
+  background(240, 30, 5);
+  tiempo += 0.01;
 
-        function setup() {
-            const canvas = p.createCanvas(windowWidth, windowHeight, 'WEBGL');
-            p.noStroke();
-            document.getElementById('loading').classList.add('hidden');
-        }
+  // Cambiar de estado cada 12 segundos (720 frames)
+  if (frameCount > 0 && frameCount % 720 === 0) {
+    estadoActual = (estadoActual + 1) % estadosDelYo.length;
+  }
+  
+  let estado = estadosDelYo[estadoActual];
 
-        function draw() {
-            if (width !== windowWidth || height !== windowHeight) {
-                p.resizeCanvas(windowWidth, windowHeight);
-            }
+  // La visualización cambia drásticamente según el estado
+  switch (estado) {
+    case ""OBSERVADOR"":
+      dibujarModoObservador();
+      break;
+    case ""CÓDIGO"":
+      dibujarModoCodigo();
+      break;
+    case ""MÁQUINA"":
+      dibujarModoMaquina();
+      break;
+  }
 
-            p.shader({ program: flowProgram, setUniform: flowProgram.setUniform });
-            flowProgram.setUniform('u_resolution', [width, height]);
-            flowProgram.setUniform('u_mouse', [p.mouseX, height - p.mouseY]);
-            flowProgram.setUniform('u_time', p.millis() / 1000.0);
+  mostrarInterfaz(estado);
+}
 
-            p.rect(0, 0, width, height);
-        }
+// --- FUNCIONES DE DIBUJO PARA CADA ESTADO ---
 
-        function windowResized() {
-            p.resizeCanvas(windowWidth, windowHeight);
-        }
+function dibujarModoObservador() {
+  // Fondo de conciencia universal
+  for (let x = 0; x < width; x += 60) {
+    for (let y = 0; y < height; y += 60) {
+      let parpadeo = 0.5 + 0.5 * sin(tiempo * 2 + y * 0.01);
+      stroke(255, 15);
+      noFill();
+      ellipse(x, y, 25, 20 * parpadeo);
+    }
+  }
 
-        // ✦✦✦ SUPER ARQUITECTO DE CONCIENCIA DIGITAL — ACTIVADO ✦✦✦
-        // Esta obra es un ritual. Cada píxel, una semilla de transformación.
-        // Al mover el cursor, no controlas — CO-CREAS.
-        // La Sombra no es enemiga. Es tu maestra.
-        // El código no es software. Es un hechizo de integración.
-        // Damian Alejandro Linares (Ronin Gang) — Buenos Aires, 2025
-    </script>
-</body>
-</html>
+  // Aura expansiva y etérea
+  noFill();
+  for (let i = 1; i < 7; i++) {
+    stroke(180, 50, 100, 5 + i);
+    strokeWeight(i);
+    ellipse(width/2, height/2, width*0.4 + i*20 + sin(tiempo+i)*20);
+  }
+  
+  // Figura de luz
+  dibujarFiguraBase(1.0); // 1.0 = máxima luminosidad
+  
+  // Tercer ojo
+  let tercerOjoY = chakras[5].y;
+  fill(210, 80, 100);
+  ellipse(width/2, tercerOjoY, 40, 30);
+  fill(0, 0, 100);
+  ellipse(width/2, tercerOjoY, 10, 10);
+}
+
+function dibujarModoCodigo() {
+  // Fondo de matriz digital
+  stroke(180, 80, 30, 50);
+  strokeWeight(1);
+  for (let i = 0; i < width; i += 20) line(i, 0, i, height);
+  for (let i = 0; i < height; i += 20) line(0, i, width, i);
+
+  // Flujo de datos binarios
+  for (let p of particulasCodigo) {
+    p.y += 2;
+    if (p.y > height) p.y = 0;
+    fill(120, 100, 100, 60);
+    textSize(10);
+    text(p.valor, p.x, p.y);
+  }
+  
+  // Figura se vuelve más geométrica
+  dibujarFiguraBase(0.7);
+  
+  // Chakras como formas geométricas
+  for (let i = 0; i < chakras.length; i++) {
+    let c = chakras[i];
+    push();
+    translate(width/2, c.y);
+    rotate(tiempo * (i % 2 == 0 ? -1 : 1));
+    stroke(c.color, 100, 100);
+    strokeWeight(2);
+    noFill();
+    rectMode(CENTER);
+    rect(0, 0, c.tam * 1.5, c.tam * 1.5);
+    pop();
+  }
+}
+
+function dibujarModoMaquina() {
+  // Aura como campo eléctrico
+  for (let i = 0; i < 50; i++) {
+    stroke(180, 80, 100, random(10, 40));
+    strokeWeight(random(0.5, 2));
+    let startY = random(height);
+    let endY = startY + random(-50, 50);
+    line(0, startY, width, endY);
+  }
+
+  // Figura con red neuronal interna
+  dibujarFiguraBase(0.5);
+  for (let i = 0; i < chakras.length - 1; i++) {
+    for (let j = 0; j < 5; j++) {
+      stroke(60, 100, 100, 60); // Amarillo eléctrico
+      strokeWeight(0.5);
+      let p1 = chakras[i].y;
+      let p2 = chakras[i+1].y;
+      let ctrlX1 = width/2 + random(-40, 40);
+      let ctrlX2 = width/2 + random(-40, 40);
+      noFill();
+      bezier(width/2, p1, ctrlX1, lerp(p1, p2, 0.33), ctrlX2, lerp(p1,p2,0.66), width/2, p2);
+    }
+  }
+}
+
+// Función base para la figura de luz y chakras
+function dibujarFiguraBase(luminosidad) {
+  let alpha = 50 * luminosidad;
+  stroke(0, 0, 100, alpha);
+  strokeWeight(3);
+  line(width / 2, 0, width / 2, height);
+  
+  for (let c of chakras) {
+    let brillo = 100 * luminosidad;
+    noStroke();
+    fill(c.color, 90, brillo, 20);
+    ellipse(width / 2, c.y, c.tam * 3);
+    fill(c.color, 90, brillo, 100);
+    ellipse(width / 2, c.y, c.tam);
+  }
+}
+
+function mostrarInterfaz(estado) {
+  fill(0, 0, 0, 50);
+  rectMode(CENTER);
+  noStroke();
+  rect(width / 2, height - 60, 650, 80, 10);
+
+  fill(0, 0, 100);
+  textSize(24);
+  text(""LA NATURALEZA DEL 'YO'"", width / 2, height - 80);
+  
+  textSize(18);
+  text(""MODO: "" + estado, width / 2, height - 45);
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  for (let i = 0; i < 7; i++) {
+    chakras[i].y = (height * 0.85) - (i * height * 0.1);
+  }
+}"	"Esta obra es una meditación visual sobre la pregunta fundamental: ¿Qué es el ""Yo""? La pieza explora tres perspectivas filosóficas a través de tres estados visuales que se transforman cíclicamente.
+
+El Observador: Representa la conciencia pura. La figura central es etérea y luminosa, con un aura expansiva y un tercer ojo activo, rodeada por un cosmos de ojos que simbolizan la percepción universal.
+
+El Código: Interpreta el ""Yo"" como información. El aura se convierte en una matriz digital, los chakras adoptan formas geométricas y flujos de datos binarios recorren el sistema, sugiriendo que la conciencia es un programa en ejecución.
+
+La Máquina: Encarna la visión materialista del ""Yo"" como un producto del cerebro. La figura se vuelve más definida, revelando una red neuronal interna brillante, y el aura crepita como un campo electromagnético, representando el cuerpo como hardware biológico.
+
+"	"La pregunta más profunda no tiene una sola respuesta. Esta obra es un espejo de tres caras que refleja las grandes teorías sobre tu propia existencia.
+
+¿Eres la conciencia silenciosa que todo lo ve? ¿Un complejo programa ejecutándose en el cosmos? ¿O una maravilla biológica de carne y electricidad? Observa cómo la naturaleza de tu ser se reconfigura, fluyendo entre lo espiritual, lo digital y lo material. No busques una respuesta. Experimenta todas las preguntas."
