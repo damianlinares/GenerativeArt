@@ -40,7 +40,7 @@
             50% { opacity: 1; transform: scale(1.02); }
         }
 
-        /* --- NUEVO PANEL UNIFICADO CON PESTAÑAS --- */
+        /* --- REFACTORIZACIÓN: PANEL UNIFICADO CON PESTAÑAS --- */
         .main-panel {
             position: fixed;
             top: 50px;
@@ -90,34 +90,32 @@
             padding: 25px;
             font-size: 14px;
             line-height: 1.8;
+            height: 480px; /* Altura fija para consistencia */
+            overflow-y: auto; /* Scroll si el contenido es muy largo */
         }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
         
         /* --- ESTILOS INTERNOS DEL PANEL --- */
-        .panel-title {
-            font-size: 22px; font-weight: bold; margin-bottom: 25px; color: #d478ff;
-            text-align: center; letter-spacing: 3px;
-            text-shadow: 0 0 20px rgba(200, 100, 255, 0.6);
-            border-bottom: 1px solid rgba(200, 100, 255, 0.3); padding-bottom: 15px;
-        }
         .jung-quote {
-            font-style: italic; color: rgba(255, 255, 255, 0.9); margin: 20px 0; padding: 15px;
+            font-style: italic; color: rgba(255, 255, 255, 0.9); margin: 10px 0 20px 0; padding: 15px;
             border-left: 3px solid rgba(200, 100, 255, 0.7);
             background: rgba(200, 100, 255, 0.05); border-radius: 5px;
         }
         .concept-section {
-            margin: 20px 0; padding: 20px; background: rgba(200, 100, 255, 0.08);
-            border-radius: 12px; border: 1px solid rgba(200, 100, 255, 0.2);
+            margin-bottom: 20px; padding-bottom: 20px;
+            border-bottom: 1px solid rgba(200, 100, 255, 0.2);
         }
-        .concept-section h4, .control-group h4 { color: #d478ff; margin-bottom: 12px; font-size: 16px; }
-        .control-group { margin: 12px 0; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 13px;}
+        .concept-section:last-child { border-bottom: none; }
+        .concept-section h4 { color: #d478ff; margin-bottom: 12px; font-size: 16px; }
+        .control-group { margin: 12px 0; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 13px;}
+        .control-group:last-child { border-bottom: none; }
         
         /* --- PANEL IZQUIERDO REUBICADO --- */
         .psychological-state {
             position: fixed;
-            top: 50px;      /* Ajustado */
-            left: 50px;     /* Ajustado */
+            top: 50px;
+            left: 50px;
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid rgba(200, 100, 255, 0.5);
             border-radius: 15px; padding: 25px;
@@ -144,16 +142,13 @@
             <button class="tab-button" onclick="showTab('controles')">Controles</button>
         </div>
 
-        <div id="concepto" class="tab-pane active">
-            <div class="panel-content">
+        <div class="panel-content">
+            <div id="concepto" class="tab-pane active">
                 <div class="jung-quote">"Hasta que no hagas consciente lo inconsciente, dirigirá tu vida y lo llamarás destino."<div style="text-align: right; margin-top: 10px; color: rgba(255,255,255,0.6);">— C.G. Jung</div></div>
                 <div class="concept-section"><h4>LA SOMBRA PERSONAL</h4><p>Representa todos los aspectos de la personalidad que el ego consciente ha rechazado.</p></div>
                 <div class="concept-section"><h4>PROCESO DE INDIVIDUACIÓN</h4><p>La integración progresiva de los contenidos inconscientes hacia la totalidad psíquica.</p></div>
             </div>
-        </div>
-
-        <div id="arquetipos" class="tab-pane">
-            <div class="panel-content">
+            <div id="arquetipos" class="tab-pane">
                 <div class="concept-section">
                     <h4 style="text-align: center;">ESTADO ARQUETÍPICO</h4>
                     <div id="archetypeList">
@@ -168,10 +163,7 @@
                     <div id="dominantSymbol" style="text-align: center; font-size: 1.2em; color: #d478ff;">El Misterio</div>
                 </div>
             </div>
-        </div>
-
-        <div id="controles" class="tab-pane">
-            <div class="panel-content">
+            <div id="controles" class="tab-pane">
                 <div class="control-group"><strong>RATÓN:</strong> Aproximación a la Sombra</div>
                 <div class="control-group"><strong>CLICK:</strong> Reiniciar individuación</div>
                 <div class="control-group"><strong>ESPACIO:</strong> Acelerar integración</div>
@@ -179,7 +171,7 @@
                 <div class="control-group"><strong>A:</strong> Activar arquetipos</div>
                 <div class="control-group"><strong>M:</strong> Mandala de totalidad</div>
                 <div class="control-group"><strong>R:</strong> Regenerar sombra</div>
-                <div class="control-group" style="border-bottom: none;"><strong>I:</strong> Ocultar este panel</div>
+                <div class="control-group"><strong>I:</strong> Ocultar este panel</div>
             </div>
         </div>
     </div>
@@ -193,7 +185,8 @@
     </div>
     
     <script>
-        // --- SCRIPT P5.JS COMPLETO Y FUNCIONAL (con lógica de pestañas añadida al final) ---
+        // --- El script de p5.js y la lógica de la obra permanece intacto ---
+        // Se añade únicamente la función para las pestañas al final.
         let prevMouseX=0,prevMouseY=0;let psyche={ego:{x:0,y:0,energia:1,estabilidad:1},sombra:{x:0,y:0,radio:0,puntos:[],fragmentos:[],energia:0,visibilidad:0,hostilidad:0.3,arquetipos:[]},anima:{energia:0,manifestaciones:[]},self:{energia:0,mandala:[],unidad:0},complejos:[],consciencia:0,integracion:0,individuacion:0,fase:0,tiempo:0,chakras:[],particulas:[],simbolos:[],conexiones:[],loadingComplete:!1,modoConfronta:!1,arquetiposActivos:!1,mandalaVisible:!1,estadoUnificacion:"ninguno"};const FASES_INDIVIDUACION=["Inconsciencia inicial","Encuentro con la Persona","Confrontación con la Sombra","Encuentro con Anima/Animus","Desarrollo del Self","Individuación realizada"],ARQUETIPOS_SIMBOLOS=["El Misterio","El Espejo","La Serpiente","El Árbol","La Corona","El Círculo","La Espiral","El Ojo"];
         function setup(){createCanvas(windowWidth,windowHeight);colorMode(HSB,360,100,100,100);inicializarPsique();setTimeout(ocultarPantallaCarga,3e3);prevMouseX=mouseX;prevMouseY=mouseY}
         function inicializarPsique(){psyche.estadoUnificacion="ninguno";psyche.consciencia=0;psyche.integracion=0;psyche.individuacion=0;psyche.ego.x=.3*width;psyche.ego.y=.5*height;psyche.sombra.x=.7*width;psyche.sombra.y=.5*height;psyche.sombra.radio=.25*height;generarGeometriaSombra();inicializarChakras();crearParticulas();generarSimbolos();generarComplejos()}
@@ -223,15 +216,12 @@
         function mouseMoved(){if(psyche.loadingComplete&&dist(mouseX,mouseY,psyche.sombra.x,psyche.sombra.y)<psyche.sombra.radio&&random()<.2)psyche.particulas.push({x:mouseX+random(-15,15),y:mouseY+random(-15,15),vx:random(-.8,.8),vy:random(-.8,.8),tam:random(1,4),hue:lerp(240,280,psyche.integracion),alpha:70,tipo:4})}
         function windowResized(){resizeCanvas(windowWidth,windowHeight);inicializarPsique()}
         function limpiarParticulas(){for(let e=psyche.particulas.length-1;e>=0;e--)psyche.particulas[e].alpha-=.3,psyche.particulas[e].alpha<=0&&psyche.particulas.splice(e,1);psyche.particulas.length>400&&psyche.particulas.splice(0,psyche.particulas.length-400)}setInterval(limpiarParticulas,100);
-        
+
         // --- LÓGICA DE PESTAÑAS ---
         function showTab(tabId) {
-            const panes = document.querySelectorAll('.tab-pane');
-            panes.forEach(pane => pane.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-
-            const buttons = document.querySelectorAll('.tab-button');
-            buttons.forEach(button => button.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));
             document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
         }
     </script>
