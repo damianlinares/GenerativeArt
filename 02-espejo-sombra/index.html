@@ -3,248 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LA INDIVIDUACIÓN: El Espejo de la Sombra - Damian Alejandro Linares</title>
+    <title>LA GRAN OBRA: El Vaso Alquímico - Damian Alejandro Linares</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             width: 100%; height: 100vh;
             background: #000;
-            overflow: hidden; font-family: 'Georgia', serif;
-            cursor: none; /* Ocultamos el cursor real */
+            overflow: hidden; font-family: 'Garamond', serif;
+            cursor: none;
         }
-        canvas { display: block; }
         .dashboard {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px);
-            border-top: 2px solid rgba(200, 100, 255, 0.6);
-            z-index: 100; box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
-            display: flex; padding: 20px; gap: 20px;
-            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 215, 0, 0.4);
+            z-index: 100; box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.7);
+            display: flex; padding: 15px 30px;
+            color: rgba(255, 255, 255, 0.8);
+            align-items: center;
         }
-        .dash-column { flex: 1; border-right: 1px solid rgba(255, 255, 255, 0.15); padding: 0 20px; min-width: 0; }
-        .dash-column:last-child { border-right: none; }
-        .dash-column h4 {
-            color: #d478ff; margin-bottom: 15px; font-size: 16px; letter-spacing: 1px;
-            border-bottom: 1px solid rgba(200, 100, 255, 0.3);
-            padding-bottom: 10px; text-align: center;
+        .dash-section {
+            flex: 1; text-align: center;
         }
-        .state-indicator { display: flex; align-items: center; margin: 8px 0; font-size: 14px; }
-        .state-bar { width: 100px; height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 3px; margin-left: auto; overflow: hidden; }
-        .state-fill { height: 100%; background: linear-gradient(90deg, #d478ff, #8a2be2, #4b0082); border-radius: 3px; transition: width 0.5s ease; }
-        .jung-quote {
-            font-style: italic; font-size: 13px; color: rgba(255, 255, 255, 0.8);
-            margin-top: 10px; padding: 10px;
-            border-left: 2px solid rgba(200, 100, 255, 0.7);
-            background: rgba(200, 100, 255, 0.05); border-radius: 5px;
+        .dash-section h4 {
+            color: #FFD700; font-weight: normal; letter-spacing: 2px;
+            font-size: 1em; margin-bottom: 8px;
+        }
+        .dash-section p {
+            font-size: 1.5em; letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        .instructions {
+            position: fixed; top: 30px; left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1em;
+            letter-spacing: 1px;
+            transition: opacity 1s;
         }
     </style>
 </head>
 <body>
+    <div class="instructions" id="instructions">Mantén presionado para iniciar la transmutación. Muévete lentamente para guiar la Obra.</div>
     <div class="dashboard">
-        <div class="dash-column">
-            <h4>ESTADO PSICOLÓGICO</h4>
-            <div class="state-indicator"><span>Atención Focada:</span><div class="state-bar"><div class="state-fill" id="consciousnessBar"></div></div><span id="consciousnessText">0%</span></div>
-            <div class="state-indicator"><span>Claridad:</span><div class="state-bar"><div class="state-fill" id="integrationBar"></div></div><span id="integrationText">0%</span></div>
-            <div class="state-indicator"><span>Integración:</span><div class="state-bar"><div class="state-fill" id="individuationBar"></div></div><span id="individuationText">0%</span></div>
-            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 14px;"><strong>Fase:</strong> <span id="currentPhase">Exploración</span></div>
+        <div class="dash-section">
+            <h4>FASE ALQUÍMICA</h4>
+            <p id="phase">INICIAL</p>
         </div>
-        <div class="dash-column">
-             <h4>SÍMBOLOS REVELADOS</h4>
-             <div id="symbolList" style="text-align: center; font-size: 1.5em; color: #d478ff; padding: 10px 0;">-</div>
+        <div class="dash-section">
+            <h4>PROGRESO DE LA OBRA</h4>
+            <p id="progress">0%</p>
         </div>
-        <div class="dash-column">
-            <h4>CONCEPTO</h4>
-            <p style="font-size: 13px;">Ilumina los aspectos oscuros de tu psique. La observación sostenida no destruye, transforma.</p>
-            <div class="jung-quote">"Uno no se ilumina fantaseando sobre la luz, sino haciendo consciente la oscuridad." — C.G. Jung</div>
+        <div class="dash-section">
+            <h4>ESTADO DEL VASO</h4>
+            <p id="vessel-state">INERTE</p>
         </div>
     </div>
-
     <script>
-        // Objeto principal que contiene el estado de la simulación
-        let psyche = {
-            sombra: { x: 0, y: 0, radio: 0, puntos: [], vx: 0, vy: 0, ruidoOffsetX: 0, ruidoOffsetY: 0 },
-            linterna: { radio: 0 },
-            particulas: [],
-            tiempoBajoLuz: 0,
-            integracion: 0,
-            fase: "Exploración",
-            simboloActual: "-"
-        };
-
-        const FASES = ["Exploración", "Observación", "Comprensión", "Claridad", "Integración", "Totalidad"];
-        const SIMBOLOS = ["El Ojo", "La Espiral", "El Círculo", "El Árbol", "La Corona", "El Misterio"];
+        // --- MOTOR ALQUÍMICO ---
+        let particles = [];
+        const NUM_PARTICLES = 2000;
+        let flowField;
+        let zOff = 0;
+        
+        let estado = 'INICIAL'; // INICIAL, NIGREDO, ALBEDO, CITRINITAS, RUBEDO
+        let progreso = 0; // 0 a 1
+        let calorAplicado = 0;
+        
+        let mouseVel = 0;
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
             colorMode(HSB, 360, 100, 100, 100);
-            inicializarPsique();
+            inicializarParticulas();
         }
 
-        function inicializarPsique() {
-            psyche.sombra.x = width * 0.75;
-            psyche.sombra.y = height * 0.5;
-            psyche.sombra.radio = height * 0.2;
-            psyche.sombra.ruidoOffsetX = random(1000);
-            psyche.sombra.ruidoOffsetY = random(10000);
-            psyche.linterna.radio = height * 0.25;
-            psyche.tiempoBajoLuz = 0;
-            psyche.integracion = 0;
-            
-            psyche.sombra.puntos = [];
-            for (let i = 0; i < 80; i++) {
-                psyche.sombra.puntos.push({
-                    angulo: map(i, 0, 80, 0, TWO_PI),
-                    distancia: random(0.8, 1.2),
-                    ruidoOffset: random(2000),
-                    velocidad: random(0.5, 1.5)
-                });
+        function inicializarParticulas() {
+            particles = [];
+            for (let i = 0; i < NUM_PARTICLES; i++) {
+                particles.push(new Particle(i < NUM_PARTICLES / 2));
             }
         }
 
         function draw() {
             background(260, 80, 5);
 
-            // --- Lógica Principal de Interacción ---
-            let distancia = dist(mouseX, mouseY, psyche.sombra.x, psyche.sombra.y);
-            if (distancia < psyche.linterna.radio) {
-                psyche.tiempoBajoLuz = min(1800, psyche.tiempoBajoLuz + 1); // Aumenta hasta un máximo
+            // --- LÓGICA DE INTERACCIÓN Y ESTADOS ---
+            mouseVel = dist(mouseX, mouseY, pmouseX, pmouseY);
+            
+            if (mouseIsPressed) {
+                document.getElementById('instructions').style.opacity = '0';
+                calorAplicado = min(1000, calorAplicado + 1);
+                
+                if(calorAplicado > 100) estado = 'NIGREDO';
+                
+                if (estado === 'NIGREDO' || estado === 'ALBEDO' || estado === 'CITRINITAS') {
+                    if (mouseVel < 5) { // Movimiento lento y catalizador
+                        progreso = min(1, progreso + 0.0005);
+                    } else { // Movimiento brusco aumenta el caos
+                        progreso = max(0, progreso - 0.001);
+                    }
+                }
             } else {
-                psyche.tiempoBajoLuz = max(0, psyche.tiempoBajoLuz - 2); // Disminuye si no está iluminada
+                calorAplicado = max(0, calorAplicado - 5);
+                if (calorAplicado < 50 && estado !== 'RUBEDO') estado = 'INICIAL';
+                progreso = max(0, progreso - 0.0002);
             }
-            psyche.integracion = psyche.tiempoBajoLuz / 1800; // Normalizar a un valor entre 0 y 1
+            
+            // Transiciones de estado
+            if (progreso > 0.3 && estado === 'NIGREDO') estado = 'ALBEDO';
+            if (progreso > 0.7 && estado === 'ALBEDO') estado = 'CITRINITAS';
+            if (progreso >= 1 && estado === 'CITRINITAS') estado = 'RUBEDO';
 
-            // --- Actualizar Estado ---
-            let faseIndex = floor(psyche.integracion * (FASES.length - 1));
-            psyche.fase = FASES[faseIndex];
-            psyche.simboloActual = SIMBOLOS[faseIndex];
+            // --- ACTUALIZAR Y DIBUJAR PARTÍCULAS ---
+            for (let p of particles) {
+                p.updateAndDisplay();
+            }
 
-            // --- Renderizado ---
-            push();
-            // Crear máscara de recorte para el efecto de linterna
-            const ctx = drawingContext;
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(mouseX, mouseY, psyche.linterna.radio, 0, TWO_PI);
-            ctx.clip();
-
-            // Lo que está dentro de la máscara es visible
-            dibujarSombra();
-            dibujarChakras();
-
-            ctx.restore();
-            pop();
-
-            dibujarLinterna();
+            // --- DIBUJAR CURSOR ALQUÍMICO ---
+            dibujarCursor();
+            
+            // --- ACTUALIZAR DASHBOARD ---
             actualizarDashboard();
         }
-        
-        function dibujarSombra() {
-            // Mover la Sombra con Ruido Perlin
-            let anguloMovimiento = noise(psyche.sombra.ruidoOffsetX) * TWO_PI * 4;
-            psyche.sombra.vx = cos(anguloMovimiento) * 2;
-            psyche.sombra.vy = sin(anguloMovimiento) * 2;
-            psyche.sombra.x += psyche.sombra.vx;
-            psyche.sombra.y += psyche.sombra.vy;
 
-            // Mantenerla en pantalla
-            if (psyche.sombra.x < 0) psyche.sombra.x = width;
-            if (psyche.sombra.x > width) psyche.sombra.x = 0;
-            if (psyche.sombra.y < 0) psyche.sombra.y = height;
-            if (psyche.sombra.y > height) psyche.sombra.y = 0;
-            
-            psyche.sombra.ruidoOffsetX += 0.001;
-
-            push();
-            translate(psyche.sombra.x, psyche.sombra.y);
-            
-            // La apariencia de la Sombra cambia con la integración
-            let caos = 1 - psyche.integracion; // 1 es caótico, 0 es calmado
-            let colorBase = lerpColor(color(280, 80, 20), color(300, 100, 100), psyche.integracion);
-
-            noStroke();
-            fill(colorBase);
-
-            beginShape();
-            for (let p of psyche.sombra.puntos) {
-                let ruido = noise(p.ruidoOffset + frameCount * 0.01 * p.velocidad);
-                let distorsion = map(ruido, 0, 1, -80, 80) * caos;
-                let radioFinal = psyche.sombra.radio * p.distancia + distorsion;
-                
-                // Cuando se integra, la forma tiende a un círculo perfecto
-                radioFinal = lerp(radioFinal, psyche.sombra.radio, psyche.integracion);
-
-                let x = cos(p.angulo) * radioFinal;
-                let y = sin(p.angulo) * radioFinal;
-                curveVertex(x, y);
+        class Particle {
+            constructor(isEgo) {
+                this.isEgo = isEgo; // true = LUZ, false = SOMBRA
+                this.pos = createVector(random(width), random(height));
+                this.vel = createVector(0, 0);
+                this.acc = createVector(0, 0);
+                this.maxSpeed = 2;
+                this.lifespan = 255;
             }
-            endShape(CLOSE);
 
-            // Dibujar patrones geométricos internos a medida que se integra
-            if (psyche.integracion > 0.2) {
-                let numLineas = floor(psyche.integracion * 12);
-                stroke(0, 0, 100, psyche.integracion * 80);
-                strokeWeight(1.5);
-                for (let i = 0; i < numLineas; i++) {
-                    let ang = map(i, 0, numLineas, 0, TWO_PI) + frameCount * 0.01;
-                    let r = psyche.sombra.radio * (0.2 + (psyche.integracion - 0.2));
-                    line(0, 0, cos(ang) * r, sin(ang) * r);
+            applyForce(force) {
+                this.acc.add(force);
+            }
+
+            update() {
+                this.vel.add(this.acc);
+                this.vel.limit(this.maxSpeed);
+                this.pos.add(this.vel);
+                this.acc.mult(0);
+            }
+
+            behaviors() {
+                // Fuerzas según el estado alquímico
+                switch(estado) {
+                    case 'INICIAL':
+                        // Se repelen
+                        let repelCenter = this.isEgo ? createVector(width*0.25, height/2) : createVector(width*0.75, height/2);
+                        let repelForce = p5.Vector.sub(repelCenter, this.pos);
+                        repelForce.normalize();
+                        repelForce.mult(-0.5);
+                        this.applyForce(repelForce);
+                        break;
+                        
+                    case 'NIGREDO':
+                        // Turbulencia caótica
+                        let angle = noise(this.pos.x * 0.005, this.pos.y * 0.005, zOff) * TWO_PI * 4;
+                        let turbulence = p5.Vector.fromAngle(angle);
+                        turbulence.setMag(1);
+                        this.applyForce(turbulence);
+                        break;
+                        
+                    case 'ALBEDO':
+                    case 'CITRINITAS':
+                        // Fuerza de atracción al centro para formar patrones
+                        let center = createVector(width/2, height/2);
+                        let attraction = p5.Vector.sub(center, this.pos);
+                        attraction.normalize();
+                        attraction.mult(0.1);
+                        this.applyForce(attraction);
+                        // Repulsión de partículas cercanas para crear estructura
+                        for(let other of particles) {
+                           let d = dist(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
+                           if(d > 0 && d < 10) {
+                               let repel = p5.Vector.sub(this.pos, other.pos);
+                               repel.normalize();
+                               repel.mult(0.5);
+                               this.applyForce(repel);
+                           }
+                        }
+                        break;
+
+                    case 'RUBEDO':
+                        // Coalescencia final en el centro
+                         let finalCenter = createVector(width/2, height/2);
+                         let finalAttraction = p5.Vector.sub(finalCenter, this.pos);
+                         let distToCenter = finalAttraction.mag();
+                         finalAttraction.normalize();
+                         finalAttraction.mult(map(distToCenter, 0, width/2, 0, 5));
+                         this.applyForce(finalAttraction);
+                         this.vel.mult(0.95); // Amortiguación para estabilizar
+                        break;
                 }
+            }
+            
+            display() {
+                // Color y forma según estado
+                let c;
+                let weight = 1.5;
+                switch(estado) {
+                    case 'INICIAL':
+                        c = this.isEgo ? color(60, 80, 100, 80) : color(280, 80, 30, 80);
+                        break;
+                    case 'NIGREDO':
+                        c = color(260, 30, 15, 70); // Oscuridad
+                        weight = 2;
+                        break;
+                    case 'ALBEDO':
+                        c = color(0, 0, 100, 70); // Blanco plateado
+                        weight = lerp(2, 0.5, progreso);
+                        break;
+                    case 'CITRINITAS':
+                        c = lerpColor(color(0, 0, 100, 70), color(50, 100, 100, 80), (progreso - 0.7) / 0.3);
+                        break;
+                    case 'RUBEDO':
+                        c = color(0, 100, 100, 90); // Rojo final
+                        break;
+                }
+                
+                stroke(c);
+                strokeWeight(weight);
+                point(this.pos.x, this.pos.y);
+            }
+
+            updateAndDisplay() {
+                this.behaviors();
+                this.update();
+                this.display();
+            }
+        }
+        
+        function dibujarCursor() {
+            push();
+            translate(mouseX, mouseY);
+            noCursor();
+            let size = 20 + calorAplicado * 0.05;
+            let c = color(35, 100, 100, 80);
+            if(estado === 'RUBEDO') c = color(0, 100, 100, 90);
+
+            noFill();
+            stroke(c);
+            strokeWeight(2);
+            for(let i=0; i < 3; i++) {
+                rotate(frameCount * 0.01 * (i + 1));
+                let s = size * (1 - i*0.2);
+                ellipse(0, 0, s, s);
             }
             pop();
         }
-
-        function dibujarChakras() {
-            // El Ego/Self se manifiesta como una columna de chakras estables
-            for (let i = 0; i < 7; i++) {
-                let y = (height * 0.85) - (i * height * 0.09);
-                let x = width * 0.2;
-                let energia = constrain(psyche.integracion * 7 - i, 0, 1);
-                if (energia > 0) {
-                    let tam = 20 + energia * 15;
-                    let colorChakra = color((i * 40)%360, 80, 100);
-                    noStroke();
-                    fill(colorChakra, energia * 50);
-                    ellipse(x, y, tam * 2);
-                    fill(colorChakra, energia * 100);
-                    ellipse(x, y, tam);
-                }
-            }
-        }
-
-        function dibujarLinterna() {
-            // Dibuja el borde y el aura de la linterna
-            noFill();
-            strokeWeight(2);
-            stroke(60, 100, 100, 80);
-            ellipse(mouseX, mouseY, psyche.linterna.radio * 2);
-            
-            strokeWeight(8);
-            stroke(60, 100, 100, 15);
-            ellipse(mouseX, mouseY, psyche.linterna.radio * 2 + 20);
-        }
-
+        
         function actualizarDashboard() {
-            let atencion = 0;
-            let dist = distance(mouseX, mouseY, psyche.sombra.x, psyche.sombra.y);
-            if (dist < psyche.linterna.radio) {
-                atencion = map(dist, psyche.linterna.radio, 0, 20, 100, true);
+            document.getElementById('phase').textContent = estado;
+            document.getElementById('progress').textContent = `${floor(progreso*100)}%`;
+            let vesselStateText = 'INERTE';
+            if (mouseIsPressed) {
+                vesselStateText = mouseVel < 5 ? 'CATALIZANDO' : 'TURBULENTO';
             }
-
-            document.getElementById('consciousnessBar').style.width = atencion + '%';
-            document.getElementById('consciousnessText').textContent = Math.round(atencion) + '%';
-            document.getElementById('integrationBar').style.width = psyche.integracion * 100 + '%';
-            document.getElementById('integrationText').textContent = Math.round(psyche.integracion * 100) + '%';
-            document.getElementById('individuationBar').style.width = psyche.integracion * 100 + '%'; // Simplificado para mayor claridad
-            document.getElementById('individuationText').textContent = Math.round(psyche.integracion * 100) + '%';
-            document.getElementById('currentPhase').textContent = psyche.fase;
-            document.getElementById('symbolList').textContent = psyche.simboloActual;
+            if(estado === 'RUBEDO') vesselStateText = 'UNIFICADO';
+            document.getElementById('vessel-state').textContent = vesselStateText;
         }
 
-        // --- Funciones de Ayuda y Eventos ---
-        function distance(x1, y1, x2, y2) { return sqrt(pow(x1-x2, 2) + pow(y1-y2, 2)); }
-        function mousePressed() { inicializarPsique(); }
-        function windowResized() { resizeCanvas(windowWidth, windowHeight); inicializarPsique(); }
+        function mousePressed() {
+             if (estado === 'RUBEDO') {
+                 estado = 'INICIAL';
+                 progreso = 0;
+                 calorAplicado = 0;
+                 inicializarParticulas();
+                 document.getElementById('instructions').style.opacity = '1';
+             }
+        }
     </script>
 </body>
 </html>
