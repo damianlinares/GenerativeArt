@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CATEDRAL DEL SELF - Una Obra de Damian Alejandro Linares</title>
+    <title>ORÁCULO DEL ALMA - Por Damian Alejandro Linares</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -11,181 +11,162 @@
             width: 100%; height: 100vh;
             background: #000;
             overflow: hidden;
-            cursor: none;
+            display: flex; align-items: center; justify-content: center;
         }
-        .overlay {
+        canvas { display: block; }
+        .input-container {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 50px;
-            color: rgba(255, 255, 255, 0.7);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+        }
+        #psychic-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
             font-family: 'Garamond', serif;
-            pointer-events: none;
+            font-size: 2em;
+            text-align: center;
+            width: 600px;
+            padding: 10px;
+            outline: none;
+            transition: all 0.5s;
         }
-        .instructions {
-            font-size: 1.2em;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px #fff;
-            transition: opacity 2s ease-out;
+        #psychic-input:focus {
+            border-bottom-color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
         }
-        .progress-bar {
-            width: 30%; height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-        #progress-fill {
-            width: 0%; height: 100%;
-            background: #fff;
-            box-shadow: 0 0 10px #fff, 0 0 20px #fff;
-            transition: width 0.5s ease-out;
+        #psychic-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <div class="overlay">
-        <div id="instructions" class="instructions">MANTÉN PRESIONADO PARA INICIAR EL VIAJE</div>
-        <div class="progress-bar">
-            <div id="progress-fill"></div>
-        </div>
+    <div class="input-container">
+        <input type="text" id="psychic-input" placeholder="¿Qué pesa en tu alma?" autofocus>
     </div>
     <script>
-        let camZ = 500;
-        let progreso = 0; // 0 (inicio) a 1 (final)
-        
-        let particulasLuz = [];
-        let particulasSombra = [];
+        let particles = [];
+        let inputElement;
+        let isGenerating = false;
 
         function setup() {
-            createCanvas(windowWidth, windowHeight, WEBGL);
+            createCanvas(windowWidth, windowHeight);
+            colorMode(HSB, 360, 100, 100, 100);
             
-            // Inicializar sistemas de partículas
-            for (let i = 0; i < 200; i++) {
-                particulasLuz.push(new Particula(true));
-                particulasSombra.push(new Particula(false));
-            }
+            inputElement = document.getElementById('psychic-input');
+            inputElement.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && inputElement.value.trim() !== '') {
+                    generarSimbolo(inputElement.value);
+                    inputElement.style.opacity = '0';
+                    inputElement.style.pointerEvents = 'none';
+                }
+            });
         }
 
         function draw() {
-            background(10, 0, 5); // Negro casi puro
-            
-            // --- Lógica de Interacción y Progreso ---
-            if (mouseIsPressed) {
-                progreso = min(1, progreso + 0.0005);
-                if(progreso > 0.1) document.getElementById('instructions').style.opacity = '0';
-            } else {
-                progreso = max(0, progreso - 0.001);
-                if(progreso < 0.1) document.getElementById('instructions').style.opacity = '1';
+            background(0, 0, 5, 80); // Fondo oscuro con un ligero rastro
+
+            if (isGenerating) {
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    particles[i].update();
+                    particles[i].display();
+                    if (particles[i].isDead()) {
+                        particles.splice(i, 1);
+                    }
+                }
+                if (particles.length === 0) {
+                    isGenerating = false;
+                    inputElement.value = '';
+                    inputElement.style.opacity = '1';
+                    inputElement.style.pointerEvents = 'auto';
+                }
             }
-            document.getElementById('progress-fill').style.width = `${progreso * 100}%`;
-            
-            // --- Configuración de Cámara y Escena ---
-            camZ = lerp(500, -5000, progreso);
-            camera(0, 0, camZ, 0, 0, 0, 0, 1, 0);
-            ambientLight(30);
-
-            // --- Renderizado de la Catedral ---
-            let numPilares = 15;
-            for (let i = 0; i < numPilares; i++) {
-                let z = -i * 400;
-                // Pilares del Ego (Izquierda)
-                push();
-                translate(-400, 0, z);
-                pointLight(200, 200, 255, -400, 0, z + 50);
-                specularMaterial(250);
-                shininess(50);
-                box(50, 800, 50);
-                pop();
-
-                // Pilares de la Sombra (Derecha)
-                push();
-                translate(400, 0, z);
-                pointLight(50, 0, 50, 400, 0, z + 50);
-                ambientMaterial(10);
-                box(50, 800, 50);
-                pop();
-            }
-
-            // --- Partículas de Energía (Luz y Sombra) ---
-            particulasLuz.forEach(p => p.updateAndDisplay());
-            particulasSombra.forEach(p => p.updateAndDisplay());
-
-            // --- El Altar y el Mandala del Self ---
-            push();
-            translate(0, 0, -numPilares * 400);
-            noStroke();
-            if (progreso < 1) {
-                // El Ojo Velado
-                ambientMaterial(0);
-                torus(150, 10, 24, 16);
-            } else {
-                // La Revelación del Mandala
-                pointLight(255, 255, 255, 0, 0, -numPilares * 400);
-                rotateX(frameCount * 0.01);
-                rotateY(frameCount * 0.01);
-                emissiveMaterial(255, 215, 0); // Oro
-                torus(150, 40, 24, 16);
-                
-                push();
-                rotateZ(frameCount * 0.02);
-                emissiveMaterial(0, 200, 255); // Azul
-                torus(80, 20, 24, 16);
-                pop();
-            }
-            pop();
         }
 
-        class Particula {
-            constructor(esLuz) {
-                this.esLuz = esLuz;
-                this.vida = random(1, 2);
-                this.reset();
+        function generarSimbolo(inputText) {
+            particles = [];
+            isGenerating = true;
+            let seed = 0;
+            for (let i = 0; i < inputText.length; i++) {
+                seed += inputText.charCodeAt(i);
             }
 
-            reset() {
-                this.pos = createVector(this.esLuz ? -400 : 400, random(-400, 400), random(camZ, -5000));
-                this.vel = createVector();
-                this.vida = random(1, 2);
+            let numParticles = constrain(inputText.length * 50, 200, 2500);
+            
+            for (let i = 0; i < numParticles; i++) {
+                let charIndex = i % inputText.length;
+                let charCode = inputText.charCodeAt(charIndex);
+                
+                let p = new Particle(
+                    width / 2, 
+                    height / 2,
+                    charCode, // Semilla de caracter para color y comportamiento
+                    seed,     // Semilla de palabra completa
+                    i,        // Indice de partícula
+                    numParticles
+                );
+                particles.push(p);
+            }
+        }
+
+        class Particle {
+            constructor(x, y, charSeed, wordSeed, index, total) {
+                this.pos = createVector(x, y);
+                
+                // --- Generación procedural basada en el input ---
+                let angle = map(index, 0, total, 0, TWO_PI * (wordSeed % 7 + 1));
+                let initialSpeed = map(charSeed, 65, 122, 5, 15); // A-z
+                this.vel = p5.Vector.fromAngle(angle).mult(initialSpeed);
+                
+                this.lifespan = 255;
+                
+                // Color derivado del caracter
+                this.hue = (charSeed * 2.5) % 360;
+                this.saturation = 80 + (wordSeed % 20);
+                this.brightness = 100;
+                
+                this.size = 2.5;
+                
+                this.mandalaAngle = angle;
+                this.mandalaRadius = map(noise(index * 0.1, (wordSeed % 100) * 0.01), 0, 1, height * 0.1, height * 0.4);
             }
 
-            updateAndDisplay() {
-                // La magia de la Coniunctio (unión)
-                let faseUnion = constrain(map(progreso, 0.4, 0.8, 0, 1), 0, 1);
-                let faseCaos = 1 - faseUnion;
+            isDead() {
+                return this.lifespan < 0;
+            }
+
+            update() {
+                // Comportamiento: explosión inicial y luego coalescencia en un mandala
+                let targetPos = createVector(
+                    width / 2 + cos(this.mandalaAngle) * this.mandalaRadius,
+                    height / 2 + sin(this.mandalaAngle) * this.mandalaRadius
+                );
+
+                let force = p5.Vector.sub(targetPos, this.pos);
+                force.mult(0.01);
                 
-                // Objetivo inicial: el centro caótico
-                let objetivoCaos = createVector(0, 0, this.pos.z + 100);
-                
-                // Objetivo final: el entrelazado ordenado
-                let angulo = (this.pos.z / 100) + frameCount * 0.05;
-                let radio = 100;
-                let objetivoOrdenado = createVector(cos(angulo) * radio * (this.esLuz ? 1 : -1), sin(angulo) * radio * (this.esLuz ? 1 : -1), this.pos.z);
-                
-                // Interpolar entre caos y orden según el progreso
-                let objetivo = p5.Vector.lerp(objetivoCaos, objetivoOrdenado, faseUnion);
-                
-                let fuerza = p5.Vector.sub(objetivo, this.pos);
-                fuerza.mult(0.01);
-                this.vel.add(fuerza);
-                this.vel.limit(5);
+                this.vel.add(force);
+                this.vel.mult(0.97); // Fricción para estabilizarse
                 this.pos.add(this.vel);
-                
-                this.vida -= 0.005;
-                if (this.vida <= 0) this.reset();
 
-                // Renderizado
-                push();
-                translate(this.pos.x, this.pos.y, this.pos.z);
+                this.lifespan -= 0.3;
+            }
+
+            display() {
                 noStroke();
-                if (this.esLuz) {
-                    emissiveMaterial(200, 200, 255, 255 * this.vida);
-                } else {
-                    emissiveMaterial(50, 0, 50, 255 * this.vida);
-                }
-                sphere(3);
-                pop();
+                
+                // Efecto de estela / brillo
+                let glowAlpha = map(this.lifespan, 255, 0, 50, 0);
+                fill(this.hue, this.saturation, this.brightness, glowAlpha);
+                ellipse(this.pos.x, this.pos.y, this.size * 5);
+
+                // Núcleo
+                let coreAlpha = map(this.lifespan, 255, 0, 100, 0);
+                fill(this.hue, this.saturation - 20, this.brightness, coreAlpha);
+                ellipse(this.pos.x, this.pos.y, this.size);
             }
         }
         
