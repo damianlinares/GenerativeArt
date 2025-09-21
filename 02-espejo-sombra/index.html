@@ -1,203 +1,608 @@
-3: La Naturaleza del 'Yo'	"// --- OBRA 03: LA NATURALEZA DEL 'YO' ---
-// Estilo Visionario. Una exploración de la conciencia como Observador, Código o Máquina.
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Espejo de Sombra Interactivo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Georgia', serif;
+        }
+        
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 300px;
+            font-size: 14px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h3>🌙 El Espejo de Sombra Interactivo</h3>
+        <p><strong>Mueve el ratón</strong> para explorar tu sombra</p>
+        <p><strong>Click</strong> para liberar energía</p>
+        <p><strong>Mantén presionado</strong> para integración profunda</p>
+    </div>
+    
+    <div id="controls">
+        <div id="estado">Estado: Observación</div>
+        <div id="integracion">Integración: 0%</div>
+    </div>
 
-let chakras = [];
-let particulasCodigo = [];
-let tiempo = 0;
-
-const estadosDelYo = [""OBSERVADOR"", ""CÓDIGO"", ""MÁQUINA""];
-let estadoActual = 0; // 0: Observador, 1: Código, 2: Máquina
-
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  colorMode(HSB, 360, 100, 100, 100);
-  
-  // Definimos los 7 chakras
-  let coloresChakra = [0, 30, 60, 120, 210, 240, 275];
-  for (let i = 0; i < 7; i++) {
-    chakras.push({
-      y: (height * 0.85) - (i * height * 0.1),
-      color: coloresChakra[i],
-      tam: 20
-    });
-  }
-
-  // Partículas para el estado ""Código""
-  for (let i = 0; i < 200; i++) {
-    particulasCodigo.push({
-      x: random(width),
-      y: random(height),
-      valor: floor(random(2))
-    });
-  }
-  
-  textAlign(CENTER, CENTER);
-  textFont('serif');
-}
-
-function draw() {
-  background(240, 30, 5);
-  tiempo += 0.01;
-
-  // Cambiar de estado cada 12 segundos (720 frames)
-  if (frameCount > 0 && frameCount % 720 === 0) {
-    estadoActual = (estadoActual + 1) % estadosDelYo.length;
-  }
-  
-  let estado = estadosDelYo[estadoActual];
-
-  // La visualización cambia drásticamente según el estado
-  switch (estado) {
-    case ""OBSERVADOR"":
-      dibujarModoObservador();
-      break;
-    case ""CÓDIGO"":
-      dibujarModoCodigo();
-      break;
-    case ""MÁQUINA"":
-      dibujarModoMaquina();
-      break;
-  }
-
-  mostrarInterfaz(estado);
-}
-
-// --- FUNCIONES DE DIBUJO PARA CADA ESTADO ---
-
-function dibujarModoObservador() {
-  // Fondo de conciencia universal
-  for (let x = 0; x < width; x += 60) {
-    for (let y = 0; y < height; y += 60) {
-      let parpadeo = 0.5 + 0.5 * sin(tiempo * 2 + y * 0.01);
-      stroke(255, 15);
-      noFill();
-      ellipse(x, y, 25, 20 * parpadeo);
-    }
-  }
-
-  // Aura expansiva y etérea
-  noFill();
-  for (let i = 1; i < 7; i++) {
-    stroke(180, 50, 100, 5 + i);
-    strokeWeight(i);
-    ellipse(width/2, height/2, width*0.4 + i*20 + sin(tiempo+i)*20);
-  }
-  
-  // Figura de luz
-  dibujarFiguraBase(1.0); // 1.0 = máxima luminosidad
-  
-  // Tercer ojo
-  let tercerOjoY = chakras[5].y;
-  fill(210, 80, 100);
-  ellipse(width/2, tercerOjoY, 40, 30);
-  fill(0, 0, 100);
-  ellipse(width/2, tercerOjoY, 10, 10);
-}
-
-function dibujarModoCodigo() {
-  // Fondo de matriz digital
-  stroke(180, 80, 30, 50);
-  strokeWeight(1);
-  for (let i = 0; i < width; i += 20) line(i, 0, i, height);
-  for (let i = 0; i < height; i += 20) line(0, i, width, i);
-
-  // Flujo de datos binarios
-  for (let p of particulasCodigo) {
-    p.y += 2;
-    if (p.y > height) p.y = 0;
-    fill(120, 100, 100, 60);
-    textSize(10);
-    text(p.valor, p.x, p.y);
-  }
-  
-  // Figura se vuelve más geométrica
-  dibujarFiguraBase(0.7);
-  
-  // Chakras como formas geométricas
-  for (let i = 0; i < chakras.length; i++) {
-    let c = chakras[i];
-    push();
-    translate(width/2, c.y);
-    rotate(tiempo * (i % 2 == 0 ? -1 : 1));
-    stroke(c.color, 100, 100);
-    strokeWeight(2);
-    noFill();
-    rectMode(CENTER);
-    rect(0, 0, c.tam * 1.5, c.tam * 1.5);
-    pop();
-  }
-}
-
-function dibujarModoMaquina() {
-  // Aura como campo eléctrico
-  for (let i = 0; i < 50; i++) {
-    stroke(180, 80, 100, random(10, 40));
-    strokeWeight(random(0.5, 2));
-    let startY = random(height);
-    let endY = startY + random(-50, 50);
-    line(0, startY, width, endY);
-  }
-
-  // Figura con red neuronal interna
-  dibujarFiguraBase(0.5);
-  for (let i = 0; i < chakras.length - 1; i++) {
-    for (let j = 0; j < 5; j++) {
-      stroke(60, 100, 100, 60); // Amarillo eléctrico
-      strokeWeight(0.5);
-      let p1 = chakras[i].y;
-      let p2 = chakras[i+1].y;
-      let ctrlX1 = width/2 + random(-40, 40);
-      let ctrlX2 = width/2 + random(-40, 40);
-      noFill();
-      bezier(width/2, p1, ctrlX1, lerp(p1, p2, 0.33), ctrlX2, lerp(p1,p2,0.66), width/2, p2);
-    }
-  }
-}
-
-// Función base para la figura de luz y chakras
-function dibujarFiguraBase(luminosidad) {
-  let alpha = 50 * luminosidad;
-  stroke(0, 0, 100, alpha);
-  strokeWeight(3);
-  line(width / 2, 0, width / 2, height);
-  
-  for (let c of chakras) {
-    let brillo = 100 * luminosidad;
-    noStroke();
-    fill(c.color, 90, brillo, 20);
-    ellipse(width / 2, c.y, c.tam * 3);
-    fill(c.color, 90, brillo, 100);
-    ellipse(width / 2, c.y, c.tam);
-  }
-}
-
-function mostrarInterfaz(estado) {
-  fill(0, 0, 0, 50);
-  rectMode(CENTER);
-  noStroke();
-  rect(width / 2, height - 60, 650, 80, 10);
-
-  fill(0, 0, 100);
-  textSize(24);
-  text(""LA NATURALEZA DEL 'YO'"", width / 2, height - 80);
-  
-  textSize(18);
-  text(""MODO: "" + estado, width / 2, height - 45);
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  for (let i = 0; i < 7; i++) {
-    chakras[i].y = (height * 0.85) - (i * height * 0.1);
-  }
-}"	"Esta obra es una meditación visual sobre la pregunta fundamental: ¿Qué es el ""Yo""? La pieza explora tres perspectivas filosóficas a través de tres estados visuales que se transforman cíclicamente.
-
-El Observador: Representa la conciencia pura. La figura central es etérea y luminosa, con un aura expansiva y un tercer ojo activo, rodeada por un cosmos de ojos que simbolizan la percepción universal.
-
-El Código: Interpreta el ""Yo"" como información. El aura se convierte en una matriz digital, los chakras adoptan formas geométricas y flujos de datos binarios recorren el sistema, sugiriendo que la conciencia es un programa en ejecución.
-
-La Máquina: Encarna la visión materialista del ""Yo"" como un producto del cerebro. La figura se vuelve más definida, revelando una red neuronal interna brillante, y el aura crepita como un campo electromagnético, representando el cuerpo como hardware biológico.
-
-"	"La pregunta más profunda no tiene una sola respuesta. Esta obra es un espejo de tres caras que refleja las grandes teorías sobre tu propia existencia.
-
-¿Eres la conciencia silenciosa que todo lo ve? ¿Un complejo programa ejecutándose en el cosmos? ¿O una maravilla biológica de carne y electricidad? Observa cómo la naturaleza de tu ser se reconfigura, fluyendo entre lo espiritual, lo digital y lo material. No busques una respuesta. Experimenta todas las preguntas."
+    <script>
+        // === EL ESPEJO DE SOMBRA INTERACTIVO - NUEVA VERSIÓN ===
+        // Una experiencia inmersiva de integración psíquica
+        
+        let chakras = [];
+        let sombra;
+        let tiempo = 0;
+        let integracion = 0;
+        let particulas = [];
+        let ondas = [];
+        let respiracion = 0;
+        let clickPresionado = false;
+        let energia = 0;
+        let memoriasSombra = [];
+        let mandala = [];
+        
+        // Sonidos visuales
+        let pulsoCorazon = 0;
+        let frecuenciaAlma = 0;
+        
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            colorMode(HSB, 360, 100, 100, 100);
+            
+            // Inicializar chakras con propiedades expandidas
+            let coloresChakra = [0, 30, 60, 120, 210, 240, 275];
+            let nombresChakra = ["Raíz", "Sacro", "Plexo", "Corazón", "Garganta", "Tercer Ojo", "Corona"];
+            
+            for (let i = 0; i < 7; i++) {
+                chakras.push({
+                    y: height * 0.8 - (i * height * 0.1),
+                    color: coloresChakra[i],
+                    nombre: nombresChakra[i],
+                    tam: 25,
+                    energia: 0,
+                    orbitas: [],
+                    frecuencia: 0.5 + i * 0.3
+                });
+                
+                // Crear órbitas para cada chakra
+                for (let j = 0; j < 3; j++) {
+                    chakras[i].orbitas.push({
+                        radio: 30 + j * 15,
+                        velocidad: 0.02 + j * 0.01,
+                        angulo: random(TWO_PI)
+                    });
+                }
+            }
+            
+            // Inicializar la sombra con geometría compleja
+            sombra = {
+                puntos: [],
+                x: width * 0.75,
+                y: height / 2,
+                radio: height * 0.35,
+                tentaculos: [],
+                ojos: [],
+                respiracion: 0
+            };
+            
+            // Crear forma orgánica de la sombra
+            for (let i = 0; i < 120; i++) {
+                sombra.puntos.push({
+                    angulo: map(i, 0, 120, 0, TWO_PI),
+                    distanciaBase: random(sombra.radio * 0.7, sombra.radio),
+                    ruido: random(1000),
+                    velocidad: random(0.005, 0.02)
+                });
+            }
+            
+            // Crear tentáculos de conexión
+            for (let i = 0; i < 8; i++) {
+                sombra.tentaculos.push({
+                    puntos: [],
+                    origen: createVector(sombra.x, sombra.y),
+                    target: createVector(width/2, height/2),
+                    activo: false
+                });
+                
+                // Puntos del tentáculo
+                for (let j = 0; j < 20; j++) {
+                    sombra.tentaculos[i].puntos.push({
+                        pos: createVector(),
+                        vel: createVector(),
+                        fuerza: createVector()
+                    });
+                }
+            }
+            
+            // Ojos de la sombra
+            for (let i = 0; i < 7; i++) {
+                sombra.ojos.push({
+                    x: random(-sombra.radio*0.3, sombra.radio*0.3),
+                    y: random(-sombra.radio*0.3, sombra.radio*0.3),
+                    tam: random(8, 15),
+                    parpadeo: random(100)
+                });
+            }
+            
+            // Crear mandala de integración
+            for (let i = 0; i < 72; i++) {
+                mandala.push({
+                    angulo: map(i, 0, 72, 0, TWO_PI),
+                    radio: 0,
+                    maxRadio: random(100, 200),
+                    velocidad: random(0.01, 0.03)
+                });
+            }
+            
+            // Sistema de partículas inicial
+            for (let i = 0; i < 50; i++) {
+                particulas.push(crearParticula());
+            }
+        }
+        
+        function draw() {
+            // Fondo dinámico que responde a la integración
+            let fondoColor = lerpColor(
+                color(240, 80, 5),
+                color(280, 40, 15),
+                integracion
+            );
+            background(fondoColor);
+            
+            tiempo += 0.015;
+            respiracion = sin(tiempo * 2) * 0.5 + 0.5;
+            pulsoCorazon = sin(tiempo * 8) * 0.3 + 0.7;
+            frecuenciaAlma += 0.1;
+            
+            // Calcular integración basada en proximidad y interacción
+            calcularIntegracion();
+            
+            // Capas de la experiencia
+            dibujarCampoEnergetico();
+            actualizarParticulas();
+            dibujarSombra();
+            dibujarFiguraCentral();
+            dibujarConexiones();
+            dibujarMandalaIntegracion();
+            dibujarOndas();
+            
+            // Efectos especiales durante momentos de alta integración
+            if (integracion > 0.8) {
+                dibujarEpifania();
+            }
+            
+            actualizarInterfaz();
+        }
+        
+        function calcularIntegracion() {
+            let distancia = dist(mouseX, mouseY, sombra.x, sombra.y);
+            let distanciaBase = map(distancia, 0, width, 1, 0);
+            let factorClick = clickPresionado ? 2 : 1;
+            let factorTiempo = map(sin(tiempo), -1, 1, 0.8, 1.2);
+            
+            integracion = constrain(distanciaBase * factorClick * factorTiempo, 0, 1);
+            energia = lerp(energia, integracion, 0.05);
+        }
+        
+        function dibujarCampoEnergetico() {
+            // Campo de energía que conecta todo
+            push();
+            translate(width/2, height/2);
+            
+            for (let r = 50; r < 400; r += 30) {
+                noFill();
+                stroke(200, 30, 80, 10 + integracion * 20);
+                strokeWeight(1);
+                
+                beginShape();
+                for (let a = 0; a < TWO_PI; a += 0.1) {
+                    let ruido = noise(cos(a) * 0.01 + tiempo, sin(a) * 0.01 + tiempo);
+                    let radio = r + map(ruido, 0, 1, -20, 20);
+                    let x = cos(a) * radio;
+                    let y = sin(a) * radio;
+                    curveVertex(x, y);
+                }
+                endShape(CLOSE);
+            }
+            pop();
+        }
+        
+        function dibujarSombra() {
+            push();
+            translate(sombra.x, sombra.y);
+            rotate(tiempo * 0.1);
+            
+            // Cuerpo principal de la sombra
+            noStroke();
+            fill(240, 60, 8, 70 + integracion * 30);
+            
+            beginShape();
+            for (let p of sombra.puntos) {
+                let ruido = noise(p.ruido + tiempo * p.velocidad);
+                let distancia = p.distanciaBase + map(ruido, 0, 1, -50, 50);
+                distancia *= (1 + respiracion * 0.2);
+                
+                let x = cos(p.angulo) * distancia;
+                let y = sin(p.angulo) * distancia;
+                curveVertex(x, y);
+            }
+            endShape(CLOSE);
+            
+            // Patrones internos que emergen con la integración
+            if (integracion > 0.2) {
+                dibujarPatronesSombra();
+            }
+            
+            // Ojos de la sombra
+            dibujarOjosSombra();
+            
+            pop();
+        }
+        
+        function dibujarPatronesSombra() {
+            // Mandalas internos
+            for (let i = 0; i < 3; i++) {
+                push();
+                rotate(tiempo * (0.5 + i * 0.2));
+                
+                noFill();
+                stroke(275, 80, 100, integracion * 60);
+                strokeWeight(2);
+                
+                for (let r = 30; r < 150; r += 20) {
+                    beginShape();
+                    for (let a = 0; a < TWO_PI; a += PI/6) {
+                        let x = cos(a) * r;
+                        let y = sin(a) * r;
+                        vertex(x, y);
+                    }
+                    endShape(CLOSE);
+                }
+                pop();
+            }
+            
+            // Símbolos arquetípicos
+            fill(300, 100, 100, integracion * 80);
+            textAlign(CENTER, CENTER);
+            textSize(20 + integracion * 10);
+            text("∞", 0, -50);
+            text("◯", 0, 0);
+            text("△", 0, 50);
+        }
+        
+        function dibujarOjosSombra() {
+            for (let ojo of sombra.ojos) {
+                ojo.parpadeo += 0.1;
+                let parpadear = sin(ojo.parpadeo) > 0.95;
+                
+                if (!parpadear) {
+                    // Iris
+                    fill(280, 80, 100, 80 + integracion * 20);
+                    ellipse(ojo.x, ojo.y, ojo.tam);
+                    
+                    // Pupila que sigue al ratón
+                    let mouseLocalX = mouseX - sombra.x;
+                    let mouseLocalY = mouseY - sombra.y;
+                    let mirax = map(mouseLocalX, -width/2, width/2, -ojo.tam*0.2, ojo.tam*0.2);
+                    let miray = map(mouseLocalY, -height/2, height/2, -ojo.tam*0.2, ojo.tam*0.2);
+                    
+                    fill(0, 0, 0);
+                    ellipse(ojo.x + mirax, ojo.y + miray, ojo.tam * 0.4);
+                    
+                    // Brillo
+                    fill(0, 0, 100, 90);
+                    ellipse(ojo.x + mirax + 2, ojo.y + miray - 2, ojo.tam * 0.1);
+                }
+            }
+        }
+        
+        function dibujarFiguraCentral() {
+            let figuraX = width * 0.25;
+            
+            // Columna de luz central
+            strokeWeight(5 + integracion * 8);
+            stroke(0, 0, 100, 40 + integracion * 60);
+            line(figuraX, 0, figuraX, height);
+            
+            // Dibujar chakras con animaciones complejas
+            for (let i = 0; i < chakras.length; i++) {
+                let c = chakras[i];
+                c.energia = lerp(c.energia, integracion, 0.1);
+                
+                push();
+                translate(figuraX, c.y);
+                rotate(tiempo * c.frecuencia);
+                
+                // Órbitas de los chakras
+                for (let orbita of c.orbitas) {
+                    orbita.angulo += orbita.velocidad;
+                    
+                    noFill();
+                    stroke(c.color, 50, 80, 20 + c.energia * 30);
+                    strokeWeight(1);
+                    ellipse(0, 0, orbita.radio * 2);
+                    
+                    // Partícula orbital
+                    let orbitaX = cos(orbita.angulo) * orbita.radio;
+                    let orbitaY = sin(orbita.angulo) * orbita.radio;
+                    
+                    fill(c.color, 80, 100, 60 + c.energia * 40);
+                    noStroke();
+                    ellipse(orbitaX, orbitaY, 4);
+                }
+                
+                // Núcleo del chakra
+                let tamActual = c.tam + sin(tiempo * 3 - i) * 8 + c.energia * 20;
+                
+                // Aura
+                fill(c.color, 60, 100, 20 + c.energia * 30);
+                ellipse(0, 0, tamActual * 4);
+                
+                // Centro brillante
+                fill(c.color, 90, 100, 80 + c.energia * 20);
+                ellipse(0, 0, tamActual);
+                
+                // Símbolo del chakra
+                fill(0, 0, 100, c.energia * 100);
+                textAlign(CENTER, CENTER);
+                textSize(12);
+                text(c.nombre.charAt(0), 0, 0);
+                
+                pop();
+            }
+        }
+        
+        function dibujarConexiones() {
+            if (integracion > 0.3) {
+                // Tentáculos de energía
+                for (let i = 0; i < sombra.tentaculos.length; i++) {
+                    let tent = sombra.tentaculos[i];
+                    tent.activo = i < integracion * 8;
+                    
+                    if (tent.activo) {
+                        stroke(275, 80, 100, integracion * 50);
+                        strokeWeight(2 + integracion * 3);
+                        noFill();
+                        
+                        beginShape();
+                        let startX = sombra.x;
+                        let startY = sombra.y + sin(tiempo + i) * 50;
+                        let endX = width * 0.25;
+                        let endY = chakras[i % 7].y;
+                        
+                        for (let t = 0; t <= 1; t += 0.1) {
+                            let x = lerp(startX, endX, t);
+                            let y = lerp(startY, endY, t);
+                            
+                            // Agregar ondulación
+                            x += sin(tiempo * 2 + t * 10) * 20 * (1 - t);
+                            y += cos(tiempo * 1.5 + t * 8) * 15 * (1 - t);
+                            
+                            curveVertex(x, y);
+                        }
+                        endShape();
+                        
+                        // Partículas que viajan por las conexiones
+                        let particulaT = (tiempo * 2) % 1;
+                        let pX = lerp(startX, endX, particulaT);
+                        let pY = lerp(startY, endY, particulaT);
+                        
+                        fill(275, 100, 100, 80);
+                        noStroke();
+                        ellipse(pX, pY, 6);
+                    }
+                }
+            }
+        }
+        
+        function dibujarMandalaIntegracion() {
+            if (integracion > 0.5) {
+                push();
+                translate(width/2, height/2);
+                rotate(tiempo * 0.5);
+                
+                for (let i = 0; i < mandala.length; i++) {
+                    let m = mandala[i];
+                    m.radio = lerp(m.radio, m.maxRadio * integracion, 0.1);
+                    
+                    let x = cos(m.angulo) * m.radio;
+                    let y = sin(m.angulo) * m.radio;
+                    
+                    let colorMandala = map(i, 0, mandala.length, 0, 360);
+                    fill(colorMandala, 80, 100, 40);
+                    noStroke();
+                    ellipse(x, y, 4);
+                    
+                    // Conectar puntos cercanos
+                    for (let j = i + 1; j < mandala.length; j++) {
+                        let m2 = mandala[j];
+                        let x2 = cos(m2.angulo) * m2.radio;
+                        let y2 = sin(m2.angulo) * m2.radio;
+                        let d = dist(x, y, x2, y2);
+                        
+                        if (d < 50) {
+                            stroke(colorMandala, 60, 100, 20);
+                            strokeWeight(1);
+                            line(x, y, x2, y2);
+                        }
+                    }
+                }
+                pop();
+            }
+        }
+        
+        function dibujarOndas() {
+            for (let i = ondas.length - 1; i >= 0; i--) {
+                let onda = ondas[i];
+                onda.radio += onda.velocidad;
+                onda.alpha -= 2;
+                
+                noFill();
+                stroke(onda.color, 80, 100, onda.alpha);
+                strokeWeight(3);
+                ellipse(onda.x, onda.y, onda.radio * 2);
+                
+                if (onda.alpha <= 0) {
+                    ondas.splice(i, 1);
+                }
+            }
+        }
+        
+        function dibujarEpifania() {
+            // Momento de revelación total
+            push();
+            translate(width/2, height/2);
+            
+            // Explosión de luz
+            for (let i = 0; i < 20; i++) {
+                let angulo = map(i, 0, 20, 0, TWO_PI);
+                let longitud = 200 + sin(tiempo * 5) * 100;
+                
+                stroke(0, 0, 100, 60);
+                strokeWeight(3);
+                line(0, 0, cos(angulo) * longitud, sin(angulo) * longitud);
+            }
+            
+            // Texto de integración
+            fill(0, 0, 100, 80);
+            textAlign(CENTER, CENTER);
+            textSize(24);
+            text("INTEGRACIÓN COMPLETA", 0, -50);
+            textSize(16);
+            text("La Sombra y la Luz son Una", 0, 50);
+            
+            pop();
+        }
+        
+        function crearParticula() {
+            return {
+                pos: createVector(random(width), random(height)),
+                vel: createVector(random(-2, 2), random(-2, 2)),
+                tam: random(2, 6),
+                color: random(360),
+                vida: 255,
+                tipo: random(['chakra', 'sombra', 'neutro'])
+            };
+        }
+        
+        function actualizarParticulas() {
+            for (let i = particulas.length - 1; i >= 0; i--) {
+                let p = particulas[i];
+                
+                p.pos.add(p.vel);
+                p.vida -= 1;
+                
+                // Atraer hacia puntos de poder según el tipo
+                if (p.tipo === 'chakra') {
+                    let target = createVector(width * 0.25, height/2);
+                    let fuerza = p5.Vector.sub(target, p.pos);
+                    fuerza.mult(0.001 * integracion);
+                    p.vel.add(fuerza);
+                } else if (p.tipo === 'sombra') {
+                    let target = createVector(sombra.x, sombra.y);
+                    let fuerza = p5.Vector.sub(target, p.pos);
+                    fuerza.mult(0.001 * integracion);
+                    p.vel.add(fuerza);
+                }
+                
+                // Dibujar partícula
+                fill(p.color, 80, 100, p.vida);
+                noStroke();
+                ellipse(p.pos.x, p.pos.y, p.tam);
+                
+                // Eliminar partículas muertas
+                if (p.vida <= 0) {
+                    particulas.splice(i, 1);
+                }
+            }
+            
+            // Crear nuevas partículas
+            if (particulas.length < 100 && random() < 0.3) {
+                particulas.push(crearParticula());
+            }
+        }
+        
+        function actualizarInterfaz() {
+            let estado = "";
+            if (integracion < 0.2) estado = "Observación";
+            else if (integracion < 0.5) estado = "Acercamiento";
+            else if (integracion < 0.8) estado = "Confrontación";
+            else estado = "Integración";
+            
+            document.getElementById('estado').textContent = `Estado: ${estado}`;
+            document.getElementById('integracion').textContent = `Integración: ${Math.round(integracion * 100)}%`;
+        }
+        
+        function mousePressed() {
+            clickPresionado = true;
+            
+            // Crear ondas de energía
+            ondas.push({
+                x: mouseX,
+                y: mouseY,
+                radio: 0,
+                velocidad: 5,
+                alpha: 100,
+                color: integracion > 0.5 ? 275 : 240
+            });
+            
+            // Liberar partículas
+            for (let i = 0; i < 10; i++) {
+                particulas.push({
+                    pos: createVector(mouseX + random(-20, 20), mouseY + random(-20, 20)),
+                    vel: createVector(random(-5, 5), random(-5, 5)),
+                    tam: random(3, 8),
+                    color: random(360),
+                    vida: 255,
+                    tipo: random(['chakra', 'sombra', 'neutro'])
+                });
+            }
+        }
+        
+        function mouseReleased() {
+            clickPresionado = false;
+        }
+        
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            
+            // Reposicionar elementos
+            sombra.x = width * 0.75;
+            sombra.y = height / 2;
+            sombra.radio = height * 0.35;
+            
+            for (let i = 0; i < chakras.length; i++) {
+                chakras[i].y = height * 0.8 - (i * height * 0.1);
+            }
+        }
+    </script>
+</body>
+</html>
