@@ -524,18 +524,18 @@
                 push();
                 translate(width/2, height/2);
                 
-                // Solo texto, sin efectos
-                fill(0, 0, 100, 80);
+                // Texto completamente simple, sin efectos
+                fill(255); // Blanco sólido
                 textSize(28);
                 text("SILENCIO INTERIOR", 0, -50);
                 
-                fill(0, 0, 100, 60);
+                fill(255); // Blanco sólido
                 textSize(16);
                 text("Debugging Completo", 0, 0);
                 
                 // Resultado de ansiedad
                 if (resultadoFinal && resultadoFinal.length > 0) {
-                    fill(180, 60, 100, 70);
+                    fill(255); // Blanco sólido
                     textSize(14);
                     text(resultadoFinal, 0, 50);
                 }
