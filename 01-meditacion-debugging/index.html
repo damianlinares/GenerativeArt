@@ -19,14 +19,15 @@
             top: 20px;
             left: 20px;
             color: white;
-            background: rgba(0,0,0,0.8);
-            padding: 15px;
-            border-radius: 10px;
-            max-width: 350px;
+            background: rgba(15, 15, 35, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 320px;
             font-size: 14px;
             z-index: 100;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
         
         #ansiedad-panel {
@@ -34,14 +35,15 @@
             top: 20px;
             right: 20px;
             color: white;
-            background: rgba(0,0,0,0.8);
-            padding: 15px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
+            background: rgba(15, 15, 35, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
             text-align: center;
-            min-width: 200px;
+            min-width: 220px;
             z-index: 100;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
         
         #controls {
@@ -49,65 +51,97 @@
             bottom: 20px;
             right: 20px;
             color: white;
-            background: rgba(0,0,0,0.8);
-            padding: 15px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
+            background: rgba(15, 15, 35, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
             text-align: center;
             z-index: 100;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
         
         #clarity-bar, #ansiedad-bar {
             width: 200px;
-            height: 8px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 4px;
-            margin-top: 10px;
+            height: 10px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 6px;
+            margin: 12px auto;
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
         #clarity-progress {
             height: 100%;
-            background: linear-gradient(90deg, #ff4757, #ffa502, #2ed573);
+            background: linear-gradient(90deg, #ff3838, #ff9500, #00d084);
             width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 4px;
+            transition: width 0.8s ease;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 208, 132, 0.4);
         }
         
         #ansiedad-progress {
             height: 100%;
-            background: linear-gradient(90deg, #2ed573, #ffa502, #ff4757);
+            background: linear-gradient(90deg, #00d084, #ff9500, #ff3838);
             width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 4px;
+            transition: width 0.4s ease;
+            border-radius: 5px;
         }
         
-        .estado-caos { color: #ff4757 !important; }
-        .estado-procesando { color: #ffa502 !important; }
-        .estado-silencio { color: #2ed573 !important; }
+        .estado-caos { 
+            border-color: #ff3838 !important; 
+            box-shadow: 0 8px 32px rgba(255, 56, 56, 0.3) !important;
+        }
+        .estado-procesando { 
+            border-color: #ff9500 !important; 
+            box-shadow: 0 8px 32px rgba(255, 149, 0, 0.3) !important;
+        }
+        .estado-silencio { 
+            border-color: #00d084 !important; 
+            box-shadow: 0 8px 32px rgba(0, 208, 132, 0.3) !important;
+        }
         
-        .ansiedad-baja { border-color: #2ed573 !important; }
-        .ansiedad-media { border-color: #ffa502 !important; }
-        .ansiedad-alta { border-color: #ff4757 !important; }
+        .ansiedad-baja { 
+            border-color: #00d084 !important; 
+            box-shadow: 0 8px 32px rgba(0, 208, 132, 0.2) !important;
+        }
+        .ansiedad-media { 
+            border-color: #ff9500 !important; 
+            box-shadow: 0 8px 32px rgba(255, 149, 0, 0.2) !important;
+        }
+        .ansiedad-alta { 
+            border-color: #ff3838 !important; 
+            box-shadow: 0 8px 32px rgba(255, 56, 56, 0.2) !important;
+        }
         
-        h3, h4 { margin-top: 0; margin-bottom: 10px; }
-        div { margin-bottom: 5px; }
+        h3, h4 { 
+            margin-top: 0; 
+            margin-bottom: 15px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        div { 
+            margin-bottom: 8px; 
+        }
+        
+        .panel-value {
+            font-weight: bold;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div id="info">
         <h3>🧘 Meditación como Debugging Mental</h3>
         <p><strong>Observa</strong> cómo los pensamientos parásitos se disuelven</p>
-        <p><strong>Click</strong> para acelerar el proceso de claridad</p>
-        <p><strong>Mantén presionado</strong> para resetear la meditación</p>
+        <p><strong>Click</strong> para acelerar el proceso de claridad mental</p>
+        <p><strong>Mantén presionado</strong> para reiniciar la meditación</p>
         <p><em>La mente se purifica gradualmente...</em></p>
     </div>
     
     <div id="ansiedad-panel">
         <h4>📊 Medidor de Ansiedad</h4>
-        <div id="clicks-count">Clicks: 0</div>
-        <div id="ansiedad-nivel">Ansiedad: 0%</div>
+        <div id="clicks-count" class="panel-value">Clicks: 0</div>
+        <div id="ansiedad-nivel" class="panel-value">Ansiedad: 0%</div>
         <div id="ansiedad-bar">
             <div id="ansiedad-progress"></div>
         </div>
@@ -115,8 +149,8 @@
     </div>
     
     <div id="controls">
-        <div id="estado-actual">Estado: Iniciando...</div>
-        <div id="claridad-nivel">Claridad: 0%</div>
+        <div id="estado-actual" class="panel-value">Estado: Iniciando...</div>
+        <div id="claridad-nivel" class="panel-value">Claridad: 0%</div>
         <div id="clarity-bar">
             <div id="clarity-progress"></div>
         </div>
@@ -124,7 +158,7 @@
     </div>
 
     <script>
-        // === MEDITACIÓN COMO DEBUGGING MENTAL - VERSIÓN DEPURADA ===
+        // === MEDITACIÓN COMO DEBUGGING MENTAL - VERSIÓN MEJORADA ===
         
         let chakras = [];
         let pensamientos = [];
@@ -132,61 +166,75 @@
         let ondas = [];
         let tiempo = 0;
         let claridad = 0;
-        let velocidadClaridad = 0.0003;
+        let velocidadClaridad = 0.0004;
         let clickPresionado = false;
         let tiempoPresionado = 0;
         let totalClicks = 0;
         let nivelAnsiedad = 0;
-        let ultimoClick = 0;
         let frecuenciaClicks = [];
         let resultadoFinal = "";
         let tiempoInicio = 0;
         
-        // Efectos visuales
+        // Efectos visuales mejorados
         let auraParticulas = [];
         let interferencias = [];
+        let estrellasEnergia = [];
         
         function setup() {
             createCanvas(windowWidth, windowHeight);
             colorMode(HSB, 360, 100, 100, 100);
             tiempoInicio = millis();
             
-            // Inicializar chakras
-            let coloresChakra = [0, 30, 60, 120, 210, 240, 275];
+            // Chakras con posiciones y colores mejorados
+            let coloresChakra = [0, 25, 45, 120, 200, 260, 280];
             let nombresChakra = ["Raíz", "Sacro", "Plexo", "Corazón", "Garganta", "Tercer Ojo", "Corona"];
             
             for (let i = 0; i < 7; i++) {
                 chakras.push({
-                    y: (height * 0.85) - (i * height * 0.1),
+                    y: height * 0.8 - (i * height * 0.09),
                     color: coloresChakra[i],
                     nombre: nombresChakra[i],
-                    tam: 25,
+                    tam: 30 + i * 2,
                     estabilidad: 0,
-                    energia: random(0.3, 0.7),
-                    ruido: random(1000)
+                    energia: random(0.4, 0.8),
+                    ruido: random(1000),
+                    brillo: 60
                 });
             }
             
             generarPensamientos();
             
-            // Partículas del aura
-            for (let i = 0; i < 50; i++) {
+            // Partículas del aura mejoradas
+            for (let i = 0; i < 60; i++) {
                 auraParticulas.push({
                     angulo: random(TWO_PI),
-                    radio: random(100, 300),
-                    velocidad: random(0.005, 0.02),
-                    tamano: random(2, 6),
-                    opacidad: random(20, 60)
+                    radio: random(120, 350),
+                    velocidad: random(0.003, 0.015),
+                    tamano: random(1.5, 4),
+                    opacidad: random(15, 45),
+                    color: random(200, 280)
                 });
             }
             
-            // Interferencias mentales
-            for (let i = 0; i < 20; i++) {
+            // Estrellas de energía
+            for (let i = 0; i < 30; i++) {
+                estrellasEnergia.push({
+                    x: random(width * 0.2, width * 0.8),
+                    y: random(height * 0.1, height * 0.9),
+                    brillo: random(20, 60),
+                    tamano: random(1, 3),
+                    parpadeo: random(0.01, 0.03)
+                });
+            }
+            
+            // Interferencias simplificadas
+            for (let i = 0; i < 15; i++) {
                 interferencias.push({
-                    x: random(width),
-                    y: random(height * 0.1, height * 0.4),
-                    intensidad: random(50, 100),
-                    frecuencia: random(0.01, 0.05)
+                    x: random(width * 0.1, width * 0.9),
+                    y: random(height * 0.05, height * 0.5),
+                    intensidad: random(30, 80),
+                    frecuencia: random(0.008, 0.025),
+                    tipo: random(['zigzag', 'ondas', 'chispas'])
                 });
             }
             
@@ -195,41 +243,57 @@
         }
         
         function draw() {
-            // Fondo dinámico
-            let fondoColor = lerpColor(
-                color(240, 50, 8),
-                color(240, 20, 15),
-                claridad
-            );
-            background(fondoColor);
+            // Fondo con gradiente suave
+            drawGradientBackground();
             
-            tiempo += 0.015;
+            tiempo += 0.012;
             
             actualizarClaridad();
+            dibujarEstrellas();
             dibujarInterferencias();
             dibujarAura();
             dibujarFiguraCentral();
             actualizarPensamientos();
-            dibujarEfectosClaridad();
+            dibujarOndas();
             dibujarMomentosSilencio();
             actualizarInterfaz();
         }
         
+        function drawGradientBackground() {
+            // Gradiente desde caos (rojo oscuro) hasta silencio (azul profundo)
+            for (let i = 0; i <= height; i++) {
+                let inter = map(i, 0, height, 0, 1);
+                let c1 = lerpColor(
+                    color(340, 60, 12), // Caos: rojo muy oscuro
+                    color(220, 40, 18), // Silencio: azul profundo
+                    claridad
+                );
+                let c2 = lerpColor(
+                    color(320, 40, 8),  // Caos: púrpura oscuro
+                    color(240, 25, 8),  // Silencio: azul muy oscuro
+                    claridad
+                );
+                stroke(lerpColor(c1, c2, inter));
+                line(0, i, width, i);
+            }
+        }
+        
         function generarPensamientos() {
             pensamientos = [];
-            let cantidad = lerp(200, 20, claridad);
+            let cantidad = Math.floor(lerp(180, 15, claridad));
             
             for (let i = 0; i < cantidad; i++) {
                 pensamientos.push({
-                    x: width / 2 + random(-200, 200),
-                    y: height * 0.2 + random(-200, 200),
-                    vx: random(-3, 3),
-                    vy: random(-3, 3),
-                    tam: random(3, 12),
+                    x: width / 2 + random(-250, 250),
+                    y: height * 0.15 + random(-150, 150),
+                    vx: random(-2, 2),
+                    vy: random(-2, 2),
+                    tam: random(4, 15),
                     ruidoOffset: random(1000),
                     tipo: random(['ansiedad', 'distraccion', 'preocupacion', 'ruido']),
-                    intensidad: random(0.5, 1.0),
-                    vida: 255
+                    intensidad: random(0.6, 1.0),
+                    vida: 255,
+                    rotacion: 0
                 });
             }
         }
@@ -238,23 +302,28 @@
             let velocidadBase = velocidadClaridad;
             
             if (clickPresionado) {
-                velocidadBase *= 3;
+                velocidadBase *= 2.5;
                 tiempoPresionado++;
                 
-                if (tiempoPresionado > 180) {
+                if (tiempoPresionado > 200) { // 3+ segundos
+                    // Reiniciar meditación
                     claridad = 0;
                     tiempoPresionado = 0;
                     resultadoFinal = "";
+                    totalClicks = 0;
+                    frecuenciaClicks = [];
+                    tiempoInicio = millis();
                     generarPensamientos();
                     
-                    for (let i = 0; i < 20; i++) {
+                    // Efecto de reinicio
+                    for (let i = 0; i < 25; i++) {
                         ondas.push({
                             x: width/2,
                             y: height/2,
-                            radio: 0,
-                            velocidad: random(3, 8),
-                            color: 0,
-                            alpha: 100
+                            radio: random(50, 150),
+                            velocidad: random(4, 9),
+                            color: random(320, 360),
+                            alpha: 80
                         });
                     }
                 }
@@ -264,31 +333,92 @@
             
             claridad = min(1.0, claridad + velocidadBase);
             
-            if (frameCount % 60 == 0 && claridad < 1.0) {
-                let nuevaCantidad = lerp(200, 10, claridad);
+            // Reducir pensamientos gradualmente
+            if (frameCount % 45 == 0 && claridad < 1.0) {
+                let nuevaCantidad = Math.floor(lerp(180, 8, claridad));
                 if (pensamientos.length > nuevaCantidad) {
                     pensamientos.splice(nuevaCantidad);
                 }
             }
         }
         
+        function dibujarEstrellas() {
+            // Estrellas de fondo que se hacen más brillantes con la claridad
+            for (let estrella of estrellasEnergia) {
+                estrella.brillo += sin(tiempo + estrella.parpadeo * 100) * estrella.parpadeo;
+                estrella.brillo = constrain(estrella.brillo, 10, 70);
+                
+                let brilloFinal = estrella.brillo * claridad;
+                fill(200, 30, brilloFinal, brilloFinal * 0.8);
+                noStroke();
+                ellipse(estrella.x, estrella.y, estrella.tamano + sin(tiempo * 2) * 0.5);
+            }
+        }
+        
         function dibujarInterferencias() {
-            if (claridad < 0.7) {
+            if (claridad < 0.8) {
                 for (let interferencia of interferencias) {
-                    interferencia.intensidad = lerp(interferencia.intensidad, 0, claridad);
+                    let intensidad = interferencia.intensidad * (1 - claridad) * 0.7;
                     
-                    if (interferencia.intensidad > 5) {
-                        stroke(0, 90, 90, interferencia.intensidad * (1 - claridad));
-                        strokeWeight(random(0.5, 2));
+                    if (intensidad > 8) {
+                        stroke(10, 90, 80, intensidad);
+                        strokeWeight(random(0.3, 1.2));
                         
-                        let x1 = interferencia.x + sin(tiempo * interferencia.frecuencia * 10) * 50;
-                        let y1 = interferencia.y;
-                        let x2 = interferencia.x + cos(tiempo * interferencia.frecuencia * 8) * 30;
-                        let y2 = interferencia.y + random(-20, 20);
-                        
-                        line(x1, y1, x2, y2);
+                        switch (interferencia.tipo) {
+                            case 'zigzag':
+                                dibujarZigzag(interferencia, intensidad);
+                                break;
+                            case 'ondas':
+                                dibujarOndasInterferencia(interferencia, intensidad);
+                                break;
+                            case 'chispas':
+                                dibujarChispas(interferencia, intensidad);
+                                break;
+                        }
                     }
                 }
+            }
+        }
+        
+        function dibujarZigzag(interferencia, intensidad) {
+            let x = interferencia.x;
+            let y = interferencia.y + sin(tiempo * interferencia.frecuencia * 15) * 30;
+            
+            beginShape();
+            noFill();
+            for (let i = 0; i < 6; i++) {
+                let offsetX = i * 15 + cos(tiempo * interferencia.frecuencia * 10 + i) * 8;
+                let offsetY = sin(tiempo * interferencia.frecuencia * 12 + i) * 12;
+                vertex(x + offsetX, y + offsetY);
+            }
+            endShape();
+        }
+        
+        function dibujarOndasInterferencia(interferencia, intensidad) {
+            let x = interferencia.x;
+            let y = interferencia.y;
+            
+            for (let i = 0; i < 3; i++) {
+                let radio = 20 + i * 15 + sin(tiempo * interferencia.frecuencia * 8 + i) * 8;
+                stroke(15, 85, 75, intensidad * (1 - i * 0.3));
+                strokeWeight(0.8);
+                ellipse(x, y, radio);
+            }
+        }
+        
+        function dibujarChispas(interferencia, intensidad) {
+            let x = interferencia.x;
+            let y = interferencia.y;
+            
+            for (let i = 0; i < 4; i++) {
+                let angulo = tiempo * interferencia.frecuencia * 20 + i * PI/2;
+                let distancia = 15 + sin(tiempo * 5 + i) * 8;
+                let x2 = x + cos(angulo) * distancia;
+                let y2 = y + sin(angulo) * distancia;
+                
+                stroke(25, 95, 85, intensidad);
+                strokeWeight(1);
+                line(x, y, x2, y2);
             }
         }
         
@@ -296,40 +426,45 @@
             push();
             translate(width/2, height/2);
             
-            let auraTam = lerp(width * 0.25, width * 0.5, claridad);
-            let auraEstabilidad = lerp(50, 5, claridad);
+            // Aura principal más suave
+            let auraTam = lerp(width * 0.2, width * 0.45, claridad);
+            let auraEstabilidad = lerp(35, 8, claridad);
             
-            for (let i = 1; i <= 6; i++) {
-                let radio = auraTam + i * 20;
-                let ruido = map(noise(tiempo * 0.5 + i), 0, 1, -auraEstabilidad, auraEstabilidad);
+            // Capas de aura con mejor gradiente
+            for (let i = 1; i <= 5; i++) {
+                let radio = auraTam + i * 25;
+                let ruido = map(noise(tiempo * 0.3 + i * 0.5), 0, 1, -auraEstabilidad, auraEstabilidad);
                 
                 noFill();
-                stroke(200 + i * 10, lerp(80, 40, claridad), lerp(60, 100, claridad), lerp(8, 20, claridad));
-                strokeWeight(i * 0.5);
+                let colorAura = lerp(240, 200, claridad);
+                stroke(colorAura, lerp(70, 35, claridad), lerp(50, 85, claridad), lerp(12, 25, claridad));
+                strokeWeight(lerp(2, 0.8, i/5));
                 ellipse(0, 0, radio + ruido);
             }
             
+            // Partículas orbitales mejoradas
             for (let p of auraParticulas) {
                 p.angulo += p.velocidad;
-                p.radio = lerp(p.radio, 150 + claridad * 100, 0.01);
+                p.radio = lerp(p.radio, 130 + claridad * 120, 0.008);
                 
                 let x = cos(p.angulo) * p.radio;
                 let y = sin(p.angulo) * p.radio;
                 
-                let particleOpacity = p.opacidad * claridad;
-                fill(200, 50, 100, particleOpacity);
+                let particleOpacity = p.opacidad * (0.3 + claridad * 0.7);
+                fill(p.color, 40, 90, particleOpacity);
                 noStroke();
-                ellipse(x, y, p.tamano);
+                ellipse(x, y, p.tamano * (0.8 + claridad * 0.4));
                 
+                // Conexiones entre partículas
                 for (let other of auraParticulas) {
                     if (other != p) {
                         let otherX = cos(other.angulo) * other.radio;
                         let otherY = sin(other.angulo) * other.radio;
                         let d = dist(x, y, otherX, otherY);
                         
-                        if (d < 80 && claridad > 0.3) {
-                            stroke(200, 30, 100, claridad * 15);
-                            strokeWeight(0.5);
+                        if (d < 70 && claridad > 0.4 && random() < 0.3) {
+                            stroke(220, 25, 80, claridad * 20);
+                            strokeWeight(0.3);
                             line(x, y, otherX, otherY);
                         }
                     }
@@ -340,61 +475,74 @@
         }
         
         function dibujarFiguraCentral() {
-            let columnaIntensidad = lerp(30, 90, claridad);
-            let columnaGrosor = lerp(3, 8, claridad);
+            // Columna de energía central mejorada
+            let columnaIntensidad = lerp(25, 75, claridad);
+            let columnaGrosor = lerp(4, 10, claridad);
             
-            stroke(0, 0, 100, columnaIntensidad);
-            strokeWeight(columnaGrosor);
-            line(width / 2, 0, width / 2, height);
+            // Gradiente en la columna
+            for (let i = 0; i < columnaGrosor; i++) {
+                let alpha = columnaIntensidad * (1 - i / columnaGrosor);
+                stroke(0, 0, 100, alpha);
+                strokeWeight(1);
+                line(width / 2 - columnaGrosor/2 + i, 0, width / 2 - columnaGrosor/2 + i, height);
+            }
             
+            // Dibujar chakras mejorados
             for (let i = 0; i < chakras.length; i++) {
                 let c = chakras[i];
                 
-                c.estabilidad = lerp(c.estabilidad, claridad, 0.05);
-                c.energia = lerp(c.energia, 0.8 + claridad * 0.2, 0.02);
+                c.estabilidad = lerp(c.estabilidad, claridad, 0.03);
+                c.energia = lerp(c.energia, 0.7 + claridad * 0.3, 0.015);
+                c.brillo = lerp(c.brillo, 60 + claridad * 35, 0.02);
                 
-                let pulsoIntensidad = lerp(15, 3, claridad);
-                let pulso = sin(tiempo * 3 - i) * pulsoIntensidad;
+                let pulsoIntensidad = lerp(12, 4, claridad);
+                let pulso = sin(tiempo * 2.5 - i * 0.8) * pulsoIntensidad;
                 let tamActual = c.tam + pulso;
                 
                 push();
                 translate(width / 2, c.y);
                 
-                if (claridad > 0.2) {
-                    for (let j = 0; j < 3; j++) {
-                        let orbitaRadio = tamActual + 20 + j * 12;
-                        let orbitaAngulo = tiempo * (0.5 + j * 0.2) + i;
+                // Órbitas energéticas
+                if (claridad > 0.15) {
+                    for (let j = 0; j < 2 + Math.floor(claridad * 2); j++) {
+                        let orbitaRadio = tamActual + 25 + j * 18;
+                        let orbitaAngulo = tiempo * (0.4 + j * 0.15) + i * 0.7;
                         
+                        // Órbita
                         noFill();
-                        stroke(c.color, 40, 80, claridad * 30);
-                        strokeWeight(1);
+                        stroke(c.color, 35, 70, claridad * 25);
+                        strokeWeight(0.8);
                         ellipse(0, 0, orbitaRadio * 2);
                         
+                        // Partícula orbital
                         let orbX = cos(orbitaAngulo) * orbitaRadio;
                         let orbY = sin(orbitaAngulo) * orbitaRadio;
-                        fill(c.color, 70, 100, claridad * 60);
+                        fill(c.color, 60, 95, claridad * 70);
                         noStroke();
-                        ellipse(orbX, orbY, 3);
+                        ellipse(orbX, orbY, 2.5 + claridad * 1.5);
                     }
                 }
                 
-                let auraBrillo = lerp(40, 100, c.estabilidad);
-                let auraSaturacion = lerp(60, 90, c.estabilidad);
-                
-                for (let j = 0; j < 4; j++) {
-                    fill(c.color, auraSaturacion, auraBrillo, 8 - j * 2);
-                    ellipse(0, 0, (tamActual + j * 10) * 3);
+                // Aura del chakra con gradiente suave
+                for (let j = 0; j < 6; j++) {
+                    let auraSize = (tamActual + j * 8) * 2.5;
+                    let auraAlpha = (12 - j * 1.8) * c.estabilidad;
+                    fill(c.color, lerp(70, 45, c.estabilidad), c.brillo, auraAlpha);
+                    ellipse(0, 0, auraSize);
                 }
                 
-                fill(c.color, 90, auraBrillo, 90);
+                // Núcleo del chakra
+                fill(c.color, 80, c.brillo, 85);
                 ellipse(0, 0, tamActual);
                 
-                fill(0, 0, 100, auraBrillo);
-                ellipse(0, 0, tamActual * 0.3);
+                // Centro brillante
+                fill(0, 0, 100, c.brillo);
+                ellipse(0, 0, tamActual * 0.4);
                 
-                if (claridad > 0.6) {
-                    fill(0, 0, 100, claridad * 80);
-                    textSize(8);
+                // Símbolo del chakra en alta claridad
+                if (claridad > 0.7) {
+                    fill(0, 0, 100, claridad * 70);
+                    textSize(10);
                     text(c.nombre.charAt(0), 0, 0);
                 }
                 
@@ -403,83 +551,96 @@
         }
         
         function actualizarPensamientos() {
-            let cabezaY = height * 0.2;
+            let cabezaY = height * 0.15;
             
             for (let i = pensamientos.length - 1; i >= 0; i--) {
                 let p = pensamientos[i];
                 
-                let fuerzaRuido = lerp(1.5, 0.05, claridad);
-                p.vx += map(noise(p.ruidoOffset + tiempo), 0, 1, -0.2, 0.2) * fuerzaRuido;
-                p.vy += map(noise(p.ruidoOffset + 100 + tiempo), 0, 1, -0.2, 0.2) * fuerzaRuido;
+                // Movimiento más orgánico
+                let fuerzaRuido = lerp(1.2, 0.03, claridad);
+                p.vx += map(noise(p.ruidoOffset + tiempo), 0, 1, -0.15, 0.15) * fuerzaRuido;
+                p.vy += map(noise(p.ruidoOffset + 100 + tiempo), 0, 1, -0.15, 0.15) * fuerzaRuido;
                 
                 p.x += p.vx;
                 p.y += p.vy;
                 
-                let atraccion = lerp(0.005, 0.02, claridad);
+                // Atracción hacia el centro para ser procesados
+                let atraccion = lerp(0.003, 0.025, claridad);
                 p.x = lerp(p.x, width/2, atraccion);
                 p.y = lerp(p.y, cabezaY, atraccion);
                 
-                p.vx *= 0.98;
-                p.vy *= 0.98;
-                p.vida = lerp(p.vida, 0, claridad * 0.02);
+                // Fricción suave
+                p.vx *= 0.985;
+                p.vy *= 0.985;
+                p.vida = lerp(p.vida, 0, claridad * 0.018);
+                p.rotacion += 0.02 * (1 - claridad);
                 
-                if (p.vida > 5) {
+                // Dibujo mejorado del pensamiento
+                if (p.vida > 8) {
                     push();
                     translate(p.x, p.y);
-                    rotate(p.ruidoOffset + tiempo * 10 * (1 - claridad));
+                    rotate(p.rotacion);
                     
                     let colorPensamiento;
                     switch(p.tipo) {
-                        case 'ansiedad': colorPensamiento = 0; break;
-                        case 'distraccion': colorPensamiento = 60; break;
-                        case 'preocupacion': colorPensamiento = 30; break;
-                        default: colorPensamiento = 300;
+                        case 'ansiedad': colorPensamiento = 5; break;
+                        case 'distraccion': colorPensamiento = 55; break;
+                        case 'preocupacion': colorPensamiento = 35; break;
+                        default: colorPensamiento = 290;
                     }
                     
-                    strokeWeight(1.5);
-                    stroke(colorPensamiento, 80, 80, p.vida * (1 - claridad));
+                    // Forma más suave del pensamiento
+                    strokeWeight(1.2);
+                    stroke(colorPensamiento, 75, 75, p.vida * (1 - claridad));
                     noFill();
                     
                     beginShape();
-                    for (let j = 0; j < 6; j++) {
-                        let angulo = map(j, 0, 6, 0, TWO_PI);
-                        let radio = p.tam + sin(tiempo * 5 + j) * 3;
+                    for (let j = 0; j < 8; j++) {
+                        let angulo = map(j, 0, 8, 0, TWO_PI);
+                        let radio = p.tam + sin(tiempo * 4 + j + p.ruidoOffset) * 2;
                         vertex(cos(angulo) * radio, sin(angulo) * radio);
                     }
                     endShape(CLOSE);
                     
-                    if (random() < 0.1) {
-                        stroke(colorPensamiento, 90, 90, p.vida * 0.5);
-                        strokeWeight(1);
-                        line(0, 0, random(-p.tam, p.tam), random(-p.tam, p.tam));
+                    // Líneas internas ocasionales
+                    if (random() < 0.05) {
+                        stroke(colorPensamiento, 85, 85, p.vida * 0.3);
+                        strokeWeight(0.6);
+                        line(0, 0, random(-p.tam/2, p.tam/2), random(-p.tam/2, p.tam/2));
                     }
                     
                     pop();
                 }
                 
-                if (p.vida <= 5) {
+                // Eliminar pensamientos disueltos
+                if (p.vida <= 8) {
                     pensamientos.splice(i, 1);
                     
+                    // Crear partícula de liberación
                     particulas.push({
                         x: p.x,
                         y: p.y,
-                        vx: random(-2, 2),
-                        vy: random(-4, -1),
-                        vida: 60,
-                        color: 200
+                        vx: random(-1.5, 1.5),
+                        vy: random(-3, -0.5),
+                        vida: 80,
+                        color: 200,
+                        tamano: random(2, 5)
                     });
                 }
             }
             
+            // Actualizar partículas de liberación
             for (let i = particulas.length - 1; i >= 0; i--) {
                 let p = particulas[i];
                 p.x += p.vx;
                 p.y += p.vy;
+                p.vy -= 0.02; // Gravedad suave hacia arriba
                 p.vida--;
+                p.tamano *= 0.99;
                 
-                fill(p.color, 60, 100, p.vida);
+                fill(p.color, 50, 90, p.vida);
                 noStroke();
-                ellipse(p.x, p.y, 3);
+                ellipse(p.x, p.y, p.tamano);
                 
                 if (p.vida <= 0) {
                     particulas.splice(i, 1);
@@ -487,30 +648,32 @@
             }
         }
         
-        function dibujarEfectosClaridad() {
-            if (claridad > 0.8) {
+        function dibujarOndas() {
+            // Ondas de paz en alta claridad
+            if (claridad > 0.75) {
                 push();
                 translate(width/2, height/2);
                 
-                for (let i = 0; i < 5; i++) {
-                    let radio = 100 + i * 50 + sin(tiempo * 2 + i) * 20;
+                for (let i = 0; i < 4; i++) {
+                    let radio = 80 + i * 60 + sin(tiempo * 1.5 + i) * 15;
                     noFill();
-                    stroke(200, 30, 100, 20 - i * 3);
-                    strokeWeight(2);
+                    stroke(200, 25, 80, (25 - i * 5) * claridad);
+                    strokeWeight(1.5);
                     ellipse(0, 0, radio);
                 }
                 
                 pop();
             }
             
+            // Actualizar ondas de click
             for (let i = ondas.length - 1; i >= 0; i--) {
                 let onda = ondas[i];
                 onda.radio += onda.velocidad;
-                onda.alpha -= 2;
+                onda.alpha -= 1.5;
                 
                 noFill();
-                stroke(onda.color, 80, 100, onda.alpha);
-                strokeWeight(3);
+                stroke(onda.color, 70, 90, onda.alpha);
+                strokeWeight(2.5);
                 ellipse(onda.x, onda.y, onda.radio);
                 
                 if (onda.alpha <= 0) {
@@ -524,20 +687,20 @@
                 push();
                 translate(width/2, height/2);
                 
-                // Texto completamente simple, sin efectos
-                fill(255); // Blanco sólido
-                textSize(28);
-                text("SILENCIO INTERIOR", 0, -50);
+                // Texto simple sin efectos
+                fill(255);
+                noStroke();
+                textSize(32);
+                text("SILENCIO INTERIOR", 0, -60);
                 
-                fill(255); // Blanco sólido
-                textSize(16);
-                text("Debugging Completo", 0, 0);
+                fill(255);
+                textSize(18);
+                text("Debugging Completo", 0, -20);
                 
-                // Resultado de ansiedad
                 if (resultadoFinal && resultadoFinal.length > 0) {
-                    fill(255); // Blanco sólido
-                    textSize(14);
-                    text(resultadoFinal, 0, 50);
+                    fill(255);
+                    textSize(16);
+                    text(resultadoFinal, 0, 30);
                 }
                 
                 pop();
@@ -546,134 +709,4 @@
         
         function actualizarInterfaz() {
             let estado = "";
-            if (claridad < 0.3) estado = "DEBUGGING MENTAL...";
-            else if (claridad < 0.7) estado = "PROCESANDO...";
-            else if (claridad < 0.95) estado = "CLARIFICANDO...";
-            else estado = "SILENCIO INTERIOR";
-            
-            let estadoEl = document.getElementById('estado-actual');
-            let claridadEl = document.getElementById('claridad-nivel');
-            let pensamientosEl = document.getElementById('pensamientos-count');
-            let progressBar = document.getElementById('clarity-progress');
-            let controlsDiv = document.getElementById('controls');
-            
-            if (estadoEl) estadoEl.textContent = `Estado: ${estado}`;
-            if (claridadEl) claridadEl.textContent = `Claridad: ${Math.round(claridad * 100)}%`;
-            if (pensamientosEl) pensamientosEl.textContent = `Pensamientos: ${pensamientos.length}`;
-            if (progressBar) progressBar.style.width = `${claridad * 100}%`;
-            
-            if (controlsDiv) {
-                if (claridad < 0.3) controlsDiv.className = 'estado-caos';
-                else if (claridad < 0.8) controlsDiv.className = 'estado-procesando';
-                else controlsDiv.className = 'estado-silencio';
-            }
-            
-            actualizarMedidorAnsiedad();
-        }
-        
-        function actualizarMedidorAnsiedad() {
-            let tiempoActual = millis();
-            let tiempoTranscurrido = Math.max(tiempoActual - tiempoInicio, 1000);
-            
-            // Limpiar clicks antiguos (más de 5 segundos)
-            frecuenciaClicks = frecuenciaClicks.filter(t => tiempoActual - t < 5000);
-            
-            // Calcular ansiedad
-            let densidadClicks = (totalClicks * 60000) / tiempoTranscurrido; // clicks por minuto
-            let clicksRecientes = frecuenciaClicks.length;
-            let factorFrecuencia = Math.min(clicksRecientes * 0.15, 0.6);
-            let factorDensidad = Math.min(densidadClicks * 0.01, 0.4);
-            
-            nivelAnsiedad = Math.min(factorFrecuencia + factorDensidad, 1);
-            
-            if (clicksRecientes >= 3) {
-                nivelAnsiedad = Math.min(nivelAnsiedad + 0.2, 1);
-            }
-            
-            // Actualizar elementos DOM
-            let clicksEl = document.getElementById('clicks-count');
-            let ansiedadEl = document.getElementById('ansiedad-nivel');
-            let ansiedadBar = document.getElementById('ansiedad-progress');
-            let diagnosticoEl = document.getElementById('diagnostico');
-            let ansiedadPanel = document.getElementById('ansiedad-panel');
-            
-            if (clicksEl) clicksEl.textContent = `Clicks: ${totalClicks}`;
-            if (ansiedadEl) ansiedadEl.textContent = `Ansiedad: ${Math.round(nivelAnsiedad * 100)}%`;
-            if (ansiedadBar) ansiedadBar.style.width = `${nivelAnsiedad * 100}%`;
-            
-            let diagnostico = "";
-            if (nivelAnsiedad < 0.15) {
-                diagnostico = "Estado: Zen 🧘";
-                if (ansiedadPanel) ansiedadPanel.className = 'ansiedad-baja';
-            } else if (nivelAnsiedad < 0.4) {
-                diagnostico = "Estado: Inquieto 😐";
-                if (ansiedadPanel) ansiedadPanel.className = 'ansiedad-media';
-            } else if (nivelAnsiedad < 0.7) {
-                diagnostico = "Estado: Preocupado 😰";
-                if (ansiedadPanel) ansiedadPanel.className = 'ansiedad-alta';
-            } else {
-                diagnostico = "Estado: Muy Impaciente 🔥";
-                if (ansiedadPanel) ansiedadPanel.className = 'ansiedad-alta';
-            }
-            
-            if (diagnosticoEl) diagnosticoEl.textContent = diagnostico;
-            
-            if (claridad > 0.95 && (!resultadoFinal || resultadoFinal.length === 0)) {
-                generarResultadoFinal();
-            }
-        }
-        
-        function generarResultadoFinal() {
-            let tiempoTotal = (millis() - tiempoInicio) / 1000;
-            let clicksPorMinuto = (totalClicks * 60) / tiempoTotal;
-            
-            if (nivelAnsiedad < 0.15) {
-                resultadoFinal = `🏆 Perfecto! Meditaste con gran paciencia (${totalClicks} clicks)`;
-            } else if (nivelAnsiedad < 0.4) {
-                resultadoFinal = `✨ Muy bien! Solo algunos impulsos naturales (${totalClicks} clicks)`;
-            } else if (nivelAnsiedad < 0.7) {
-                resultadoFinal = `⚡ Te preocupaste un poco, pero lograste la calma (${totalClicks} clicks)`;
-            } else {
-                resultadoFinal = `🌪️ Te costó esperar, pero es normal. Sigue practicando (${totalClicks} clicks)`;
-            }
-        }
-        
-        function mousePressed() {
-            clickPresionado = true;
-            totalClicks++;
-            
-            let tiempoActual = millis();
-            frecuenciaClicks.push(tiempoActual);
-            ultimoClick = tiempoActual;
-            
-            ondas.push({
-                x: mouseX,
-                y: mouseY,
-                radio: 0,
-                velocidad: 4,
-                color: 200,
-                alpha: 80
-            });
-        }
-        
-        function mouseReleased() {
-            clickPresionado = false;
-        }
-        
-        function windowResized() {
-            resizeCanvas(windowWidth, windowHeight);
-            
-            for (let i = 0; i < 7; i++) {
-                chakras[i].y = (height * 0.85) - (i * height * 0.1);
-            }
-            
-            for (let p of pensamientos) {
-                if (p.x > width || p.y > height) {
-                    p.x = width / 2 + random(-200, 200);
-                    p.y = height * 0.2 + random(-200, 200);
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+            if (claridad < 0.25) estado = "DEPURANDO MENTE
