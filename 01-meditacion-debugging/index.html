@@ -524,7 +524,7 @@
                 push();
                 translate(width/2, height/2);
                 
-                // Texto principal
+                // Solo texto, sin efectos
                 fill(0, 0, 100, 80);
                 textSize(28);
                 text("SILENCIO INTERIOR", 0, -50);
@@ -539,37 +539,6 @@
                     textSize(14);
                     text(resultadoFinal, 0, 50);
                 }
-                
-                // Efecto de resplandor simple y estable
-                noFill();
-                
-                // Círculos de luz pulsantes
-                for (let i = 1; i <= 5; i++) {
-                    let radio = 60 + i * 25;
-                    let pulso = sin(tiempo * 0.5 + i * 0.2) * 5;
-                    let alpha = 30 - i * 4;
-                    
-                    stroke(0, 0, 100, alpha);
-                    strokeWeight(1.5);
-                    ellipse(0, 0, (radio + pulso) * 2);
-                }
-                
-                // Puntos de luz orbitales
-                for (let i = 0; i < 8; i++) {
-                    let angulo = tiempo * 0.3 + (i * TWO_PI / 8);
-                    let radio = 100;
-                    let x = cos(angulo) * radio;
-                    let y = sin(angulo) * radio;
-                    
-                    fill(0, 0, 100, 60);
-                    noStroke();
-                    ellipse(x, y, 4);
-                }
-                
-                // Centro brillante
-                fill(0, 0, 100, 40 + sin(tiempo) * 20);
-                noStroke();
-                ellipse(0, 0, 20);
                 
                 pop();
             }
