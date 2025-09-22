@@ -524,45 +524,52 @@
                 push();
                 translate(width/2, height/2);
                 
-                fill(0, 0, 100, 60 + sin(tiempo * 2) * 20);
+                // Texto principal
+                fill(0, 0, 100, 80);
                 textSize(28);
                 text("SILENCIO INTERIOR", 0, -50);
                 
-                fill(0, 0, 100, 50);
+                fill(0, 0, 100, 60);
                 textSize(16);
                 text("Debugging Completo", 0, 0);
                 
+                // Resultado de ansiedad
                 if (resultadoFinal && resultadoFinal.length > 0) {
                     fill(180, 60, 100, 70);
                     textSize(14);
                     text(resultadoFinal, 0, 50);
                 }
                 
-                // Círculos concéntricos de luz
+                // Efecto de resplandor simple y estable
                 noFill();
-                for (let i = 0; i < 8; i++) {
-                    let radio = 80 + i * 15 + sin(tiempo * 1.5 + i * 0.3) * 8;
-                    let alpha = 20 - i * 2 + sin(tiempo + i * 0.5) * 5;
+                
+                // Círculos de luz pulsantes
+                for (let i = 1; i <= 5; i++) {
+                    let radio = 60 + i * 25;
+                    let pulso = sin(tiempo * 0.5 + i * 0.2) * 5;
+                    let alpha = 30 - i * 4;
+                    
                     stroke(0, 0, 100, alpha);
-                    strokeWeight(1);
-                    ellipse(0, 0, radio * 2);
+                    strokeWeight(1.5);
+                    ellipse(0, 0, (radio + pulso) * 2);
                 }
                 
-                // Rayos de luz estables
-                for (let i = 0; i < 6; i++) {
-                    let angulo = map(i, 0, 6, 0, TWO_PI);
-                    let intensidad = 25 + sin(tiempo * 0.8 + i) * 8;
+                // Puntos de luz orbitales
+                for (let i = 0; i < 8; i++) {
+                    let angulo = tiempo * 0.3 + (i * TWO_PI / 8);
+                    let radio = 100;
+                    let x = cos(angulo) * radio;
+                    let y = sin(angulo) * radio;
                     
-                    stroke(0, 0, 100, intensidad);
-                    strokeWeight(2);
-                    
-                    let x1 = cos(angulo) * 40;
-                    let y1 = sin(angulo) * 40;
-                    let x2 = cos(angulo) * 130;
-                    let y2 = sin(angulo) * 130;
-                    
-                    line(x1, y1, x2, y2);
+                    fill(0, 0, 100, 60);
+                    noStroke();
+                    ellipse(x, y, 4);
                 }
+                
+                // Centro brillante
+                fill(0, 0, 100, 40 + sin(tiempo) * 20);
+                noStroke();
+                ellipse(0, 0, 20);
                 
                 pop();
             }
