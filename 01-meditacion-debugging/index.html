@@ -185,16 +185,18 @@
             colorMode(HSB, 360, 100, 100, 100);
             tiempoInicio = millis();
             
-            // Chakras con posiciones y colores mejorados
+            // Chakras con posiciones CORREGIDAS
             let coloresChakra = [0, 25, 45, 120, 200, 260, 280];
             let nombresChakra = ["Raíz", "Sacro", "Plexo", "Corazón", "Garganta", "Tercer Ojo", "Corona"];
             
+            // CORRECCIÓN: Calculamos las posiciones desde abajo hacia arriba
             for (let i = 0; i < 7; i++) {
                 chakras.push({
-                    y: height * 0.8 - (i * height * 0.09),
+                    // Posicionamos desde el 70% de la pantalla hacia arriba
+                    y: height * 0.7 - (i * height * 0.06), // Espaciado más compacto
                     color: coloresChakra[i],
                     nombre: nombresChakra[i],
-                    tam: 30 + i * 2,
+                    tam: 25 + i * 1.5, // Tamaños más pequeños pero visibles
                     estabilidad: 0,
                     energia: random(0.4, 0.8),
                     ruido: random(1000),
@@ -303,7 +305,6 @@
         
         function generarPensamientos() {
             pensamientos = [];
-            // CAMBIO: De 180, 15 a 180, 0 para que lleguen realmente a 0
             let cantidad = Math.floor(lerp(180, 0, claridad));
             
             for (let i = 0; i < cantidad; i++) {
@@ -359,7 +360,6 @@
             
             // Reducir pensamientos gradualmente
             if (frameCount % 45 == 0 && claridad < 1.0) {
-                // CAMBIO: De 8 a 0 para que lleguen realmente a 0
                 let nuevaCantidad = Math.floor(lerp(180, 0, claridad));
                 if (pensamientos.length > nuevaCantidad) {
                     pensamientos.splice(nuevaCantidad);
@@ -558,7 +558,7 @@
                     ellipse(0, 0, auraSize);
                 }
                 
-                // Núcleo del chakra - MUY IMPORTANTE
+                // Núcleo del chakra - PRINCIPAL
                 fill(c.color, 80, c.brillo, 95);
                 noStroke();
                 ellipse(0, 0, tamActual);
@@ -603,12 +603,10 @@
                 p.vx *= 0.985;
                 p.vy *= 0.985;
                 
-                // CAMBIO: Los pensamientos se disuelven más rápido
                 p.vida = lerp(p.vida, 0, claridad * 0.025);
                 p.rotacion += 0.02 * (1 - claridad);
                 
                 // Dibujo mejorado del pensamiento
-                // CAMBIO: Cambié de vida > 8 a vida > 3 para que desaparezcan más completamente
                 if (p.vida > 3) {
                     push();
                     translate(p.x, p.y);
@@ -646,7 +644,6 @@
                 }
                 
                 // Eliminar pensamientos disueltos
-                // CAMBIO: Cambié de vida <= 8 a vida <= 3
                 if (p.vida <= 3) {
                     pensamientos.splice(i, 1);
                     
@@ -685,22 +682,34 @@
         function dibujarOndas() {
             // Ondas de paz en alta claridad
             if (claridad > 0.75) {
+                push();
+                translate(width/2, height/2);
                 
-                // Texto simple sin efectos
-                fill(0, 0, 100, (claridad - 0.95) * 2000);
-                noStroke();
-                textSize(32);
-                text("SILENCIO INTERIOR", 0, -60);
-                
-                textSize(18);
-                text("Debugging Completo", 0, -20);
-                
-                if (resultadoFinal && resultadoFinal.length > 0) {
-                    textSize(16);
-                    text(resultadoFinal, 0, 30);
+                for (let i = 0; i < 4; i++) {
+                    let radio = 80 + i * 60 + sin(tiempo * 1.5 + i) * 15;
+                    noFill();
+                    stroke(200, 25, 80, (25 - i * 5) * claridad);
+                    strokeWeight(1.5);
+                    ellipse(0, 0, radio);
                 }
                 
                 pop();
+            }
+            
+            // Actualizar ondas de click
+            for (let i = ondas.length - 1; i >= 0; i--) {
+                let onda = ondas[i];
+                onda.radio += onda.velocidad;
+                onda.alpha -= 1.5;
+                
+                noFill();
+                stroke(onda.color, 70, 90, onda.alpha);
+                strokeWeight(2.5);
+                ellipse(onda.x, onda.y, onda.radio);
+                
+                if (onda.alpha <= 0) {
+                    ondas.splice(i, 1);
+                }
             }
         }
         
@@ -809,36 +818,3 @@
     </script>
 </body>
 </html>
-                
-                for (let i = 0; i < 4; i++) {
-                    let radio = 80 + i * 60 + sin(tiempo * 1.5 + i) * 15;
-                    noFill();
-                    stroke(200, 25, 80, (25 - i * 5) * claridad);
-                    strokeWeight(1.5);
-                    ellipse(0, 0, radio);
-                }
-                
-                pop();
-            }
-            
-            // Actualizar ondas de click
-            for (let i = ondas.length - 1; i >= 0; i--) {
-                let onda = ondas[i];
-                onda.radio += onda.velocidad;
-                onda.alpha -= 1.5;
-                
-                noFill();
-                stroke(onda.color, 70, 90, onda.alpha);
-                strokeWeight(2.5);
-                ellipse(onda.x, onda.y, onda.radio);
-                
-                if (onda.alpha <= 0) {
-                    ondas.splice(i, 1);
-                }
-            }
-        }
-        
-        function dibujarMomentosSilencio() {
-            if (claridad > 0.95) {
-                push();
-                translate(width/2, height/2);
