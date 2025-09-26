@@ -158,7 +158,7 @@
     </div>
 
     <script>
-        // === MEDITACIÓN COMO DEBUGGING MENTAL - VERSIÓN COMPLETADA ===
+        // === MEDITACIÓN COMO DEBUGGING MENTAL - VERSIÓN CORREGIDA ===
         
         let chakras = [];
         let pensamientos = [];
@@ -175,7 +175,7 @@
         let resultadoFinal = "";
         let tiempoInicio = 0;
         
-        // Efectos visuales mejorados
+        // Efectos visuales
         let auraParticulas = [];
         let interferencias = [];
         let estrellasEnergia = [];
@@ -185,18 +185,23 @@
             colorMode(HSB, 360, 100, 100, 100);
             tiempoInicio = millis();
             
-            // Chakras con posiciones CORREGIDAS
+            // Chakras con distribución vertical correcta (75% de pantalla)
             let coloresChakra = [0, 25, 45, 120, 200, 260, 280];
             let nombresChakra = ["Raíz", "Sacro", "Plexo", "Corazón", "Garganta", "Tercer Ojo", "Corona"];
             
-            // CORRECCIÓN: Calculamos las posiciones desde abajo hacia arriba
+            // Área vertical: 75% de la pantalla, centrada
+            let margenSup = height * 0.125; // 12.5% arriba
+            let margenInf = height * 0.125; // 12.5% abajo
+            let alturaTotal = height - margenSup - margenInf; // 75% restante
+            let espaciado = alturaTotal / 6; // 6 espacios para 7 chakras
+            
             for (let i = 0; i < 7; i++) {
                 chakras.push({
-                    // Posicionamos desde el 70% de la pantalla hacia arriba
-                    y: height * 0.7 - (i * height * 0.06), // Espaciado más compacto
+                    // Desde abajo (Raíz=0) hacia arriba (Corona=6)
+                    y: height - margenInf - (i * espaciado),
                     color: coloresChakra[i],
                     nombre: nombresChakra[i],
-                    tam: 25 + i * 1.5, // Tamaños más pequeños pero visibles
+                    tam: 25 + i * 3,
                     estabilidad: 0,
                     energia: random(0.4, 0.8),
                     ruido: random(1000),
@@ -206,7 +211,7 @@
             
             generarPensamientos();
             
-            // Partículas del aura mejoradas
+            // Partículas del aura
             for (let i = 0; i < 60; i++) {
                 auraParticulas.push({
                     angulo: random(TWO_PI),
@@ -229,7 +234,7 @@
                 });
             }
             
-            // Interferencias simplificadas
+            // Interferencias
             for (let i = 0; i < 15; i++) {
                 interferencias.push({
                     x: random(width * 0.1, width * 0.9),
@@ -245,7 +250,7 @@
         }
         
         function draw() {
-            // Fondo con gradiente suave
+            // Fondo con gradiente
             drawGradientBackground();
             
             tiempo += 0.012;
@@ -266,7 +271,6 @@
                 push();
                 translate(width/2, height/2);
                 
-                // Texto simple sin efectos
                 fill(0, 0, 100, (claridad - 0.95) * 2000);
                 noStroke();
                 textSize(32);
@@ -285,7 +289,6 @@
         }
         
         function drawGradientBackground() {
-            // Gradiente desde caos (rojo oscuro) hasta silencio (azul profundo)
             for (let i = 0; i <= height; i++) {
                 let inter = map(i, 0, height, 0, 1);
                 let c1 = lerpColor(
@@ -307,10 +310,13 @@
             pensamientos = [];
             let cantidad = Math.floor(lerp(180, 0, claridad));
             
+            // Pensamientos en la zona superior (cabeza)
+            let cabezaY = chakras[6].y; // Chakra Corona
+            
             for (let i = 0; i < cantidad; i++) {
                 pensamientos.push({
-                    x: width / 2 + random(-250, 250),
-                    y: height * 0.15 + random(-150, 150),
+                    x: width / 2 + random(-300, 300),
+                    y: cabezaY + random(-100, 50),
                     vx: random(-2, 2),
                     vy: random(-2, 2),
                     tam: random(4, 15),
@@ -330,8 +336,7 @@
                 velocidadBase *= 2.5;
                 tiempoPresionado++;
                 
-                if (tiempoPresionado > 200) { // 3+ segundos
-                    // Reiniciar meditación
+                if (tiempoPresionado > 200) { // 3+ segundos para reiniciar
                     claridad = 0;
                     tiempoPresionado = 0;
                     resultadoFinal = "";
@@ -368,7 +373,6 @@
         }
         
         function dibujarEstrellas() {
-            // Estrellas de fondo que se hacen más brillantes con la claridad
             for (let estrella of estrellasEnergia) {
                 estrella.brillo += sin(tiempo + estrella.parpadeo * 100) * estrella.parpadeo;
                 estrella.brillo = constrain(estrella.brillo, 10, 70);
@@ -451,13 +455,13 @@
             push();
             translate(width/2, height/2);
             
-            // Aura principal más suave
-            let auraTam = lerp(width * 0.2, width * 0.45, claridad);
+            // Aura principal
+            let auraTam = lerp(width * 0.25, width * 0.5, claridad);
             let auraEstabilidad = lerp(35, 8, claridad);
             
-            // Capas de aura con mejor gradiente
+            // Capas de aura
             for (let i = 1; i <= 5; i++) {
-                let radio = auraTam + i * 25;
+                let radio = auraTam + i * 30;
                 let ruido = map(noise(tiempo * 0.3 + i * 0.5), 0, 1, -auraEstabilidad, auraEstabilidad);
                 
                 noFill();
@@ -467,7 +471,7 @@
                 ellipse(0, 0, radio + ruido);
             }
             
-            // Partículas orbitales mejoradas
+            // Partículas orbitales
             for (let p of auraParticulas) {
                 p.angulo += p.velocidad;
                 p.radio = lerp(p.radio, 130 + claridad * 120, 0.008);
@@ -482,13 +486,13 @@
                 
                 // Conexiones entre partículas
                 for (let other of auraParticulas) {
-                    if (other != p) {
+                    if (other != p && random() < 0.02) {
                         let otherX = cos(other.angulo) * other.radio;
                         let otherY = sin(other.angulo) * other.radio;
                         let d = dist(x, y, otherX, otherY);
                         
-                        if (d < 70 && claridad > 0.4 && random() < 0.3) {
-                            stroke(220, 25, 80, claridad * 20);
+                        if (d < 70 && claridad > 0.4) {
+                            stroke(220, 25, 80, claridad * 15);
                             strokeWeight(0.3);
                             line(x, y, otherX, otherY);
                         }
@@ -500,19 +504,23 @@
         }
         
         function dibujarFiguraCentral() {
-            // Columna de energía central mejorada
+            // Columna de energía central
             let columnaIntensidad = lerp(25, 75, claridad);
-            let columnaGrosor = lerp(4, 10, claridad);
+            let columnaGrosor = lerp(6, 12, claridad);
             
-            // Gradiente en la columna
+            // Línea central que conecta todos los chakras
+            let chakraArriba = chakras[6].y; // Corona
+            let chakraAbajo = chakras[0].y;   // Raíz
+            
             for (let i = 0; i < columnaGrosor; i++) {
                 let alpha = columnaIntensidad * (1 - i / columnaGrosor);
                 stroke(0, 0, 100, alpha);
-                strokeWeight(1);
-                line(width / 2 - columnaGrosor/2 + i, 0, width / 2 - columnaGrosor/2 + i, height);
+                strokeWeight(1.5);
+                line(width / 2 - columnaGrosor/2 + i, chakraArriba, 
+                     width / 2 - columnaGrosor/2 + i, chakraAbajo);
             }
             
-            // Dibujar chakras mejorados
+            // Dibujar los 7 chakras
             for (let i = 0; i < chakras.length; i++) {
                 let c = chakras[i];
                 
@@ -520,21 +528,21 @@
                 c.energia = lerp(c.energia, 0.7 + claridad * 0.3, 0.015);
                 c.brillo = lerp(c.brillo, 60 + claridad * 35, 0.02);
                 
-                let pulsoIntensidad = lerp(12, 4, claridad);
+                let pulsoIntensidad = lerp(15, 5, claridad);
                 let pulso = sin(tiempo * 2.5 - i * 0.8) * pulsoIntensidad;
                 let tamActual = c.tam + pulso;
                 
                 push();
                 translate(width / 2, c.y);
                 
-                // Órbitas energéticas - simplificadas
+                // Órbitas energéticas
                 if (claridad > 0.15) {
                     let numOrbitas = 1 + Math.floor(claridad * 2);
                     for (let j = 0; j < numOrbitas; j++) {
-                        let orbitaRadio = tamActual + 25 + j * 18;
+                        let orbitaRadio = tamActual + 30 + j * 20;
                         let orbitaAngulo = tiempo * (0.4 + j * 0.15) + i * 0.7;
                         
-                        // Órbita
+                        // Círculo orbital
                         noFill();
                         stroke(c.color, 35, 70, claridad * 25);
                         strokeWeight(0.8);
@@ -545,34 +553,35 @@
                         let orbY = sin(orbitaAngulo) * orbitaRadio;
                         fill(c.color, 60, 95, claridad * 70);
                         noStroke();
-                        ellipse(orbX, orbY, 2.5 + claridad * 1.5);
+                        ellipse(orbX, orbY, 3 + claridad * 2);
                     }
                 }
                 
                 // Aura del chakra - múltiples capas
                 for (let j = 0; j < 6; j++) {
-                    let auraSize = (tamActual + j * 8) * 2.2;
-                    let auraAlpha = (12 - j * 1.8) * c.estabilidad;
+                    let auraSize = (tamActual + j * 8) * 2.5;
+                    let auraAlpha = (15 - j * 2) * c.estabilidad;
                     fill(c.color, lerp(70, 45, c.estabilidad), c.brillo, auraAlpha);
                     noStroke();
                     ellipse(0, 0, auraSize);
                 }
                 
-                // Núcleo del chakra - PRINCIPAL
-                fill(c.color, 80, c.brillo, 95);
-                noStroke();
+                // Núcleo del chakra - MÁS VISIBLE
+                fill(c.color, 80, c.brillo + 20, 90);
+                stroke(c.color, 90, 100, 40);
+                strokeWeight(2);
                 ellipse(0, 0, tamActual);
                 
                 // Centro brillante
-                fill(0, 0, 100, c.brillo);
+                fill(0, 0, 100, c.brillo + 30);
                 noStroke();
-                ellipse(0, 0, tamActual * 0.4);
+                ellipse(0, 0, tamActual * 0.5);
                 
-                // Símbolo del chakra en alta claridad
-                if (claridad > 0.7) {
-                    fill(0, 0, 100, claridad * 70);
+                // Nombre del chakra en alta claridad
+                if (claridad > 0.6) {
+                    fill(0, 0, 100, claridad * 80);
                     textAlign(CENTER, CENTER);
-                    textSize(10);
+                    textSize(10 + claridad * 2);
                     text(c.nombre.charAt(0), 0, 0);
                 }
                 
@@ -581,7 +590,7 @@
         }
         
         function actualizarPensamientos() {
-            let cabezaY = height * 0.15;
+            let cabezaY = chakras[6].y; // Chakra Corona
             
             for (let i = pensamientos.length - 1; i >= 0; i--) {
                 let p = pensamientos[i];
@@ -606,7 +615,7 @@
                 p.vida = lerp(p.vida, 0, claridad * 0.025);
                 p.rotacion += 0.02 * (1 - claridad);
                 
-                // Dibujo mejorado del pensamiento
+                // Dibujo del pensamiento
                 if (p.vida > 3) {
                     push();
                     translate(p.x, p.y);
@@ -620,7 +629,6 @@
                         default: colorPensamiento = 290;
                     }
                     
-                    // Forma más suave del pensamiento
                     strokeWeight(1.2);
                     stroke(colorPensamiento, 75, 75, p.vida * (1 - claridad));
                     noFill();
@@ -633,7 +641,6 @@
                     }
                     endShape(CLOSE);
                     
-                    // Líneas internas ocasionales
                     if (random() < 0.05) {
                         stroke(colorPensamiento, 85, 85, p.vida * 0.3);
                         strokeWeight(0.6);
@@ -665,7 +672,7 @@
                 let p = particulas[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy -= 0.02; // Gravedad suave hacia arriba
+                p.vy -= 0.02;
                 p.vida--;
                 p.tamano *= 0.99;
                 
@@ -738,11 +745,11 @@
             document.getElementById('clarity-progress').style.width = `${claridad * 100}%`;
             document.getElementById('pensamientos-count').innerText = `Pensamientos: ${pensamientos.length}`;
             
-            // --- Panel de Ansiedad ---
+            // Panel de Ansiedad
             let panelAnsiedad = document.getElementById('ansiedad-panel');
             panelAnsiedad.classList.remove('ansiedad-baja', 'ansiedad-media', 'ansiedad-alta');
             let ahora = millis();
-            frecuenciaClicks = frecuenciaClicks.filter(t => ahora - t < 5000); // Mantener solo los clicks de los últimos 5 segundos
+            frecuenciaClicks = frecuenciaClicks.filter(t => ahora - t < 5000);
             
             let ansiedadPorFrecuencia = map(frecuenciaClicks.length, 0, 15, 0, 100, true);
             let ansiedadPorTotal = map(totalClicks, 0, 100, 0, 40, true);
@@ -767,7 +774,7 @@
         }
 
         function calcularDiagnosticoFinal() {
-            let tiempoTotal = (millis() - tiempoInicio) / 1000; // en segundos
+            let tiempoTotal = (millis() - tiempoInicio) / 1000;
             
             if (totalClicks < 15 && tiempoTotal > 60) {
                 resultadoFinal = `Enfoque Paciente. ${Math.round(tiempoTotal)}s`;
@@ -801,9 +808,19 @@
 
         function windowResized() {
             resizeCanvas(windowWidth, windowHeight);
+            
+            // Reposicionar chakras al cambiar tamaño de ventana
+            let margenSup = height * 0.125;
+            let margenInf = height * 0.125;
+            let alturaTotal = height - margenSup - margenInf;
+            let espaciado = alturaTotal / 6;
+            
+            for (let i = 0; i < chakras.length; i++) {
+                chakras[i].y = height - margenInf - (i * espaciado);
+            }
         }
 
-        // Función map para compatibilidad
+        // Función map para compatibilidad con p5.js
         function map(value, start1, stop1, start2, stop2, withinBounds) {
             let newval = (value - start1) / (stop1 - start1) * (stop2 - start2) + start2;
             if (!withinBounds) {
